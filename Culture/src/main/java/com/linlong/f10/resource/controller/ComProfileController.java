@@ -78,17 +78,7 @@ public class ComProfileController {
 			@RequestParam(value = "tokenId", required = true) String tokenId, HttpServletResponse response, ModelMap map) {
 		map.put("stockcode", stockcode);
 		map.put("tokenId", tokenId);
-		// 公司概况
-		Map<String, Object> comProfile = comProfileService.queryComProfileBrief(stockcode);
-		map.put("comProfile", comProfile);
-		// 主营业务
-		Map<String, Object> business = operationService.queryBusiness(stockcode);
-		map.addAttribute("business", business);
-		// 行业市场表现表格
-		Map<String, Object> indu = industryPosService.queryIndu(stockcode);
-		map.put("indu", indu);
-		List<Map<String, Object>> induPos = industryPosService.queryInduPos(stockcode);
-		map.put("induPos", induPos);
+		
 		return "mobile/stock/profile";
 	}
 
