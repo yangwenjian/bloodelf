@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.stockindex.geniusdao.BStockReviewDAO">
+    <select id="getTapeReviewTitle" resultType="java.util.Map" useCache="false">
+        SELECT SQL_NO_CACHE
+		DATE(a.declaredate) AS declaredate,  -- 公告日期
+		a.title_main AS title, -- 新闻标题
+		a.guid AS guid
+		FROM (SELECT guid FROM pgenius.news_cls WHERE 
+		declaredate>=DATE_ADD(CURDATE(),INTERVAL -12 MONTH) 
+		AND isvalid=1 
+		AND cls_code='010004'
+		UNION  
+		SELECT guid FROM pgenius.news_cls WHERE 
+		declaredate>=DATE_ADD(CURDATE(),INTERVAL -1 MONTH) 
+		AND isvalid=1 
+		AND cls_code LIKE '011002%') d
+		INNER JOIN pgenius.news_main a ON a.guid=d.guid AND a.isvalid=1
+		ORDER BY a.guid DESC
+		LIMIT 10; -- 参数可以调整
+    </select>
+    <select id="getTapeReviewInfoc" resultType="java.util.Map" parameterType="java.util.ArrayList" useCache="false">
+       SELECT A.DECLAREDATE AS declaredate, D.SRC_NAME AS sourceName, A.TITLE_MAIN AS title, C.TXT_CONTENT AS content 
+		FROM NEWS_MAIN A INNER JOIN NEWS_CONTENT C ON A.GUID=C.GUID
+			 INNER JOIN PUB_INFOR_SRC D ON A.SRC_CODE=D.SRC_CODE 
+		WHERE  A.ISVALID=1  AND C.ISVALID=1 
+		AND A.GUID IN (
+			<foreach item="guid" index="index" collection="list" separator=",">#{guid}</foreach>
+		) 
+    </select>
+    <select id="getIndividualReview" resultType="java.util.Map" useCache="false">
+       SELECT SQL_NO_CACHE
+		DATE(a.declaredate) AS declaredate,  -- 公告日期
+		b.SRC_NAME AS sourceName,  -- 新闻来源
+		a.TITLE_MAIN AS title, -- 新闻标题
+		c.TXT_CONTENT AS content-- 新闻正文
+		FROM (SELECT GUID
+		FROM 	NEWS_CLS 
+		WHERE CLS_CODE IN ('001005','003006','003003','003006001','003006002')
+		#AND DECLAREDATE > ADDDATE(CURDATE(),-3)
+		ORDER BY DECLAREDATE DESC LIMIT 30) d
+		INNER JOIN pgenius.news_main a ON a.guid=d.guid AND a.isvalid=1
+		INNER JOIN PUB_INFOR_SRC b ON a.SRC_CODE=b.SRC_CODE AND b.isvalid=1
+		LEFT JOIN NEWS_CONTENT c ON a.guid=c.guid AND c.isvalid=1
+		LIMIT 10 ; -- 参数可以调整
+    </select>
+</mapper>

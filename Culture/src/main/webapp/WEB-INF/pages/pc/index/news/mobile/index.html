@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html class="ui-mobile">
+<head>
+	<meta charset="utf-8" />
+	<title>新闻资讯</title>
+</head>
+	<body>
+		<div class="third-party font-md break">
+			<div>
+				<span>${.now?string("yyyy-MM-dd")}</span><span>&nbsp;&nbsp;更新</span>
+			</div>
+			<div>
+				<img src="${webRootPath}/res/css/mobile/star-white.svg"
+					style="height: 8px; height: 0.8rem" />巨灵信息<img
+					src="${webRootPath}/res/css/mobile/star-white.svg"
+					style="height: 8px; height: 0.8rem" />
+			</div>
+			<div>WWW.GENIUS.COM.CN</div>
+		</div>
+
+		<div class="catalog break">
+			<div id="sub-menu" class="sub-menu font-sm follow">
+				<div class="ui-grid-b">
+					<div class="ui-block-a">
+						<div id="block-1" class="each">
+							<a href="#1"> <span class="index">1.</span> <span
+								class="text">${todayNews.titleMain!"今日要闻综述"}</span>
+							</a>
+						</div>
+					</div>
+					<div class="ui-block-b">
+						<div id="block-2" class="each">
+							<a href="#1"> <span class="index">2.</span> <span
+								class="text">昨日要闻综述</span>
+							</a>
+						</div>
+					</div>
+					<div class="ui-block-c">
+						<div id="block-3" class="each">
+							<a href="#1"> <span class="index">3.</span> <span
+								class="text">今日焦点</span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="dest-1" class="topic break min-h">
+			<div class="type">
+				<div class="exclam follow"></div>
+				<div class="text follow font-lg">
+					<#if todayNews.titleMain != null>${todayNews.titleMain}<#else>今日要闻综述</#if><a name="1"></a>
+				</div>
+				<div class="follow-R font-lg top">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<div id="notice-list" class="notice-list break">
+				<div class="notice">
+					<div class="content font-sm break">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span><#if todayNews.txtContent != null>${todayNews.txtContent?replace('\n', '<br/>')}<#else>暂无今日要闻综述</#if></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="line"></div>
+		
+		<div id="dest-2" class="topic break min-h">
+			<div class="type">
+				<div class="exclam follow"></div>
+				<div class="text follow font-lg">
+					昨日要闻综述<a name="2"></a>
+				</div>
+				<div class="follow-R font-lg top">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<div id="notice-list" class="notice-list break">
+				<div class="notice">
+					<div class="content font-sm break">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span><#if yestdayNews.txtContent != null>${yestdayNews.txtContent?replace('\n', '<br/>')}<#else>暂无昨日要闻综述</#if></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="line"></div>
+		
+		<div id="dest-3" class="topic break min-h">
+			<div class="type">
+				<div class="exclam follow"></div>
+				<div class="text follow font-lg">
+					今日焦点<a name="3"></a>
+				</div>
+				<div class="follow-R font-lg top">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<div id="notice-list" class="notice-list break">
+				<#if todayFocus?size=0>
+					<div class="notice">
+						<div class="content font-sm break">
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span>暂无今日焦点</span>
+						</div>
+					</div>
+				<#else>
+					<#list todayFocus!! as entity>
+					<div class="notice">
+						<div class="subject font-md">${entity.titleMain}</div>
+						<div class="publish-date font-sm">${entity.declaredate?string("yyyy-MM-dd")}</div>
+						<div class="content font-sm break">
+							<span>${entity.txtContent?replace('[\r\n]+', '<br>', 'r')}</span>
+						</div>
+						<div class="issuer font-sm break"></div>
+						<div class="line"></div>
+					</div>
+					</#list>
+				</#if>
+			</div>
+		</div>
+		<div class="line"></div>
+	</body>
+</html>

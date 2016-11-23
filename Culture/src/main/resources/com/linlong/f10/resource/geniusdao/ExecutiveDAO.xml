@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.resource.geniusdao.ExecutiveDAO">
+	<!-- 根据证券市场查询所有证券的流通股本 -->
+	<select id="selectExecChange" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT C.NAME AS name     -- 高管姓名
+		      ,B.POST AS pos     -- 职务
+		      ,B.HOLDER AS holder   -- 持股人名称
+		      ,B.RELATION AS relation -- 关联关系
+		      ,B.STK_CODE AS stockcode -- 股票代码
+		      ,B.CHNG_VOL AS changeVol -- 变动数量（股）
+		      ,B.END_VOL AS endVol  -- 变动后持股
+		      ,B.CHEG_EP  AS chegEp -- 变动均价
+		      ,B.CHNG_RSN AS chngReason -- 变动原因
+		      ,B.CHNG_DATE AS chngdate-- 变动日期
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.STK_MNG_TRADE_INFO B
+		    ON A.COMCODE = B.COMCODE
+		 INNER JOIN PGENIUS.PUB_IND_PROFILE C
+		    ON B.INDI_ID = C.INDI_ID
+		 WHERE A.STOCKCODE = #{stockcode}
+		   AND B.CHNG_DATE &gt;= DATE_ADD(NOW(),INTERVAL -1 YEAR)
+		 ORDER BY B.CHNG_DATE DESC
+	</select>
+	<select id="selectExecDetail" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT XX.NAME AS name   -- 高管姓名
+		      ,XX.GENDER AS gender -- 性别
+		      ,XX.AGE AS age   -- 年龄
+		      ,XX.EDU AS edu   -- 学历
+		      ,GROUP_CONCAT(XX.POST) AS pos -- 职位
+		      ,XX.RWD AS reward   -- 薪酬
+		      ,XX.START_SHR AS startshr-- 期初持股（股）
+		      ,XX.END_SHR AS endshr  -- 期末持股（股）
+		  FROM 
+		(SELECT C.NAME,C.GENDER,YEAR(NOW())-C.BIRTHYEAR AS AGE,C.EDU
+		      ,(SELECT REF_NAME FROM GEN_REF WHERE CLS_CODE = 2018 AND D.POST_CODE = REF_CODE)AS POST
+		      ,B.RWD,B.START_SHR,B.END_SHR,D.POST_CODE
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.STK_DS_POST D
+		    ON A.COMCODE = D.COMCODE
+		 INNER JOIN PGENIUS.PUB_IND_PROFILE C
+		    ON D.INDI_ID = C.INDI_ID
+		  LEFT JOIN PGENIUS.STK_MNG_RWD_DTL B
+			  ON A.COMCODE = B.COMCODE
+			 AND B.INDI_ID = D.INDI_ID
+			 AND B.PERIODDATE = (SELECT MAX(PERIODDATE) FROM PGENIUS.STK_MNG_RWD_DTL WHERE COMCODE = B.COMCODE)
+		 WHERE A.STOCKCODE = #{stockcode}
+		   AND D.ON_DUTY = '是'
+			 AND D.POST_CODE = (SELECT MIN(POST_CODE) FROM PGENIUS.STK_DS_POST WHERE COMCODE = D.COMCODE AND INDI_ID = D.INDI_ID AND ON_DUTY=D.ON_DUTY)
+		 UNION ALL
+		SELECT C.NAME,C.GENDER,YEAR(NOW())-C.BIRTHYEAR AS AGE,C.EDU
+		      ,(SELECT REF_NAME FROM GEN_REF WHERE CLS_CODE = 2019 AND D.POST_CODE = REF_CODE)AS POST
+		      ,B.RWD,B.START_SHR,B.END_SHR,D.POST_CODE
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.STK_MNG_POST D
+		    ON A.COMCODE = D.COMCODE
+		 INNER JOIN PGENIUS.PUB_IND_PROFILE C
+		    ON D.INDI_ID = C.INDI_ID
+		  LEFT JOIN PGENIUS.STK_MNG_RWD_DTL B
+			  ON A.COMCODE = B.COMCODE
+			 AND B.INDI_ID = D.INDI_ID
+			 AND B.PERIODDATE = (SELECT MAX(PERIODDATE) FROM PGENIUS.STK_MNG_RWD_DTL WHERE COMCODE = B.COMCODE)
+		 WHERE A.STOCKCODE = #{stockcode}
+		   AND D.ON_DUTY = '是'
+			 AND D.POST_CODE = (SELECT MIN(POST_CODE) FROM PGENIUS.STK_MNG_POST WHERE COMCODE = D.COMCODE AND INDI_ID = D.INDI_ID AND ON_DUTY=D.ON_DUTY)
+		) XX
+		GROUP BY XX.NAME,XX.GENDER,XX.AGE,XX.EDU,XX.RWD,XX.START_SHR,XX.END_SHR
+		ORDER BY XX.POST_CODE
+	</select>
+	<select id="selectExecChReason" resultType="java.util.HashMap" parameterType="String">
+	SELECT C.`NAME` AS name -- 高管姓名
+		      ,A.CHNG_CAUSE AS chngReason -- 持股变动原因
+		  FROM PGENIUS.STK_MNG_RWD_DTL A
+		 INNER JOIN PGENIUS.STK_CODE B
+		    ON A.COMCODE = B.COMCODE
+		 INNER JOIN PGENIUS.PUB_IND_PROFILE C
+		    ON A.INDI_ID = C.INDI_ID
+		 WHERE B.STOCKCODE = #{stockcode}
+		   AND a.ISVALID=1
+		   AND A.CHNG_CAUSE IS NOT NULL
+		   AND A.PERIODDATE = (SELECT MAX(PERIODDATE) FROM PGENIUS.STK_MNG_RWD_DTL
+          	WHERE COMCODE = A.COMCODE AND INDI_ID = A.INDI_ID)
+   </select>
+	<select id="selectExecPT" resultType="java.util.HashMap" parameterType="String">
+	SELECT B.PERIODDATE AS perioddate-- 截止日期
+		      ,C.NAME AS name     -- 姓名
+		      ,(SELECT REF_NAME FROM GEN_REF WHERE CLS_CODE=2025 AND REF_CODE=B.PT_CLS_CODE)AS ptcls -- 兼职类别  
+		      ,B.ORG_NAME AS orgName -- 兼职单位名称
+		      ,B.ORG_POST AS orgPos -- 兼职单位职务
+		      ,B.PT_STARTDATE AS startdate-- 兼职起始时间
+		      ,B.PT_ENDDATE  AS enddate -- 兼职截止时间
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.STK_MNG_PART_JOB B
+		    ON A.COMCODE = B.COMCODE
+		   AND B.PERIODDATE = (SELECT MAX(PERIODDATE) FROM PGENIUS.STK_MNG_RWD_DTL WHERE COMCODE = B.COMCODE)
+		 INNER JOIN PGENIUS.PUB_IND_PROFILE C
+		    ON B.INDI_ID = C.INDI_ID
+		 WHERE A.STOCKCODE = #{stockcode}  ORDER BY B.INDI_ID
+   </select>
+	<select id="selectStIncetive" resultType="java.util.HashMap" parameterType="String">
+	SELECT B.ACT_DATE AS actdate    -- 实施公告日
+		      ,B.PRG AS prg         -- 方案进度
+		      ,(SELECT REF_NAME FROM GEN_REF WHERE CLS_CODE=2054 AND REF_CODE=B.INCT_TYPE_CODE)AS incType -- 激励类别  
+		      ,B.OPT_NUM_FLOR AS optNumFlor-- 激励数量下限
+		      ,B.OPT_NUM_CEIL AS optNumCell -- 激励数量上限
+		      ,B.OBJ_STK_PCT  AS stkPct -- 占股本
+		      ,B.VALID_YEAR   AS validYear -- 有效期
+		      ,B.STK_SRC      AS stkSource-- 股票来源
+		      ,B.INCT_TARG    AS incTarget-- 激励对象
+		      ,B.GIVE_PRC_INFO AS giveInfo-- 授予价格
+		      ,B.GIVE_CONDI    AS giveCondi-- 授予条件
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.STK_SHR_INCT B
+		    ON A.COMCODE = B.COMCODE
+		 WHERE A.STOCKCODE = #{stockcode}
+		 ORDER BY B.ACT_DATE DESC
+   </select>
+	<select id="selectExecIntro" resultType="java.util.HashMap" parameterType="String">
+	SELECT XX.NAME AS name  -- 高管姓名
+		      ,XX.GENDER AS gender -- 性别
+		      ,XX.AGE  AS age  -- 年龄
+		      ,XX.EDU  AS edu  -- 学历
+		      ,GROUP_CONCAT(XX.POST) AS pos -- 职位
+		      ,xx.START_DATE AS startdate-- 任期起始日期
+		      ,XX.END_DATE  AS enddate -- 任期截止日期
+		      ,XX.RESUME    AS resume -- 简历
+		  FROM 
+		(
+		SELECT C.NAME,C.GENDER,YEAR(NOW())-C.BIRTHYEAR AS AGE,C.EDU
+		      ,(SELECT REF_NAME FROM GEN_REF WHERE CLS_CODE = 2018 AND D.POST_CODE = REF_CODE)AS POST
+		      ,d.START_DATE,d.END_DATE,c.RESUME,D.POST_CODE
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.STK_DS_POST D
+		    ON A.COMCODE = D.COMCODE
+		 INNER JOIN PGENIUS.PUB_IND_PROFILE C
+		    ON D.INDI_ID = C.INDI_ID
+		 WHERE A.STOCKCODE = #{stockcode}
+		   AND D.ON_DUTY = '是'
+			 AND D.POST_CODE = (SELECT MIN(POST_CODE) FROM PGENIUS.STK_DS_POST WHERE COMCODE = D.COMCODE AND INDI_ID = D.INDI_ID AND ON_DUTY=D.ON_DUTY)
+		 UNION ALL
+		SELECT C.NAME,C.GENDER,YEAR(NOW())-C.BIRTHYEAR AS AGE,C.EDU
+		      ,(SELECT REF_NAME FROM GEN_REF WHERE CLS_CODE = 2019 AND D.POST_CODE = REF_CODE)AS POST
+		      ,d.START_DATE,d.END_DATE,c.RESUME,D.POST_CODE
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.STK_MNG_POST D
+		    ON A.COMCODE = D.COMCODE
+		 INNER JOIN PGENIUS.PUB_IND_PROFILE C
+		    ON D.INDI_ID = C.INDI_ID
+		 WHERE A.STOCKCODE = #{stockcode}
+		   AND D.ON_DUTY = '是'
+			 AND D.POST_CODE = (SELECT MIN(POST_CODE) FROM PGENIUS.STK_MNG_POST WHERE COMCODE = D.COMCODE AND INDI_ID = D.INDI_ID AND ON_DUTY=D.ON_DUTY)
+		) XX
+		GROUP BY XX.NAME,XX.GENDER,XX.AGE,XX.EDU,xx.START_DATE,XX.END_DATE,XX.RESUME
+		ORDER BY XX.POST_CODE
+   </select>
+</mapper>

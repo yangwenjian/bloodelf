@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html class="ui-mobile">
+<head>
+	<meta charset="utf-8" />
+	<title>多维统计</title>
+</head>
+	<body>
+		<div class="third-party font-md break">
+			<div>
+				<span>${.now?string("yyyy-MM-dd")}</span><span>&nbsp;&nbsp;更新</span>
+			</div>
+			<div>
+				<img src="${webRootPath}/res/css/mobile/star-white.svg"
+					style="height: 8px; height: 0.8rem" />巨灵信息<img
+					src="${webRootPath}/res/css/mobile/star-white.svg"
+					style="height: 8px; height: 0.8rem" />
+			</div>
+			<div>WWW.GENIUS.COM.CN</div>
+		</div>
+
+		<div class="catalog break">
+			<div id="sub-menu" class="sub-menu font-sm follow">
+				<div class="ui-grid-b">
+					<div class="ui-block-a">
+						<div id="block-1" class="each">
+							<a href="#1"> <span class="index">1.</span> <span
+								class="text">分红方案统计</span>
+							</a>
+						</div>
+					</div>
+					<div class="ui-block-b">
+						<div id="block-2" class="each">
+							<a href="#2"> <span class="index">2.</span> <span
+								class="text">多维统计</span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="dest-1" class="topic break min-h">
+			<div class="type">
+				<div class="exclam follow"></div>
+				<div class="text follow font-lg">
+					分红方案统计<a name="1"></a>
+				</div>
+				<div class="follow-R font-lg top">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<div class="info-table font-sm break">
+			<#if dividendScheme?size gt 0>
+				<table style="width: 800px; width: 80rem; text-align: center;">
+					<thead>
+						<tr>
+							<th style="width: 100px; width: 10rem;">股票</th>
+							<th style="width: 80px; width: 8rem;">进展情况</th>
+							<th style="width: 60px; width: 6rem;">总股本_亿</th>
+							<th style="width: 60px; width: 6rem;">每股收益_元</th>
+							<th style="width: 60px; width: 6rem;">每股公积_元</th>
+							<th style="width: 240px; width: 24rem;">方案说明</th>
+							<th style="width: 200px; width: 20rem;">日期</th>
+						</tr>
+					</thead>
+					<tbody>
+						<#list dividendScheme as entity>
+						<tr>
+							<td>${entity.stock!}</td>
+							<td>${entity.refName!}</td>
+							<td>${entity.capitalization!}</td>
+							<td>${entity.mgsy!}</td>
+							<td>${entity.mggj!}</td>
+							<td>${entity.schemeExplain!}</td>
+							<td>${entity.declaredate!}</td>
+						</tr>
+						</#list>
+					</tbody>
+				</table>
+				<#else>
+					<div class="notice">
+						<div class="content font-sm break">
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span>暂无分红方案统计</span>
+						</div>
+					</div>
+				</#if>
+			</div>
+		</div>
+		<div class="line"></div>
+
+		<div id="dest-2" class="topic break min-h">
+			<div class="type">
+				<div class="exclam follow"></div>
+				<div class="text follow font-lg">
+					多维统计<a name="2"></a>
+				</div>
+				<div class="follow-R font-lg top">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<div id="notice-list" class="notice-list break">
+				<#if manyDimensionsStatistics?size gt 0>
+					<#list manyDimensionsStatistics!! as entity>
+					<div class="notice" id='dest-${entity_index?string("number")}'>
+						<div class="subject font-md">${entity.titleMain}</div>
+						<div class="publish-date font-sm">${entity.declaredate?string("yyyy-MM-dd")}&nbsp;&nbsp;&nbsp;&nbsp;<a class="top">Top</a></div>
+						<div class="content font-sm break">
+							<span>${entity.txtContent?replace('[\r\n]+', '<br>', 'r')}</span>
+						</div>
+						<div class="issuer font-sm break"></div>
+						<div class="line"></div>
+					</div>
+					</#list>
+				<#else>
+					<div class="notice">
+						<div class="content font-sm break">
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span>暂无多维统计</span>
+						</div>
+					</div>
+				</#if>
+			</div>
+		</div>
+		<div class="line"></div>
+	</body>
+</html>

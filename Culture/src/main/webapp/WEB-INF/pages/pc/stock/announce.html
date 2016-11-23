@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>公司公告</title>
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+	name="viewport" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+</head>
+<body>
+	<div class="catalog gap">
+		<div class="catalog-name follow font-lg">目录</div>
+		<div id="catalog-list" class="catalog-bg follow font-md">
+			<ol type="" class="catalog-list">
+				<!-- 每4个一组 -->
+				<li><span class="index">1.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#0">公司公告</a></span></li>
+				<li><span class="index">&nbsp;&nbsp;</span> <span class="text"><a
+						href="#2"></a></span></li>
+				<li><span class="index">&nbsp;&nbsp;</span> <span class="text"><a
+						href="#3"></a></span></li>
+				<li><span class="index">&nbsp;&nbsp;</span> <span class="text"><a
+						href="#4"></a></span></li>
+			</ol>
+		</div>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				公司公告<a name="0"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap font-md break">
+			<#if announcements?size == 0>
+				<div>暂无数据</div>
+			</#if>
+			<#list announcements as announcement>
+			<div><a href="#${(announcement_index+1)?string('#')}">${(announcement_index+1)?string("#")}、${announcement.title!}</a></div>
+			</#list>
+		</div>
+	</div>
+
+	<div class="topic topic-gap">
+		<#list announcements as announcement>
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				${(announcement_index+1)?string("#")}、&nbsp;【${(announcement.declaredate?string("yyyy-MM-dd"))!}】<a
+					name="${(announcement_index+1)?string('#')}"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="notice-list" class="notice-list break">
+			<div class="notice">
+				<div class="subject font-lg">${announcement.title!}</div>
+				<div class="break">
+					<br>
+				</div>
+				<div class="content font-md">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span>${announcement.content?replace('(\r\n)+','</br>',
+						'r')!}
+					</span>
+				</div>
+				<div>
+					<br>
+				</div>
+				<div class="line"></div>
+			</div>
+		</div>
+		</#list>
+	</div>
+
+</body>
+</html>

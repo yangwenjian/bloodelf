@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.stockindexdetail.geniusdao.IndexSampleDAO">
+	<!-- 根据证券市场查询所有证券的流通股本 -->
+	<select id="selectIndexSample" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT 
+		CONCAT(a.stocksname, '(',a.stockcode,')') AS stockname, -- 样本股名称
+		DATE(b.STARTDATE) AS startdate -- 进入时间
+		FROM stk_code a 
+		INNER JOIN INDX_SAMP_INFO b
+		ON a.INNER_CODE=b.SEC_INNER_CODE
+		INNER JOIN indx_gen_info c
+		ON b.inner_code=c.inner_code
+		WHERE a.isvalid=1 AND b.isvalid=1 AND c.isvalid=1 AND c.INDX_CODE=#{indexcode}
+		ORDER BY b.STARTDATE DESC
+	</select>
+</mapper>

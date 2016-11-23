@@ -1,0 +1,589 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+	license agreements. See the NOTICE file distributed with this work for additional 
+	information regarding copyright ownership. The ASF licenses this file to 
+	you under the Apache License, Version 2.0 (the "License"); you may not use 
+	this file except in compliance with the License. You may obtain a copy of 
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
+	by applicable law or agreed to in writing, software distributed under the 
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. See the License for the specific 
+	language governing permissions and limitations under the License. -->
+<!-- $Id: pom.xml 642118 2008-03-28 08:04:16Z reinhard $ -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<packaging>war</packaging>
+
+	<name>SSA-F10</name>
+	<groupId>com.linlong</groupId>
+	<version>0.0.1-SNAPSHOT</version>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- Spring framework version -->
+		<springframework.version>4.1.2.RELEASE</springframework.version>
+		<springframework.security.version>3.2.3.RELEASE</springframework.security.version>
+		<springframework.security.oauth.version>3.9.SS3</springframework.security.oauth.version>
+		<spring-jpa.version>2.0.8</spring-jpa.version>
+		<org.aspectj.aspectjweaver.version>1.7.1</org.aspectj.aspectjweaver.version>
+		<aopalliance.version>1.0</aopalliance.version>
+		<testng.version>6.8.8</testng.version>
+		<junit.version>4.8.2</junit.version>
+		<cll-platform-framework.version>1.0.1-SNAPSHOT</cll-platform-framework.version>
+		<!-- mybatis version -->
+		<mybatis.version>3.2.7</mybatis.version>
+		<mybatis-spring.version>1.2.2</mybatis-spring.version>
+		<mybatis-ehcache.version>1.0.0</mybatis-ehcache.version>
+		<!-- java web api version -->
+		<servlet.version>3.1.0</servlet.version>
+		<jstl.version>1.2</jstl.version>
+		<taglibs.version>1.1.2</taglibs.version>
+		<jsp-api.version>2.2.1-b03</jsp-api.version>
+		<!-- database driver version -->
+		<mysql.version>5.1.31</mysql.version>
+		<!-- logger api version -->
+		<commons-logging.version>1.1.3</commons-logging.version>
+		<log4j.version>1.2.14</log4j.version>
+		<slf4j-api.version>1.7.6</slf4j-api.version>
+		<slf4j-log4j12.version>1.7.6</slf4j-log4j12.version>
+		<!-- apache common library version -->
+		<commons-collections.version>3.1</commons-collections.version>
+		<commons-fileupload.version>1.3.1</commons-fileupload.version>
+		<commons-io.version>2.0.1</commons-io.version>
+		<httpclient.version>4.5</httpclient.version>
+		<commons-lang.version>2.6</commons-lang.version>
+		<commons-beanutils.version>1.9.2</commons-beanutils.version>
+		<!-- database connection pool version -->
+		<c3p0.version>0.9.1.2</c3p0.version>
+		<bonecp.version>0.8.0.RELEASE</bonecp.version>
+		<!-- json version -->
+		<jackson.version>1.9.13</jackson.version>
+		<com.fasterxml.jackson.core.version>2.1.0</com.fasterxml.jackson.core.version>
+		<!-- freemarker version -->
+		<freemarker.version>2.3.20</freemarker.version>
+		<cll-platform.version>1.0.1-SNAPSHOT</cll-platform.version>
+		<aspectj-aspectjrt.version>1.5.4</aspectj-aspectjrt.version>
+		<commons-codec.version>1.10</commons-codec.version>
+		<spring-asm.version>3.1.4.RELEASE</spring-asm.version>
+		<project.deploy>deploy</project.deploy>
+		<!-- jdk builder version -->
+		<buildNumber>1.7</buildNumber>
+		<!-- cas client version -->
+		<cas.client.version>3.1.12</cas.client.version>
+		<!-- sitemesh version -->
+		<sitemesh.version>3.0.0</sitemesh.version>
+		<!-- ESB version -->
+		<javax.ws.rs.version>2.0.1</javax.ws.rs.version>
+		<jersey-json.version>1.19</jersey-json.version>
+		<jersey.version>1.3</jersey.version>
+		<org.glassfish.jersey.core.version>2.19</org.glassfish.jersey.core.version>
+		<json-lib.version>2.4</json-lib.version>
+		<!-- ant.zip.version -->
+		<ant.zip.version>1.9.6</ant.zip.version>
+		<e-payment-entity.version>1.0-SNAPSHOT</e-payment-entity.version>
+		<!-- redis config -->
+	</properties>
+
+	<profiles>
+		<profile>
+			<id>local</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<boneCp.driverClass>com.mysql.jdbc.Driver</boneCp.driverClass>
+				<boneCp.jdbcUrl>jdbc:mysql://172.27.10.130:3306/pgenius?useUnicode=true&amp;amp;characterEncoding=utf-8</boneCp.jdbcUrl>
+				<boneCp.jdbcUrl.f10>jdbc:mysql://172.27.10.130:3306/f10?useUnicode=true&amp;amp;characterEncoding=utf-8</boneCp.jdbcUrl.f10>
+				<boneCp.username>root</boneCp.username>
+				<boneCp.password>redhat</boneCp.password>
+				<boneCp.jdbcUrl.etl>jdbc:mysql://172.27.40.130:3306/f10_cms?useUnicode=true&amp;amp;characterEncoding=utf-8</boneCp.jdbcUrl.etl>
+				<boneCp.username.etl>root</boneCp.username.etl>
+				<boneCp.password.etl>redhat</boneCp.password.etl>
+				<boneCp.maxConnectionsPerPartition>10</boneCp.maxConnectionsPerPartition>
+				<boneCp.minConnectionsPerPartition>10</boneCp.minConnectionsPerPartition>
+				<boneCp.partitionCount>3</boneCp.partitionCount>
+				<boneCp.acquireIncrement>5</boneCp.acquireIncrement>
+				<boneCp.statementsCacheSize>100</boneCp.statementsCacheSize>
+
+				<!-- redis -->
+				<redis.host>172.27.40.130</redis.host>
+				<redis.port>6379</redis.port>
+				<redis.password></redis.password>
+				<redis.maxIdle>100</redis.maxIdle>
+				<redis.maxActive>300</redis.maxActive>
+				<redis.maxWait>1000</redis.maxWait>
+				<redis.testOnBorrow>true</redis.testOnBorrow>
+				<redis.timeout>1000</redis.timeout>
+
+				<!-- Log Setting -->
+				<logLevel>debug</logLevel>
+				<system.err.log.file>log/${project.artifactId}/sys-error.log</system.err.log.file>
+				<daily.log.file>log/${project.artifactId}/date-detail.log</daily.log.file>
+
+				<!-- -->
+				<static.path>http://192.168.4.56:8080/</static.path>
+				<server.domain>http://192.168.4.56:8080/</server.domain>
+				<authentication.ios.url>https://172.27.40.150/obtainToken</authentication.ios.url>
+				<authentication.android.url>https://172.27.40.150/obtainToken</authentication.android.url>
+				<authentication.pc.url>https://172.27.40.150/obtainToken</authentication.pc.url>
+				<hostIP>192.168.4.56</hostIP>
+				<serverPort>8080</serverPort>
+				<tcpServerPort>16833</tcpServerPort>
+				<monitorPort>16833</monitorPort>
+				<monitorServerPort>16833</monitorServerPort>
+				<monitorServerIP>172.27.40.150</monitorServerIP>
+			</properties>
+		</profile>
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<boneCp.driverClass>com.mysql.jdbc.Driver</boneCp.driverClass>
+				<boneCp.jdbcUrl>jdbc:mysql://172.27.10.130:3306/pgenius?useUnicode=true&amp;amp;characterEncoding=utf-8</boneCp.jdbcUrl>
+				<boneCp.jdbcUrl.f10>jdbc:mysql://172.27.10.130:3306/f10?useUnicode=true&amp;amp;characterEncoding=utf-8</boneCp.jdbcUrl.f10>
+				<boneCp.username>root</boneCp.username>
+				<boneCp.password>redhat</boneCp.password>
+				<boneCp.jdbcUrl.etl>jdbc:mysql://172.27.40.130:3306/f10_cms?useUnicode=true&amp;amp;characterEncoding=utf-8</boneCp.jdbcUrl.etl>
+				<boneCp.username.etl>root</boneCp.username.etl>
+				<boneCp.password.etl>redhat</boneCp.password.etl>
+				<boneCp.maxConnectionsPerPartition>10</boneCp.maxConnectionsPerPartition>
+				<boneCp.minConnectionsPerPartition>10</boneCp.minConnectionsPerPartition>
+				<boneCp.partitionCount>3</boneCp.partitionCount>
+				<boneCp.acquireIncrement>5</boneCp.acquireIncrement>
+				<boneCp.statementsCacheSize>100</boneCp.statementsCacheSize>
+
+				<!-- redis -->
+				<redis.host>172.27.40.130</redis.host>
+				<redis.port>6379</redis.port>
+				<redis.password></redis.password>
+				<redis.maxIdle>100</redis.maxIdle>
+				<redis.maxActive>300</redis.maxActive>
+				<redis.maxWait>1000</redis.maxWait>
+				<redis.testOnBorrow>true</redis.testOnBorrow>
+				<redis.timeout>1000</redis.timeout>
+
+				<!-- Log Setting -->
+				<logLevel>debug</logLevel>
+				<system.err.log.file>log/${project.artifactId}/sys-error.log</system.err.log.file>
+				<daily.log.file>log/${project.artifactId}/date-detail.log</daily.log.file>
+
+				<!-- -->
+				<static.path>http://192.168.4.56:8080/</static.path>
+				<server.domain>http://172.27.40.130:8080/</server.domain>
+				<authentication.ios.url>https://172.27.40.150/obtainToken</authentication.ios.url>
+				<authentication.android.url>https://172.27.40.150/obtainToken</authentication.android.url>
+				<authentication.pc.url>https://172.27.40.150/obtainToken</authentication.pc.url>
+				<hostIP>172.27.40.130</hostIP>
+				<serverPort>8080</serverPort>
+				<tcpServerPort>16833</tcpServerPort>
+				<monitorPort>16833</monitorPort>
+				<monitorServerPort>16833</monitorServerPort>
+				<monitorServerIP>172.27.40.150</monitorServerIP>
+			</properties>
+		</profile>
+		<profile>
+			<id>uat</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<boneCp.driverClass>com.mysql.jdbc.Driver</boneCp.driverClass>
+				<boneCp.jdbcUrl>jdbc:mysql://172.27.10.130:3306/pgenius?useUnicode=true&amp;amp;characterEncoding=utf-8</boneCp.jdbcUrl>
+				<boneCp.jdbcUrl.f10>jdbc:mysql://172.27.10.130:3306/f10?useUnicode=true&amp;amp;characterEncoding=utf-8</boneCp.jdbcUrl.f10>
+				<boneCp.username>root</boneCp.username>
+				<boneCp.password>redhat</boneCp.password>
+				<boneCp.jdbcUrl.etl>jdbc:mysql://172.27.20.41:3306/f10_cms?useUnicode=true&amp;amp;characterEncoding=utf-8</boneCp.jdbcUrl.etl>
+				<boneCp.username.etl>root</boneCp.username.etl>
+				<boneCp.password.etl>redhat</boneCp.password.etl>
+				<boneCp.maxConnectionsPerPartition>10</boneCp.maxConnectionsPerPartition>
+				<boneCp.minConnectionsPerPartition>10</boneCp.minConnectionsPerPartition>
+				<boneCp.partitionCount>3</boneCp.partitionCount>
+				<boneCp.acquireIncrement>5</boneCp.acquireIncrement>
+				<boneCp.statementsCacheSize>100</boneCp.statementsCacheSize>
+
+				<!-- redis -->
+				<redis.host>172.27.40.130</redis.host>
+				<redis.port>6379</redis.port>
+				<redis.password></redis.password>
+				<redis.maxIdle>100</redis.maxIdle>
+				<redis.maxActive>300</redis.maxActive>
+				<redis.maxWait>1000</redis.maxWait>
+				<redis.testOnBorrow>true</redis.testOnBorrow>
+				<redis.timeout>1000</redis.timeout>
+
+				<!-- Log Setting -->
+				<logLevel>debug</logLevel>
+				<system.err.log.file>log/${project.artifactId}/sys-error.log</system.err.log.file>
+				<daily.log.file>log/${project.artifactId}/date-detail.log</daily.log.file>
+
+				<!-- -->
+				<static.path>http://59.46.52.54:8001/</static.path>
+				<server.domain>http://59.46.52.54:8001/</server.domain>
+				<authentication.ios.url>https://59.46.52.54:9002/obtainToken</authentication.ios.url>
+				<authentication.android.url>https://59.46.52.54:9002/obtainToken</authentication.android.url>
+				<authentication.pc.url>https://59.46.52.54:9002/obtainToken</authentication.pc.url>
+				<hostIP>59.46.52.54</hostIP>
+				<serverPort>8001</serverPort>
+				<tcpServerPort>16833</tcpServerPort>
+				<monitorPort>9015</monitorPort>
+				<monitorServerPort>9012</monitorServerPort>
+				<monitorServerIP>59.46.52.54</monitorServerIP>
+			</properties>
+		</profile>
+	</profiles>
+	<dependencies>
+		<!-- Servlet jars -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<scope>provided</scope>
+			<version>${servlet.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>${jstl.version}</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>taglibs</groupId>
+			<artifactId>standard</artifactId>
+			<version>${taglibs.version}</version>
+		</dependency>
+		
+		<!-- <dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>7.0</version>
+		</dependency> -->
+
+		<dependency>
+		  <groupId>javax.transaction</groupId>
+		  <artifactId>jta</artifactId>
+		  <version>1.1</version>
+		</dependency>
+
+		<!-- spring framework -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${springframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>${springframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${springframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>${springframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+			<version>${springframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aspects</artifactId>
+			<version>${springframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${springframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${springframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-expression</artifactId>
+			<version>${springframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${springframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${springframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${springframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-oxm</artifactId>
+			<version>${springframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>${org.aspectj.aspectjweaver.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>aopalliance</groupId>
+			<artifactId>aopalliance</artifactId>
+			<version>${aopalliance.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-redis</artifactId>
+			<version>1.6.1.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>2.7.3</version>
+		</dependency>
+		<!-- Spring security -->
+		<!-- apache jars -->
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+			<version>${commons-collections.version}</version>
+			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>${commons-fileupload.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${commons-io.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>${commons-lang.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>${commons-beanutils.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>${commons-codec.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>${httpclient.version}</version>
+		</dependency>
+		<!-- mybatis jars -->
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>${mybatis.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+			<version>${mybatis-spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-ehcache</artifactId>
+			<version>${mybatis-ehcache.version}</version>
+		</dependency>
+		<!-- database jars -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jolbox</groupId>
+			<artifactId>bonecp</artifactId>
+			<version>${bonecp.version}</version>
+		</dependency>
+		<!-- logger jars -->
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>${commons-logging.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j-api.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j-log4j12.version}</version>
+		</dependency>
+		<!--Netty用Jar包 -->
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-all</artifactId>
+			<version>4.1.5.Final</version>
+		</dependency>
+		<!-- google -->
+		<dependency>
+			<groupId>com.google.protobuf</groupId>
+			<artifactId>protobuf-java</artifactId>
+			<version>2.5.0</version>
+		</dependency>
+		<!-- sitemesh3 -->
+		<dependency>
+			<groupId>org.sitemesh</groupId>
+			<artifactId>sitemesh</artifactId>
+			<version>${sitemesh.version}</version>
+		</dependency>
+		<!-- freemarker -->
+		<dependency>
+			<groupId>org.freemarker</groupId>
+			<artifactId>freemarker</artifactId>
+			<version>${freemarker.version}</version>
+		</dependency>
+		<!-- json -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.4</version>
+		</dependency>
+		<!-- jackson dependency -->
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>${jackson.version}</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${com.fasterxml.jackson.core.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${com.fasterxml.jackson.core.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>${com.fasterxml.jackson.core.version}</version>
+		</dependency>
+
+		<!-- JCaptcha Dependencies Begin -->
+		<!-- <dependency> <groupId>commons-collections</groupId> <artifactId>commons-collections</artifactId> 
+			<version>3.2.1</version> </dependency> -->
+	</dependencies>
+
+	<build>
+		<finalName>${project.artifactId}</finalName>
+		<plugins>
+			<plugin>
+				<!--skip deploy (this is just a test module) -->
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<source>${buildNumber}</source>
+					<target>${buildNumber}</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<webXml>src/main/webapp/WEB-INF/web.xml</webXml>
+					<uriEncoding>UTF-8</uriEncoding>
+					<port>8080</port>
+					<path>/${project.artifactId}</path>
+					<url>http://172.27.20.41:8080/manager/text</url>
+					<username>admin</username>
+					<password>password</password>
+				</configuration>
+				<executions>
+					<execution>
+						<id>tomcat-run</id>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<phase>pre-integration-test</phase>
+					</execution>
+					<execution>
+						<id>tomcat-shutdown</id>
+						<goals>
+							<goal>shutdown</goal>
+						</goals>
+						<phase>post-integration-test</phase>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+				</configuration>
+			</plugin>
+		</plugins>
+
+		<!-- 使用资源过滤器 -->
+		<resources>
+			<resource>
+				<directory>${project.basedir}/src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+
+		<filters>
+			<filter>${project.basedir}/src/main/resources/conf/config.properties</filter>
+		</filters>
+	</build>
+
+	<artifactId>Culture</artifactId>
+</project>

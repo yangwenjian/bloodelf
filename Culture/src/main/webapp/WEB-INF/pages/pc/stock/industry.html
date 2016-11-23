@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>行业地位</title>
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+	name="viewport" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+</head>
+<body>
+
+	<div class="catalog gap">
+		<div class="catalog-name follow font-lg">目录</div>
+		<div id="catalog-list" class="catalog-bg follow font-md">
+			<ol type="" class="catalog-list">
+				<!-- 每4个一组 -->
+				<li><span class="index">1.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#1">行业市场表现</a></span></li>
+				<li><span class="index">&nbsp;&nbsp;</span> <span class="text"><a
+						href="#2"></a></span></li>
+				<li><span class="index">&nbsp;&nbsp;</span> <span class="text"><a
+						href="#3"></a></span></li>
+				<li><span class="index">&nbsp;&nbsp;</span> <span class="text"><a
+						href="#4"></a></span></li>
+			</ol>
+		</div>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				行业市场表现<a name="1"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<div class="info-table font-md">
+			<table>
+				<thead align="center">
+					<tr>
+						<th style="width: 25%">行业／公司</br><#if indu.enddate??>(${indu.enddate?string("yyyy-MM-dd")})<#else>-</#if>
+						</th>
+						<th style="width: 10%">涨跌%</th>
+						<th style="width: 10%">最近1个月涨跌%</th>
+						<th style="width: 10%">最近3个月涨跌%</th>
+						<th style="width: 10%">最近一年涨跌%</th>
+						<th style="width: 10%">换手率%</th>
+						<th style="width: 10%">月均换手率%</th>
+						<th style="width: 15%">总市值(百万元)</th>
+					</tr>
+				</thead>
+				<tbody align="center">
+					<tr>
+						<td>${indu.induName!0.00}</td>
+						<td>${indu.chPctDay!0.00}</td>
+						<td>${indu.chPctMonth!0.00}</td>
+						<td>${indu.chPctSeason!0.00}</td>
+						<td>${indu.chPctYear!0.00}</td>
+						<td>${indu.turnoverDay!0.00}</td>
+						<td>${indu.turnoverMonth!0.00}</td>
+						<td>${indu.totalCap!0.00}</td>
+					</tr>
+					<#list induPos as pos>
+					<tr>
+						<td>${pos.rank?string("#")!}&nbsp;${pos.stockname!}</td>
+						<td>${pos.chPctDay!}</td>
+						<td>${pos.chPctMonth!}</td>
+						<td>${pos.chPctSeason!}</td>
+						<td>${pos.chPctYear!}</td>
+						<td>${pos.turnoverDay!}</td>
+						<td>${pos.turnoverMonth!}</td>
+						<td>${pos.totalCap!}</td>
+					</tr>
+					</#list>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				${indu.induName!''}<a name="2"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<#if !induCompanies?? || induCompanies?size == 0> 
+		<div id="normal" class="left-gap font-md break">暂无数据</div>
+		<#else>
+		<#list induCompanies as induCompany>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<div class="info-table font-md">
+			<table>
+				<thead align="center">
+					<tr>
+						<th style="width: 16%">同行业公司</br>(${induCompany.enddate?string("yyyy-MM-dd")})
+						</th>
+						<th style="width: 6%">每股收益(元)</th>
+						<th style="width: 6%">同比%</th>
+						<th style="width: 6%">营业收入(百万元)</th>
+						<th style="width: 6%">同比%</th>
+						<th style="width: 6%">净资产收益率摊薄</th>
+						<th style="width: 6%">同比%</th>
+						<th style="width: 6%">每股净资产元</th>
+						<th style="width: 6%">每股经营现金流净额</th>
+						<th style="width: 6%">同比%</th>
+						<th style="width: 6%">净利润(百万元)</th>
+						<th style="width: 6%">销售毛利率%</th>
+						<th style="width: 6%">总资产(百万元)</th>
+						<th style="width: 6%">资产负债率%</th>
+						<th style="width: 6%">总资产周转率</th>
+					</tr>
+					<#if induCompany.epspRank??>
+					<tr>
+						<th>${induCompany.companyName!}&nbsp;排名</th>
+						<th>${(induCompany.epspRank!0)?string("#")}</th>
+						<th></th>
+						<th>${(induCompany.incjRank!0)?string("#")}</th>
+						<th></th>
+						<th>${(induCompany.roedRank!0)?string("#")}</th>
+						<th></th>
+						<th>${(induCompany.bpsnedRank!0)?string("#")}</th>
+						<th>${(induCompany.psnetvalRank!0)?string("#")}</th>
+						<th></th>
+						<th>${(induCompany.inciRank!0)?string("#")}</th>
+						<th>${(induCompany.selrintRank!0)?string("#")}</th>
+						<th>${(induCompany.baloRank!0)?string("#")}</th>
+						<th>${(induCompany.caplabRank!0)?string("#")}</th>
+						<th>${(induCompany.opetaiRank!0)?string("#")}</th>
+					</tr>
+					</#if>
+				</thead>
+				<tbody align="center">
+					<#list induCompany.comList as com>
+					<tr>
+						<td>${com.rank?string("#")!}&nbsp;${com.stockname!}</td>
+						<td>${com.epsp!}</td>
+						<td>${com.riseps!}</td>
+						<td>${com.incj!}</td>
+						<td>${com.risor!}</td>
+						<td>${com.roed!}</td>
+						<td>${com.risroe!}</td>
+						<td>${com.bpsned!}</td>
+						<td>${com.psnetval!}</td>
+						<td>${com.risbpf!}</td>
+						<td>${com.inci!}</td>
+						<td>${com.selrint!}</td>
+						<td>${com.balo!}</td>
+						<td>${com.caplab!}</td>
+						<td>${com.opetai!}</td>
+					</tr>
+					</#list>
+				</tbody>
+			</table>
+		</div>
+		</#list>
+		</#if>
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	    <meta charset="UTF-8">
+	    <title>行业研究</title>
+	</head>
+	<body>
+		<div class="third-party gap">
+			<div class="h2"><span>WWW.GENIUS.COM.CN-----巨灵信息-----${.now?string("yyyy-MM-dd")}更新</span></div>
+		</div>
+		
+		<div class="catalog gap">
+			<div class="catalog-name follow font-lg">
+				目录
+			</div>
+			<div id="catalog-list" class="catalog-bg follow font-md">
+				<ol type="" class="catalog-list">
+					<!-- 每4个一组 -->
+					<li>
+						<span class="index">1.&nbsp;&nbsp;</span>
+						<span class="text"><a href="#1">标题列表</a></span>
+					</li>
+					<li>
+						<span class="index">2.&nbsp;&nbsp;</span>
+						<span class="text"><a href="#2">新闻全文</a></span>
+					</li>
+				</ol>
+			</div>
+		</div>
+		
+		<div class="topic topic-gap">
+			<div class="font-lg">
+				<div class="topic-square follow"></div>
+				<div class="follow">标题列表<a name="1"></a></div>
+				<div class="follow-R"><a href="#top">Top</a></div>
+			</div>
+			<div id="notice-list" class="notice-list break">
+				<#if news??>
+				<#list news!! as entity>
+				<div class="notice">
+					<div class="subject font-lg">
+					<a href="#news-${entity_index}">${entity.titleMain}</a>
+					</div>
+					<div class="publish-date">${entity.declaredate?string("yyyy-MM-dd")}</div>
+					<div class="issuer"></div>
+				</div>
+				</#list>
+				<#else>
+				<div class="notice">
+					<div class="break"><br></div>
+					<div class="content font-md">
+						<span>暂无标题列表</span>
+					</div>
+					<div><br></div>
+				</div>
+				</#if>
+				<div class="line"></div>
+			</div>
+		</div>
+		
+		<div class="topic topic-gap">
+			<div class="font-lg">
+				<div class="topic-square follow"></div>
+				<div class="follow">新闻全文<a name="2"></a></div>
+				<div class="follow-R"><a href="#top">Top</a></div>
+			</div>
+			<div id="notice-list" class="notice-list break">
+				<#if news??>
+				<#list news!! as entity>
+				<div class="notice">
+					<div class="subject font-lg">${entity.titleMain}<a name="news-${entity_index}"></a></div>
+					<div class="publish-date">${entity.declaredate?string("yyyy-MM-dd")}&nbsp;&nbsp;&nbsp;&nbsp;<a href="#top">Top</a></div>
+					<div class="break">
+						<br>
+					</div>
+					<div class="content font-md">
+						<span>${entity.txtContent?replace('[\r\n]+', '<br>', 'r')}</span>
+					</div>
+					<div>
+						<br>
+					</div>
+					<div class="issuer"></div>
+					<div class="line"></div>
+				</div>
+				</#list>
+				<#else>
+				<div class="notice">
+					<div class="break"><br></div>
+					<div class="content font-md">
+						<span>暂无新闻全文</span>
+					</div>
+					<div><br></div>
+					<div class="line"></div>
+				</div>
+				</#if>
+			</div>
+		</div>
+	</body>
+</html>

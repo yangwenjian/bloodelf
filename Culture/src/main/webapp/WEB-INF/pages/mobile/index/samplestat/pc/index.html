@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>样本统计</title>
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+	name="viewport" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+</head>
+<body>
+
+	<div class="catalog gap">
+		<div class="catalog-name follow font-lg">目录</div>
+		<div id="catalog-list" class="catalog-bg follow font-md">
+			<ol type="" class="catalog-list">
+				<!-- 每4个一组 -->
+				<li><span class="index">1.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#1">样本统计</a></span></li>
+				<li><span class="index">&nbsp;&nbsp;</span> <span class="text"><a
+						href="#2"></a></span></li>
+				<li><span class="index">&nbsp;&nbsp;</span> <span class="text"><a
+						href="#3"></a></span></li>
+				<li><span class="index">&nbsp;&nbsp;</span> <span class="text"><a
+						href="#4"></a></span></li>
+			</ol>
+		</div>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				样本统计<a name="1"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<#if !sampleStatistics?? || sampleStatistics?size == 0>
+		<div id="normal" class="left-gap font-md break">暂无数据</div>
+		<#else>
+		<div class="info-table font-md">
+			<table>
+				<thead align="center">
+					<tr>
+						<th style="width: 30%">证券名称</th>
+						<th style="width: 20%">样本选用时间</th>
+						<th style="width: 15%">总股本(亿)</th>
+						<th style="width: 10%">总股本排名</th>
+						<th style="width: 15%">流通股本(亿)</th>
+						<th style="width: 10%">流通股排名</th>
+					</tr>
+				</thead>
+				<tbody align="center">
+					<#list sampleStatistics as stat>
+					<tr>
+						<td>${(stat.ss)!}</td>
+						<td>${(stat.mm?string("yyyy-MM-dd"))!}</td>
+						<td>${(stat.kk)!}</td>
+						<td>${(stat.rank1?string("#"))!}</td>
+						<td>${(stat.yy)!}</td>
+						<td>${(stat.rank2?string("#"))!}</td>
+					</tr>
+					</#list>
+				</tbody>
+			</table>
+		</div>
+		</#if>
+	</div>
+
+</body>
+</html>

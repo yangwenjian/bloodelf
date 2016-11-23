@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	    <meta charset="UTF-8">
+	    <title>多维统计</title>
+	</head>
+	<body>
+		<div class="third-party gap">
+			<div class="h2"><span>WWW.GENIUS.COM.CN-----巨灵信息-----${.now?string("yyyy-MM-dd")}更新</span></div>
+		</div>
+		
+		<div class="catalog gap">
+			<div class="catalog-name follow font-lg">
+				目录
+			</div>
+			<div id="catalog-list" class="catalog-bg follow font-md">
+				<ol type="" class="catalog-list">
+					<!-- 每4个一组 -->
+					<li>
+						<span class="index">1.&nbsp;&nbsp;</span>
+						<span class="text"><a href="#1">分红方案统计</a></span>
+					</li>
+					<li>
+						<span class="index">2.&nbsp;&nbsp;</span>
+						<span class="text"><a href="#2">多维统计</a></span>
+					</li>
+				</ol>
+			</div>
+		</div>
+		
+		<div class="topic topic-gap">
+			<div class="font-lg">
+				<div class="topic-square follow"></div>
+				<div class="follow">
+					分红方案统计<a name="1"></a>
+				</div>
+				<div class="follow-R">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<div id="normal" class="left-gap break">
+				<div class="table-top"></div>
+			</div>
+			<#if dividendScheme?size gt 0>
+			<div class="info-table font-md">
+				<table>
+					<thead align="center">
+						<tr>
+							<th style="width: 15%">股票</th>
+							<th style="width: 10%">进展情况</th>
+							<th style="width: 10%">总股本_亿</th>
+							<th style="width: 10%">每股收益_元</th>
+							<th style="width: 10%">每股公积_元</th>
+							<th style="width: 25%">方案说明</th>
+							<th style="width: 20%">日期</th>
+						</tr>
+					</thead>
+					<tbody align="center">
+						<#list dividendScheme as entity>
+						<tr>
+							<td>${entity.stock!}</td>
+							<td>${entity.refName!}</td>
+							<td>${entity.capitalization!}</td>
+							<td>${entity.mgsy!}</td>
+							<td>${entity.mggj!}</td>
+							<td>${entity.schemeExplain!}</td>
+							<td>${entity.declaredate!}</td>
+						</tr>
+						</#list>
+					</tbody>
+				</table>
+			</div>
+			<#else>
+				<div class="notice">
+					<div class="break"><br></div>
+					<div class="content font-md">
+						<span>暂无分红方案统计</span>
+					</div>
+					<div><br></div>
+					<div class="line"></div>
+				</div>
+			</#if>
+		</div>
+		
+		<div class="topic topic-gap">
+			<div class="font-lg">
+				<div class="topic-square follow"></div>
+				<div class="follow">多维统计<a name="2"></a></div>
+				<div class="follow-R"><a href="#top">Top</a></div>
+			</div>
+			<div id="notice-list" class="notice-list break">
+				<#if manyDimensionsStatistics?size gt 0>
+				<#list manyDimensionsStatistics!! as entity>
+				<div class="notice">
+					<div class="subject font-lg">${entity.titleMain}</div>
+					<div class="publish-date">${entity.declaredate?string("yyyy-MM-dd")}&nbsp;&nbsp;&nbsp;&nbsp;<a href="#top">Top</a></div>
+					<div class="break">
+						<br>
+					</div>
+					<div class="content font-md">
+						<span>${entity.txtContent?replace('[\r\n]+', '<br>', 'r')}</span>
+					</div>
+					<div>
+						<br>
+					</div>
+					<div class="issuer"></div>
+					<div class="line"></div>
+				</div>
+				</#list>
+				<#else>
+				<div class="notice">
+					<div class="break"><br></div>
+					<div class="content font-md">
+						<span>暂无多维统计</span>
+					</div>
+					<div><br></div>
+					<div class="line"></div>
+				</div>
+				</#if>
+			</div>
+		</div>
+	</body>
+</html>

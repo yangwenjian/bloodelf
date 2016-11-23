@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html class="ui-mobile">
+<head>
+<meta charset="utf-8" />
+
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>财务</title>
+
+<script src="${webRootPath}/res/js/mobile/jquery.js"></script>
+<script src="${webRootPath}/res/js/bootstrap.min.js"></script>
+<script src="${webRootPath}/res/js/mobile/main.js"></script>
+
+<script type="text/javascript">
+	var basePath = "${webRootPath}";
+</script>
+<link href="${webRootPath}/res/css/mobile/styles_mobile.css"
+	type="text/css" rel="stylesheet" />
+<link href="${webRootPath}/res/css/bootstrap.min.css" type="text/css"
+	rel="stylesheet" />
+</head>
+<body>
+	<div class="base">
+		<div id="quickNavigation" class="quick_nav"
+			style="background-color: #0f0f0f; width: 100%; z-index: 11;">
+			<div class="content topCss">
+				<table id="navtable"
+					class="table table-bordered table-condensed line"
+					style="border-style: solid; align: center; margin-bottom: 10px; border-style: solid;">
+					<tbody>
+						<td id="unic1" width="25%" align="center" style="border: 1px solid #353535;"
+							onclick="reload('${webRootPath}/f10/stock/cpbd/mobile/${stockcode}.html?tokenId=${tokenId}')">必读</td>
+						<td width="25%" align="center" style="border: 1px solid #353535;"
+							onclick="reload('${webRootPath}/f10/stock/gsgk/mobile/${stockcode}.html?tokenId=${tokenId}')">简况</td>
+						<td width="25%" align="center" style="border: 1px solid #353535;"
+							onclick="reload('${webRootPath}/f10/stock/cwfx/mobile/${stockcode}.html?tokenId=${tokenId}')">财务</td>
+						<td width="25%" align="center" style="border: 1px solid #353535;"
+							onclick="reload('${webRootPath}/f10/stock/gdyj/mobile/${stockcode}.html?tokenId=${tokenId}')">股本股东</td>
+					</tbody>
+				</table>
+			</div>
+			<div id="jump">
+				<ul class="hrefJumpCss">
+					<div class="row">
+						<li><a href="javascript:void(false);"
+							onclick="scrollHref('c1')">主营指标 &nbsp;|&nbsp;</a></li>
+						<li><a href="javascript:void(false);"
+							onclick="scrollHref('c2')">资产负债简表&nbsp;|&nbsp;</a></li>
+						<li><a href="javascript:void(false);"
+							onclick="scrollHref('c3')">利润分析简表&nbsp;|&nbsp;</a></li>
+						<li><a href="javascript:void(false);"
+							onclick="scrollHref('c4')">现金流量简表</a></li>
+					</div>
+				</ul>
+			</div>
+		</div>
+		<div id="content"  style="width: 100%; height: 100%; margin-top:80px">
+			<div id="c1">
+				<div class="divSpacing">
+					<div class="nav nav-pills nav-stacked headline" role="tablist"
+						onclick="show1()">
+						主营指标 <span id="button1"
+							class="glyphicon glyphicon-circle-arrow-down right"></span>
+					</div>
+				</div>
+				<div id="content1">
+					<div class="table-responsive">
+						<table class="table table-bordered table-condensed line"
+							style="float: left; text-align: center;">
+							<thead class="headtd">
+								<tr>
+									<th>指标\报告期</th> <#list enddates as enddate>
+									<th>${enddate.enddate?string("yyyy-MM-dd")}</th> </#list>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>*投资收益分析*</br>基本每股收益(元)</br>每股净资产(元)</br>市盈率</br>市净率
+									</td> <#list investments as invest>
+									<td></br>${invest.epsp!0.00}</br>${invest.bps!0.00}</br>${invest.pe!0.00}</br>${invest.pb!0.00}</td>
+									</#list>
+								</tr>
+								<tr>
+									<td>*偿债能力分析*</br>流动比率
+									</td> <#list debts as debt>
+									<td></br>${debt.labflo!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>发展能力分析*</br>主营收入增长率(%)</br>主营利润增长率(%)
+									</td> <#list developings as dev>
+									<td></br>${dev.risor!0.00}</br>${dev.risop!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>*资本结构分析*</br>资产负债率(%)
+									</td> <#list capStructs as struct>
+									<td></br>${struct.caplab!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>*获利能力分析*</br>净资产报酬率(%)</br>总资产报酬率(%)</br>销售毛利率(%)</br>销售净利率(%)
+									</td> <#list profits as profit>
+									<td></br>${profit.netEssets!0.00}</br>${profit.totalEssets!0.00}</br>${profit.selRint!0.00}</br>${profit.selNint!0.00}</td>
+									</#list>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div id="c2">
+				<div class="divSpacing">
+					<div class="nav nav-pills nav-stacked headline" role="tablist"
+						onclick="show2()">
+						资产负债简表<span id="button2"
+							class="glyphicon glyphicon-circle-arrow-down right"></span>
+					</div>
+				</div>
+				<div id="content2">
+					<div class="table-responsive">
+						<table class="table table-bordered table-condensed line"
+							style="float: left; text-align: center;">
+							<thead class="headtd">
+								<tr>
+									<td>科目\年度</td> <#list capDebtTables as capDebt>
+									<td>${capDebt.enddate?string("yyyy-MM-dd")}</td> </#list>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>货币资金</td><#list capDebtTables as capDebt>
+									<td>${capDebt.B110101!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>应收帐款净额</td><#list capDebtTables as capDebt>
+									<td>${capDebt.B110701!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>存货</td><#list capDebtTables as capDebt>
+									<td>${capDebt.B111501!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>流动资产合计</td><#list capDebtTables as capDebt>
+									<td>${capDebt.B110001!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>长期投资合计</td><#list capDebtTables as capDebt>
+									<td>${capDebt.B120001!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>固定资产合计</td><#list capDebtTables as capDebt>
+									<td>${capDebt.B130101!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>无形及其它资产合计</td><#list capDebtTables as capDebt>
+									<td>${capDebt.B140001!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>资产总计</td><#list capDebtTables as capDebt>
+									<td>${capDebt.B100000!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>应付帐款</td><#list capDebtTables as capDebt>
+									<td>${capDebt.B210301!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>流动负债合计</td><#list capDebtTables as capDebt>
+									<td>${capDebt.B210001!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>长期负债合计</td><#list capDebtTables as capDebt>
+									<td>${capDebt.B220001!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>负债合计</td><#list capDebtTables as capDebt>
+									<td>${capDebt.B200000!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>实收股本</td><#list capDebtTables as capDebt>
+									<td>${capDebt.B310101!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>资本公积</td><#list capDebtTables as capDebt>
+									<td>${capDebt.B310201!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>盈余公积</td><#list capDebtTables as capDebt>
+									<td>${capDebt.B310301!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>未分配利润</td><#list capDebtTables as capDebt>
+									<td>${capDebt.B310701!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>股东权益合计</td><#list capDebtTables as capDebt>
+									<td>${capDebt.B311101!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>流动比率</td><#list capDebtTables as capDebt>
+									<td>${capDebt.B210001!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>速动比率</td> <#list capDebtTables as capDebt>
+									<td>${capDebt.B210001!0.00}</td> </#list>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<a name="lrfxb" href="javascript:return false;"></a>
+			<div id="c3">
+				<div class="divSpacing">
+					<div class="nav nav-pills nav-stacked headline" role="tablist"
+						onclick="show3()">
+						利润分析简表 <span id="button3"
+							class="glyphicon glyphicon-circle-arrow-down right"></span>
+					</div>
+				</div>
+				<div id="content3">
+					<div class="table-responsive">
+						<table class="table table-bordered table-condensed line"
+							style="float: left; text-align: center;">
+							<thead class="headtd">
+								<tr>
+									<td>科目\年度</td> <#list capDebtTables as capDebt>
+									<td>${capDebt.enddate?string("yyyy-MM-dd")}</td> </#list>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>主营业务收入</td><#list profitTables as profit>
+									<td>${profit.P110101!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>主营业务成本</td><#list profitTables as profit>
+									<td>${profit.P110202!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>主营业务利润</td><#list profitTables as profit>
+									<td>${profit.P120101!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>营业费用</td><#list profitTables as profit>
+									<td>${profit.P120412!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>管理费用</td><#list profitTables as profit>
+									<td>${profit.P120422!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>财务费用</td><#list profitTables as profit>
+									<td>${profit.P120432!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>营业利润</td><#list profitTables as profit>
+									<td>${profit.P130101!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>投资收益</td><#list profitTables as profit>
+									<td>${profit.P130201!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>利润总额</td><#list profitTables as profit>
+									<td>${profit.P140101!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>所得税</td><#list profitTables as profit>
+									<td>${profit.P140202!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>净利润</td><#list profitTables as profit>
+									<td>${profit.P150101!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>年初未分配利润</td><#list profitTables as profit>
+									<td>${profit.P210101!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>未分配利润</td><#list profitTables as profit>
+									<td>${profit.P240101!0.00}</td> </#list>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<a name="xjllb" href="javascript:return false;"></a>
+			<div id="c4">
+				<div class="divSpacing">
+					<div class="nav nav-pills nav-stacked headline" role="tablist"
+						onclick="show4()">
+						现金流量简表 <span id="button4"
+							class="glyphicon glyphicon-circle-arrow-down right"></span>
+					</div>
+				</div>
+				<div id="content4">
+					<div class="table-responsive">
+						<table class="table table-bordered table-condensed line"
+							style="float: left; text-align: center;">
+							<thead class="headtd">
+								<tr>
+									<td>科目\年度</td> <#list capDebtTables as capDebt>
+									<td>${capDebt.enddate?string("yyyy-MM-dd")}</td> </#list>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>经营活动现金流入小计</td><#list cashFlowTables as cash>
+									<td>${cash.C110000!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>经营活动现金流出小计</td><#list cashFlowTables as cash>
+									<td>${cash.C120000!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>经营活动现金流量净额</td><#list cashFlowTables as cash>
+									<td>${cash.C100000!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>投资活动现金流入小计</td><#list cashFlowTables as cash>
+									<td>${cash.C210000!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>投资活动现金流出小计</td><#list cashFlowTables as cash>
+									<td>${cash.C220000!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>投资活动现金流量净额</td><#list cashFlowTables as cash>
+									<td>${cash.C200000!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>筹资活动现金流入小计</td><#list cashFlowTables as cash>
+									<td>${cash.C310000!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>筹资活动现金流出小计</td><#list cashFlowTables as cash>
+									<td>${cash.C320000!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>筹资活动现金流量净额</td><#list cashFlowTables as cash>
+									<td>${cash.C300000!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>汇率变动对现金的影响</td><#list cashFlowTables as cash>
+									<td>${cash.C410101!0.00}</td> </#list>
+								</tr>
+								<tr>
+									<td>现金及等价物净增加额</td><#list cashFlowTables as cash>
+									<td>${cash.C410201!0.00}</td> </#list>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+</body>
+</html>

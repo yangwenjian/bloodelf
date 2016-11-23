@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>指数新闻</title>
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+	name="viewport" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+</head>
+<body>
+	<div class="catalog gap">
+		<div class="catalog-name follow font-lg">目录</div>
+		<div id="catalog-list" class="catalog-bg follow font-md">
+			<ol type="" class="catalog-list">
+				<!-- 每4个一组 -->
+				<li><span class="index">1.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#1">指数新闻</a></span></li>
+				<li><span class="index">&nbsp;&nbsp;</span> <span class="text"><a
+						href="#2"></a></span></li>
+				<li><span class="index">&nbsp;&nbsp;</span> <span class="text"><a
+						href="#3"></a></span></li>
+				<li><span class="index">&nbsp;&nbsp;</span> <span class="text"><a
+						href="#4"></a></span></li>
+			</ol>
+		</div>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				指数新闻<a name="1"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<#if !indexNews?? || indexNews?size == 0> 
+		<div id="normal" class="left-gap font-md break">暂无数据</div>
+		<#else>
+		<div id="normal" class="left-gap font-md break">
+			<#list indexNews as indexNew>
+			<div>${(indexNew_index+1)?string("#")}、${indexNew.title!}</div>
+			</#list>
+		</div>
+		</#if>
+	</div>
+
+	<div class="topic topic-gap">
+		<#list indexNews as indexNew>
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				${(indexNew_index+1)?string("#")}、&nbsp;【${(indexNew.declaredate?string("yyyy-MM-dd"))!}&nbsp;${indexNew.srcname!}】<a
+					name="4"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="notice-list" class="notice-list break">
+			<div class="notice">
+				<div class="subject font-lg">${indexNew.title!}</div>
+				<div class="break">
+					<br>
+				</div>
+				<div class="content font-md">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span>${indexNew.content?replace('(\r\n)+','</br>',
+						'r')!}
+					</span>
+				</div>
+				<div>
+					<br>
+				</div>
+				<div class="line"></div>
+			</div>
+		</div>
+		</#list>
+	</div>
+
+</body>
+</html>

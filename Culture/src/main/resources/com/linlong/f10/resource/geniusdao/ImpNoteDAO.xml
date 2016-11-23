@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.resource.geniusdao.ImpNoteDAO">
+	<!-- 根据证券市场查询所有证券的流通股本 -->
+	<!-- 代替上面的sql，需要进行验证
+	<select id="selectImpNotes" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT 
+		B.REF_NAME AS name,
+		DATE(A.DECLAREDATE) AS declaredate,
+		A.PRG AS prg,
+		A.RLT_TRD AS rlttrd,
+		A.TRD_INFO AS info
+		FROM STK_GREATE_EVENT A
+		INNER JOIN GEN_REF B
+		ON A.EVENT_CODE=B.REF_CODE
+		INNER JOIN ORG_PROFILE C
+		ON A.ORG_CODE=C.ORGCODE
+		INNER JOIN STK_CODE D
+		ON C.ORGCODE=D.COMCODE
+		WHERE A.ISVALID=1 AND B.ISVALID=1 AND C.ISVALID=1 AND D.ISVALID=1
+		AND B.CLS_CODE='2046' AND D.STOCKCODE=#{stockcode}
+		ORDER BY A.DECLAREDATE DESC
+	</select>
+	 -->
+	 <!-- SELECT 
+	  B.REF_NAME AS NAME,
+	  DATE(A.DECLAREDATE) AS declaredate,
+	  A.PRG AS prg,
+	  A.RLT_TRD AS rlttrd,
+	  A.TRD_INFO AS info
+	FROM
+	  STK_GREATE_EVENT A 
+	  INNER JOIN GEN_REF B 
+	    ON A.EVENT_CODE = B.REF_CODE 
+	WHERE A.ISVALID = 1 
+	  AND B.ISVALID = 1 
+	  AND B.CLS_CODE = '2046' 
+	 AND A.`ORG_CODE` IN (SELECT ORGCODE FROM ORG_PROFILE WHERE ORGCODE = (SELECT COMCODE FROM STK_CODE WHERE ISVALID = 1 AND STOCKCODE='600712') AND ISVALID=1) 
+	ORDER BY A.DECLAREDATE DESC  -->
+	 <select id="selectImpNotes" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT 
+		  B.REF_NAME AS NAME,
+		  -- 事项类型
+		  DATE(A.DECLAREDATE) AS declaredate,
+		  -- 公告日期
+		  A.PRG AS prg,
+		  -- 方案进度
+		  A.RLT_TRD AS rlttrd,
+		  -- 是否关联交易
+		  A.TRD_INFO AS info -- 交易简介
+		FROM
+		  STK_GREATE_EVENT A 
+		  INNER JOIN GEN_REF B 
+		    ON A.EVENT_CODE = B.REF_CODE 
+		  INNER JOIN ORG_PROFILE C 
+		    ON A.ORG_CODE = C.ORGCODE 
+		WHERE A.ISVALID = 1 
+		  AND B.ISVALID = 1 
+		  AND C.ISVALID = 1 
+		  AND B.CLS_CODE = '2046' 
+		  AND C.`ORGCODE` = (SELECT COMCODE FROM STK_CODE WHERE STOCKCODE=#{stockcode} AND iSVALID=1)
+		ORDER BY A.DECLAREDATE DESC 
+	</select>
+	<select id="selectImpNotes2" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT 
+		  B.REF_NAME AS name,
+		  DATE(A.DECLAREDATE) AS declaredate,
+		  A.PRG AS prg,
+		  A.RLT_TRD AS rlttrd,
+		  A.TRD_INFO AS info
+		FROM
+		  STK_GREATE_EVENT A 
+		  INNER JOIN GEN_REF B 
+		    ON A.EVENT_CODE = B.REF_CODE 
+		WHERE A.ISVALID = 1 
+		  AND B.ISVALID = 1 
+		  AND B.CLS_CODE = '2046' 
+		  AND A.`ORG_CODE` = 
+		  (SELECT 
+		    C.`ORGCODE` 
+		  FROM
+		    ORG_PROFILE C 
+		    INNER JOIN STK_CODE D 
+		      ON C.ORGCODE = D.COMCODE 
+		  WHERE D.STOCKCODE = #{stockcode} 
+		    AND C.`ISVALID` = 1 
+		    AND D.`ISVALID` = 1) 
+		ORDER BY A.DECLAREDATE DESC 
+	</select>
+</mapper>

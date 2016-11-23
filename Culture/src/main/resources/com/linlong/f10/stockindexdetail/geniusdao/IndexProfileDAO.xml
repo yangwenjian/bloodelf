@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.stockindexdetail.geniusdao.IndexProfileDAo">
+	<!-- 根据证券市场查询所有证券的流通股本 -->
+	<select id="selectIndexProfile" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT 
+		INDX_CNAME AS cname, -- 指数名称
+		INDX_CODE AS code, -- 指数代码
+		INDX_SNAME AS sname, -- 指数简称
+		SEC_CLS AS seccls, -- 指数分类  （该指数分类的值和txt版对应不上）
+		a.ORIENT_CLS AS orientcls,  -- 指数分类
+		DATE(PUB_DATE) AS pubdate, -- 启用日期
+		DATE(BASE_DATE) AS basedate, -- 基准日期
+		BASE_POINT AS basepoint, -- 基准点，精度问题在前端开发层控制就可以
+		ADJ_FREQ AS adjfreq, -- 调整频率
+		WHG_METH AS whgmeth, -- 加权方式
+		CASE WHEN ORIENT_CLS_CODE=3 THEN '关联行业' ELSE '不关联行业' END AS tt,
+		SAMP_MKT_CLS AS sampcls, -- 指数体系
+		PUB_ORGNAME AS puborgName, -- 发布机构
+		SAMP_METH AS sampmeth, -- 覆盖范围
+		ADJ_METH AS adjmeth,-- 调整方式
+		INDX_INTRO AS indexIntro-- 指数说明
+		FROM indx_gen_info a
+		WHERE isvalid=1 AND indx_code=#{indexcode}
+	</select>
+</mapper>

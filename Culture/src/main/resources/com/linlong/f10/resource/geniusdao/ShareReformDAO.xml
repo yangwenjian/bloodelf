@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.resource.geniusdao.ShareReformDAO">
+	<!-- 根据证券市场查询所有证券的流通股本 -->
+	<select id="selectShareChange" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT B.PRG AS prg -- 方案进度
+		      ,(SELECT REF_NAME FROM GEN_REF WHERE CLS_CODE = 2065 AND REF_CODE = B.CONS_CLS_CODE) AS conscls -- 方案类型
+		      ,B.OPT_PJT_INFO  AS optpjtInfo -- 方案内容
+		      ,B.ACT_TEN_SHR   AS acttenshr -- 每10股送股数（股）
+		      ,B.ACT_TEN_CASH  AS acttencash -- 每10股派现金额（元）
+		      ,B.TEN_TRAN      AS tentran-- 每10股转增股数（股）
+		      ,B.CALL_WARRANT  AS callWarrant  -- 每10股支付认购权证数（份）
+		      ,B.PUT_WARRANT   AS putWarrant-- 每10股支付认沽权证数（份）
+		      ,B.BF_TOT        AS bttot-- 股改前总股本（万股）
+		      ,B.AFT_TOT       AS afttot-- 股改后总股本（万股）
+		      ,B.RESUMP_DATE_2 AS resumedate2-- 实施复牌日
+		      ,B.LISTDATE      AS listdate-- 上市流通日
+		      ,B.ACCT_DATE     AS acctdate-- 现金红利到账日
+		      ,IFNULL(B.CONS_CASH_DATE,B.PROV_DATE) AS conscashdate -- 对价现金到账日
+		      ,B.CHNG_DATE    AS changedate -- 股份变更登记日
+		      ,IFNULL(B.CONS_SHR_DATE,B.PAY_DATE) AS paydate -- 支付对价到账日
+		      ,C.WRTCODE    AS wrtcode   -- 权证代码
+		      ,C.LISTDATE   AS listdate2   -- 权证上市日期
+		      ,C.PERIOD     AS period   -- 存续期
+		      ,C.PERIOD_UNIT  AS periodUnit -- 存续期单位
+		      ,C.EXE_DATE     AS exedate -- 行权日期
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.STK_NON_TRD_IDX B
+		    ON A.COMCODE = B.COMCODE
+		  LEFT JOIN PGENIUS.WRT_PROFILE C
+		    ON A.STOCKCODE = C.SECCODE
+		 WHERE A.STOCKCODE = #{stockcode}
+	</select>
+	<select id="selectRestrictShare" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT  C.CNAME  AS cname   -- 股东名称
+		      ,(SELECT REF_NAME FROM GEN_REF WHERE CLS_CODE = 2053 AND REF_CODE = B.LTD_REAS_CODE)AS ltdreas -- 限售原因
+		      ,B.TRADEDATE AS tradedate-- 预计上市日期
+		      ,B.UNLTD_VOL AS unltdvol-- 解禁数量（万股）
+		      ,B.SHR_PCT   AS shrpct-- 占总股本
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.DERI_STK_LTD_DTL B
+		    ON A.COMCODE = B.COMCODE
+		 INNER JOIN ORG_PROFILE C
+		    ON B.ORGCODE = C.ORGCODE
+		 WHERE A.STOCKCODE = #{stockcode}
+		ORDER BY B.TRADEDATE DESC,b.LTD_REAS_CODE ASC ,B.UNLTD_VOL DESC
+		LIMIT 10;
+	</select>
+	<select id="selectRelatedInfo" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT SQL_NO_CACHE
+			b.declaredate AS declaredate,
+			(SELECT src_name FROM pgenius.PUB_INFOR_SRC WHERE src_code=b.src_code) AS source,
+			b.title_main AS title,
+			c.txt_content AS content
+			FROM (SELECT a.guid FROM pgenius.news_stk a,pgenius.stk_code b
+			WHERE a.comcode=b.comcode AND b.STOCKCODE=#{stockcode}
+			AND a.DECLAREDATE >ADDDATE(CURDATE(),-360)) aa 
+			INNER JOIN pgenius.news_main b
+			ON aa.guid=b.guid
+			INNER JOIN pgenius.NEWS_CONTENT c
+			ON  b.guid=c.guid
+			WHERE b.title_main LIKE '%股权分置%'
+			ORDER BY b.DECLAREDATE DESC
+			LIMIT 10; 
+	</select>
+</mapper>

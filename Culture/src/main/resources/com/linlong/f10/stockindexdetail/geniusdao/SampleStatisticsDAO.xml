@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.stockindexdetail.geniusdao.SampleStatisticsDAO">
+	<!-- 根据证券市场查询所有证券的流通股本 -->
+	<select id="selectSampleStatistics" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT 
+		  SQL_NO_CACHE p.ss,
+		  p.mm,
+		  p.kk,
+		  p.rank1,
+		  q.yy,
+		  q.rank2 
+		FROM
+		  (SELECT 
+		    a.inner_code,
+		    CONCAT(a.stocksname, '(', a.stockcode, ')') AS ss,
+		    -- 样本股名称
+		    DATE(b.STARTDATE) AS mm,
+		    -- 进入时间
+		    ROUND(d1.TOTAL / 100000000, 2) AS kk -- 总股本
+		    ,
+		    (SELECT 
+		      COUNT(1) + 1 
+		    FROM
+		      (SELECT 
+		        d1.TOTAL 
+		      FROM
+		        stk_code a 
+		        INNER JOIN INDX_SAMP_INFO b 
+		          ON a.INNER_CODE = b.SEC_INNER_CODE 
+		        INNER JOIN STK_SHR_STRU d1 
+		          ON a.comcode = d1.comcode 
+		        INNER JOIN 
+		          (SELECT 
+		            MAX(declaredate) AS dd,
+		            comcode 
+		          FROM
+		            STK_SHR_STRU 
+		          WHERE isvalid = 1 
+		          GROUP BY comcode) AS d2 
+		          ON d1.declaredate = d2.dd 
+		          AND d1.comcode = d2.comcode 
+		      WHERE a.isvalid = 1 
+		        AND b.isvalid = 1 
+		        AND d1.isvalid = 1 
+		        AND b.inner_code = 
+		        (SELECT 
+		          inner_code 
+		        FROM
+		          indx_gen_info 
+		        WHERE isvalid = 1 
+		          AND indx_code = #{indexcode} 
+		        LIMIT 1) 
+		        AND b.ENDDATE IS NULL) r 
+		    WHERE r.TOTAL > d1.TOTAL) AS rank1 
+		  FROM
+		    stk_code a 
+		    INNER JOIN INDX_SAMP_INFO b 
+		      ON a.INNER_CODE = b.SEC_INNER_CODE 
+		    INNER JOIN STK_SHR_STRU d1 
+		      ON a.comcode = d1.comcode 
+		    INNER JOIN 
+		      (SELECT 
+		        MAX(declaredate) AS dd,
+		        comcode 
+		      FROM
+		        STK_SHR_STRU 
+		      WHERE isvalid = 1 
+		      GROUP BY comcode) AS d2 
+		      ON d1.declaredate = d2.dd 
+		      AND d1.comcode = d2.comcode 
+		  WHERE a.isvalid = 1 
+		    AND b.isvalid = 1 
+		    AND d1.isvalid = 1 
+		    AND b.inner_code = 
+		    (SELECT 
+		      inner_code 
+		    FROM
+		      indx_gen_info 
+		    WHERE isvalid = 1 
+		      AND indx_code = #{indexcode} 
+		    LIMIT 1) 
+		    AND b.ENDDATE IS NULL) p 
+		  INNER JOIN 
+		    (SELECT 
+		      a.inner_code,
+		      CONCAT(a.stocksname, '(', a.stockcode, ')') AS ss,
+		      -- 样本股名称
+		      DATE(b.STARTDATE) AS mm,
+		      -- 进入时间
+		      ROUND(d1.FL_SHR / 100000000, 2) AS yy -- 总股本
+		      ,
+		      (SELECT 
+		        COUNT(1) + 1 
+		      FROM
+		        (SELECT 
+		          d1.FL_SHR 
+		        FROM
+		          stk_code a 
+		          INNER JOIN INDX_SAMP_INFO b 
+		            ON a.INNER_CODE = b.SEC_INNER_CODE 
+		          INNER JOIN STK_SHR_STRU d1 
+		            ON a.comcode = d1.comcode 
+		          INNER JOIN 
+		            (SELECT 
+		              MAX(declaredate) AS dd,
+		              comcode 
+		            FROM
+		              STK_SHR_STRU 
+		            WHERE isvalid = 1 
+		            GROUP BY comcode) AS d2 
+		            ON d1.declaredate = d2.dd 
+		            AND d1.comcode = d2.comcode 
+		        WHERE a.isvalid = 1 
+		          AND b.isvalid = 1 
+		          AND d1.isvalid = 1 
+		          AND b.inner_code = 
+		          (SELECT 
+		            inner_code 
+		          FROM
+		            indx_gen_info 
+		          WHERE isvalid = 1 
+		            AND indx_code = #{indexcode} 
+		          LIMIT 1) 
+		          AND b.ENDDATE IS NULL) s 
+		      WHERE s.FL_SHR > d1.FL_SHR) AS rank2 
+		    FROM
+		      stk_code a 
+		      INNER JOIN INDX_SAMP_INFO b 
+		        ON a.INNER_CODE = b.SEC_INNER_CODE 
+		      INNER JOIN STK_SHR_STRU d1 
+		        ON a.comcode = d1.comcode 
+		      INNER JOIN 
+		        (SELECT 
+		          MAX(declaredate) AS dd,
+		          comcode 
+		        FROM
+		          STK_SHR_STRU 
+		        WHERE isvalid = 1 
+		        GROUP BY comcode) AS d2 
+		        ON d1.declaredate = d2.dd 
+		        AND d1.comcode = d2.comcode 
+		    WHERE a.isvalid = 1 
+		      AND b.isvalid = 1 
+		      AND d1.isvalid = 1 
+		      AND b.inner_code = 
+		      (SELECT 
+		        inner_code 
+		      FROM
+		        indx_gen_info 
+		      WHERE isvalid = 1 
+		        AND indx_code = #{indexcode} 
+		      LIMIT 1) 
+		      AND b.ENDDATE IS NULL) q 
+		    ON p.inner_code = q.inner_code 
+		ORDER BY p.kk DESC ;
+	</select>
+</mapper>

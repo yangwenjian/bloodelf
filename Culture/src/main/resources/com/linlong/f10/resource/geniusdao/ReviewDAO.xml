@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.resource.geniusdao.ReviewDAO">
+	<!-- 根据证券市场查询所有证券的流通股本 -->
+	<select id="selectReviews" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT A.DECLAREDATE as declaredate,A.TITLE_MAIN as
+		title,
+		G.SRC_NAME as sourceName,a.AUTOR as author ,F.TXT_CONTENT as
+		content
+		FROM PGENIUS.NEWS_MAIN A
+		INNER JOIN PGENIUS.NEWS_STK B
+		ON A.GUID = B.GUID
+		INNER JOIN PGENIUS.STK_CODE C
+		ON B.COMCODE = C.COMCODE
+		AND C.STOCKCODE = #{stockcode}
+		INNER JOIN PGENIUS.NEWS_CLS D
+		ON A.GUID = D.GUID
+		AND D.CLS_CODE in ('003006','004001') -- 分类：上市公司研究'003006',个股点评'004001'
+		INNER JOIN NEWS_CLS_REF E
+		ON D.CLS_CODE = E.CLS_CODE
+		INNER JOIN PGENIUS.NEWS_CONTENT F
+		ON A.GUID = F.GUID
+		INNER JOIN PGENIUS.PUB_INFOR_SRC G
+		ON A.SRC_CODE = G.SRC_CODE
+		where
+		a.DECLAREDATE &gt; DATE_ADD(CURDATE(),INTERVAL -1 YEAR)
+		ORDER BY A.DECLAREDATE DESC
+		LIMIT 10
+	</select>
+	<select id="selectReviewTitles" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT 
+		  A.GUID AS guid,
+		  A.TITLE_MAIN AS title
+		FROM
+		  PGENIUS.NEWS_MAIN A 
+		  INNER JOIN PGENIUS.NEWS_STK B 
+		    ON A.GUID = B.GUID 
+		  INNER JOIN PGENIUS.STK_CODE C 
+		    ON B.COMCODE = C.COMCODE 
+		    AND C.STOCKCODE = #{stockcode}
+		  INNER JOIN PGENIUS.NEWS_CLS D 
+		    ON A.GUID = D.GUID 
+		    AND D.CLS_CODE IN ('003006', '004001') -- 分类：上市公司研究'003006',个股点评'004001'
+		WHERE a.DECLAREDATE &gt; DATE_ADD(CURDATE(), INTERVAL - 1 YEAR) 
+		ORDER BY A.DECLAREDATE DESC 
+		LIMIT 3 
+	</select>
+	<select id="selectReviewById" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT 
+		  A.DECLAREDATE AS declaredate,
+		  A.TITLE_MAIN AS title,
+		  G.SRC_NAME AS sourceName,
+		  A.AUTOR AS author,
+		  F.TXT_CONTENT AS content 
+		FROM
+		  PGENIUS.NEWS_MAIN A 
+		  INNER JOIN PGENIUS.NEWS_CONTENT F 
+		    ON A.GUID = F.GUID 
+		  INNER JOIN PGENIUS.PUB_INFOR_SRC G 
+		    ON A.SRC_CODE = G.SRC_CODE 
+		WHERE A.GUID=#{guid}
+	</select>
+	<select id="selectReviews2" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT
+		A.DECLAREDATE as declaredate,
+		A.TITLE_MAIN as title,
+		G.SRC_NAME as sourceName,
+		A.AUTOR as author,
+		F.TXT_CONTENT as content
+		FROM
+		PGENIUS.NEWS_MAIN A
+		INNER JOIN PGENIUS.NEWS_STK B
+		ON A.GUID = B.GUID
+		INNER JOIN PGENIUS.NEWS_CLS D
+		ON A.GUID = D.GUID
+		AND D.CLS_CODE IN ('003006', '004001') -- 分类：上市公司研究'003006',个股点评'004001'
+		INNER JOIN PGENIUS.NEWS_CONTENT F
+		ON A.GUID = F.GUID
+		INNER JOIN PGENIUS.PUB_INFOR_SRC G
+		ON A.SRC_CODE = G.SRC_CODE
+		WHERE A.DECLAREDATE > DATE_ADD(CURDATE(), INTERVAL - 1 YEAR)
+		and B.COMCODE =
+		(select
+		C.COMCODE
+		from
+		PGENIUS.STK_CODE C
+		where C.STOCKCODE = #{stockcode})
+		ORDER BY A.DECLAREDATE DESC
+		LIMIT 10
+	</select>
+</mapper>

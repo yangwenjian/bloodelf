@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.market.geniusdao.WarrantDAO">
+	<!-- 查询全部除权信息 -->
+	<select id="selectAllDividend" resultType="com.linlong.f10.dto.market.Dividend">
+		SELECT 
+		  b.stockcode,
+		  b.trade_mkt AS market,
+		  a.cash_bt / 10 AS cash,
+		  a.bonus_shr / 10 AS bonus,
+		  a.cap_shr / 10 AS cap,
+		  0 AS allot,
+		  0 AS allotPrice,
+		  DATE(EX_DIVI_DATE) AS exdividate 
+		FROM
+		  STK_DIV_INFO a,
+		  STK_CODE B 
+		WHERE DIV_TYPE_CODE IN (1, 3) 
+		  AND A.ISVALID = 1 
+		  AND B.ISVALID = 1 
+		  AND A.COMCODE = B.COMCODE 
+		  AND A.INNER_CODE = B.INNER_CODE 
+		  AND EX_DIVI_DATE IS NOT NULL 
+		UNION
+		ALL 
+		SELECT 
+		  d.stockcode,
+		  d.trade_mkt AS market,
+		  0 AS cash,
+		  0 AS bonus,
+		  0 AS cap,
+		  C.allot_pct AS allot,
+		  IFNULL(
+		    C.ALLOT_PRC,
+		    CONCAT(C.CURNCY, C.FOR_PRC)
+		  ) AS allotPrice,
+		  (
+		    CASE
+		      WHEN d.STATUS_TYPE_REF = 1 
+		      AND d.STK_TYPE_REF IN (2, 4) 
+		      THEN DATE(C.B_EXRGT_DATE) 
+		      ELSE DATE(C.A_EXRGT_DATE) 
+		    END
+		  ) AS exdividate 
+		FROM
+		  STK_ALLOT_PLAN A,
+		  STK_ALLOT_INTRO B,
+		  STK_ALLOT_RESULT C,
+		  STK_CODE d 
+		WHERE A.ISVALID = 1 
+		  AND B.ISVALID = 1 
+		  AND C.ISVALID = 1 
+		  AND A.SEQ = B.P_SEQ 
+		  AND A.SEQ = C.P_SEQ_PLAN 
+		  AND C.P_SEQ_INTRO = B.SEQ 
+		  AND A.PRG_CODE = 29 
+		  AND A.COMCODE = d.COMCODE 
+		  AND d.ISVALID = 1 
+		  AND 
+		  CASE
+		    WHEN d.STATUS_TYPE_REF = 1 
+		    AND d.STK_TYPE_REF IN (2, 4) 
+		    THEN DATE(C.B_EXRGT_DATE) 
+		    ELSE DATE(C.A_EXRGT_DATE) 
+		  END IS NOT NULL 
+		ORDER BY stockcode ASC,
+		  exdividate ASC 
+	</select>
+	<!-- 查询全部配股信息 
+	<select id="selectAllAddition" resultType="com.linlong.f10.dto.market.Dividend">
+	SELECT 
+	  d.stockcode,
+	  C.allot_pct,
+	  IFNULL(
+	    C.ALLOT_PRC,
+	    CONCAT(C.CURNCY, C.FOR_PRC)
+	  ) AS allot_prc,
+	    COALESCE(
+	    (
+	      CASE
+	        WHEN d.STATUS_TYPE_REF = 1 
+	        AND d.STK_TYPE_REF IN (2, 4) 
+	        THEN DATE(C.B_EXRGT_DATE) 
+	        ELSE DATE(C.A_EXRGT_DATE) 
+	      END
+	    ),
+	    DATE(B.DECLAREDATE)
+	  ) AS exrgtdate 
+	FROM
+	  STK_ALLOT_PLAN A,
+	  STK_ALLOT_INTRO B,
+	  STK_ALLOT_RESULT C,
+	  STK_CODE d 
+	WHERE A.ISVALID = 1 
+	  AND B.ISVALID = 1 
+	  AND C.ISVALID = 1 
+	  AND A.SEQ = B.P_SEQ 
+	  AND A.SEQ = C.P_SEQ_PLAN 
+	  AND C.P_SEQ_INTRO = B.SEQ 
+	  AND A.PRG_CODE = 29 
+	  AND A.COMCODE = d.COMCODE 
+	  AND d.ISVALID = 1 
+	ORDER BY stockcode ASC 
+	</select>-->
+	<!-- 分红信息查询 
+	<select id="selectDevindend" resultType="java.util.HashMap" parameterType="String">
+		SELECT
+		b.stockcode,
+		a.base_vol,
+		a.curncy_code,
+		a.cash_bt,
+		(SELECT
+		F111001
+		FROM
+		STK_FIN_IDX ss
+		WHERE ss.isvalid = 1
+		AND ss.comcode = a.comcode
+		AND ss.RPT_DATE =
+		ss.ENDDATE
+		AND ss.ENDDATE =
+		(SELECT
+		MAX(ENDDATE)
+		FROM
+		STK_FIN_IDX
+		WHERE
+		isvalid = 1
+		AND comcode = ss.comcode
+		AND RPT_DATE = ENDDATE
+		AND ENDDATE
+		&lt;= a.DIR_DCL_DATE)) AS eps,
+		DATE(A.REG_DATE) AS regdate,
+		DATE(EX_DIVI_DATE) AS exdividate,
+		DATE(A.ACT_DEC_DATE) AS actdate,
+		DATE(ACNT_DATE) AS acntdate,
+		DATE(A.BS_TRA_DATE) AS bstradate,
+		DATE(A.CS_TRA_DATE) AS cstradate,
+		COALESCE(
+		DATE(SH_DCL_DATE),
+		DATE(DIR_DCL_DATE)
+		) AS dcldate
+		FROM
+		STK_DIV_INFO a,
+		STK_CODE B
+		WHERE
+		DIV_TYPE_CODE IN (1, 3)
+		AND A.ISVALID = 1
+		AND B.ISVALID = 1
+		AND B.STOCKCODE=#{stockcode}
+		AND A.COMCODE
+		= B.COMCODE
+		AND A.INNER_CODE = B.INNER_CODE ;
+	</select> -->
+	<!-- 增发信息查询 
+	<select id="selectAdditional" resultType="java.util.HashMap" parameterType="String">
+		SELECT
+		d.stockcode,
+		C.base_date,
+		ROUND(
+		COALESCE(
+		C.BASE_SHR,
+		B.BASE_VOL,
+		A.BASE_VOL
+		),
+		2
+		) AS
+		baseshr,
+		C.allot_pct,
+		IFNULL(
+		C.ALLOT_PRC,
+		CONCAT(C.CURNCY, C.FOR_PRC)
+		) AS
+		allot_prc,
+		DATE(B.DECLAREDATE) AS decldate,
+		C.und_shr,
+		CASE
+		WHEN d.STATUS_TYPE_REF = 1
+		AND d.STK_TYPE_REF IN (2, 4)
+		THEN DATE(
+		COALESCE(B.A_REG_DATE,
+		C.A_REG_DATE)
+		)
+		ELSE DATE(
+		COALESCE(B.B_REG_DATE, C.B_REG_DATE)
+		)
+		END AS
+		regdate,
+		CASE
+		WHEN d.STATUS_TYPE_REF = 1
+		AND d.STK_TYPE_REF IN (2, 4)
+		THEN DATE(C.LIST_DATE)
+		ELSE DATE(C.LIST_DATE)
+		END AS listdate,
+		CASE
+		WHEN
+		d.STATUS_TYPE_REF = 1
+		AND d.STK_TYPE_REF IN (2, 4)
+		THEN
+		DATE(C.B_EXRGT_DATE)
+		ELSE DATE(C.A_EXRGT_DATE)
+		END AS exrgtdate,
+		CASE
+		WHEN d.STATUS_TYPE_REF = 1
+		AND d.STK_TYPE_REF IN (2, 4)
+		THEN
+		DATE(B.STR_BUY_DATE)
+		ELSE DATE(B.STR_BUY_DATE)
+		END AS strbuydate,
+		CASE
+		WHEN d.STATUS_TYPE_REF = 1
+		AND d.STK_TYPE_REF IN (2, 4)
+		THEN
+		DATE(B.END_BUY_DATE)
+		ELSE DATE(B.END_BUY_DATE)
+		END AS endbuydate
+		FROM
+		STK_ALLOT_PLAN A,
+		STK_ALLOT_INTRO B,
+		STK_ALLOT_RESULT C,
+		STK_CODE d
+		WHERE
+		A.ISVALID = 1
+		AND B.ISVALID = 1
+		AND C.ISVALID = 1
+		AND d.STOCKCODE=#{stockcode}
+		AND A.SEQ = B.P_SEQ
+		AND
+		A.SEQ = C.P_SEQ_PLAN
+		AND C.P_SEQ_INTRO = B.SEQ
+		AND A.PRG_CODE = 29
+		AND
+		A.COMCODE = d.COMCODE
+		AND d.ISVALID = 1
+		ORDER BY BASE_DATE DESC
+	</select>-->
+</mapper>

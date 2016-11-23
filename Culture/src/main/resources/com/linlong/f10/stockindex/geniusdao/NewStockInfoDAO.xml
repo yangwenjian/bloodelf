@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.stockindex.geniusdao.NewStockInfoDAO">
+    <select id="getNewStockInfo" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT SQL_NO_CACHE
+			   DATE(a.declaredate) as declaredate,  -- 公告日期
+               a.title_main as titleMain,           -- 新闻标题
+               c.txt_content as txtContent          -- 新闻正文
+        FROM (SELECT guid
+              FROM news_cls 
+              WHERE cls_code ='001005'
+              AND declaredate > ADDDATE(CURDATE(),-3)
+              ORDER BY declaredate DESC LIMIT 30) d
+        INNER JOIN pgenius.news_main a ON a.guid=d.guid AND a.isvalid=1
+        LEFT JOIN news_content c ON a.guid=c.guid AND c.isvalid=1
+        WHERE a.title_main = #{title, jdbcType=VARCHAR}
+        LIMIT 1;
+    </select>
+    
+    <select id="getWaitListing" resultType="java.util.Map">
+        select sql_no_cache
+			   date(a.declaredate) as declaredate,  -- 公告日期
+               a.title_main as titleMain,           -- 新闻标题
+               c.TXT_CONTENT as txtContent          -- 新闻正文
+        from (select guid from pgenius.news_cls 
+              where declaredate > adddate(curdate(),-30) 
+              and isvalid=1 and cls_code ='001015' 
+              order by declaredate desc limit 2 ) d
+        inner join pgenius.news_main a on a.guid=d.guid and a.isvalid=1
+        left join news_content c on a.guid=c.guid and c.isvalid=1
+		where a.title_main ='等待上市新股一览表';
+    </select>
+    
+    <select id="getLatestStock" resultType="java.util.Map">
+        select sql_no_cache
+		       date(a.declaredate) as declaredate,  -- 公告日期
+		       a.title_main as titleMain,           -- 新闻标题
+               c.TXT_CONTENT as txtContent          -- 新闻正文
+        from (select guid 
+              from pgenius.news_cls 
+              where declaredate > adddate(curdate(),-30) 
+              and isvalid=1 and cls_code ='001015' 
+              order by declaredate desc limit 2 ) d
+        inner join pgenius.news_main a on a.guid=d.guid and a.isvalid=1
+        left join news_content c on a.guid=c.guid and c.isvalid=1
+        where a.title_main ='最近上市新股一览表';
+    </select>
+    
+    <select id="getNewStockLocation" resultType="java.util.Map">
+        select sql_no_cache
+			   date(a.declaredate) as declaredate,  -- 公告日期
+               a.title_main as titleMain,           -- 新闻标题
+               c.TXT_CONTENT as txtContent          -- 新闻正文
+        from (select guid 
+              from pgenius.news_cls 
+              where declaredate > adddate(curdate(),-30) 
+              and isvalid=1 and cls_code ='011005001003' 
+              order by declaredate desc limit 1 ) d
+        inner join pgenius.news_main a on a.guid=d.guid and a.isvalid=1
+        left join news_content c on a.guid=c.guid and c.isvalid=1;
+    </select>
+</mapper>

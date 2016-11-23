@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.resource.geniusdao.FluctuationDAO">
+	<!-- 根据证券市场查询所有证券的流通股本 -->
+	<select id="selectEnddates" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT SQL_NO_CACHE DISTINCT DATE(B.ENDDATE) AS enddate ,B.INFO_CLS_CODE AS infoClsCode
+		FROM PGENIUS.STK_EXCRA_INFO_MAIN B
+		WHERE   B.ISVALID=1 
+		AND B.INNER_CODE=(SELECT INNER_CODE FROM STK_CODE WHERE ISVALID=1 AND STOCKCODE=#{stockcode})
+		AND SEC_TYPE='1'
+		ORDER BY enddate DESC  LIMIT 10;
+	</select>
+	<select id="selectFlucInfo" resultType="java.util.HashMap">
+		SELECT 
+		  a.INFO_CLS_CODE AS infoClsCode,
+		  -- 异动类型代码
+		  a.ENDDATE AS enddate,
+		  (SELECT 
+		    REF_NAME 
+		  FROM
+		    PGENIUS.GEN_REF 
+		  WHERE ISVALID = 1 
+		    AND REF_CODE = a.INFO_CLS_CODE 
+		    AND CLS_CODE = 2022) AS refName,
+		  -- 异动类型
+		  (SELECT 
+		    CHNG_PCT 
+		  FROM
+		    pgenius.STK_MKT 
+		  WHERE isvalid = 1 
+		    AND inner_code = a.inner_code 
+		    AND TRADEDATE = a.enddate) AS fflChangePct,
+		  -- 涨跌幅
+		  a.VOLUME AS volume,
+		  -- 成交数量 万股
+		  a.VALUE AS value -- 成交额   万元
+		FROM
+		  pgenius.STK_EXCRA_INFO_MAIN a,
+		  pgenius.stk_code b 
+		WHERE a.isvalid = 1 
+		  AND b.isvalid = 1 
+		  AND a.INNER_CODE = b.inner_code 
+		  AND b.stockcode = #{stockcode} 
+		  AND a.RANK_CLS = 1 
+		  AND ENDDATE = #{enddate} 
+		  LIMIT 1;
+	</select>
+	<select id="selectFlucDetail" resultType="java.util.HashMap">
+	SELECT DATE(B.ENDDATE) AS enddate,
+			(SELECT REF_NAME FROM PGENIUS.GEN_REF WHERE ISVALID=1 AND REF_CODE=B.INFO_CLS_CODE AND CLS_CODE=2022) AS fflinfoClsCode ,-- 异动类型
+			(SELECT REF_NAME FROM PGENIUS.GEN_REF WHERE ISVALID=1 AND REF_CODE=B.RANK_CLS AND CLS_CODE=2015) AS rankCls,-- 排名类型
+			C.BRANCH_NAME AS branchName, -- 营业部
+			C.BVALUE AS bvalue, -- 买入金额(元)
+			C.SVALUE AS svalue, -- 卖出金额(元)
+		  B.INFO_CLS_CODE AS infoClsCode
+		FROM PGENIUS.STK_CODE A ,PGENIUS.STK_EXCRA_INFO_MAIN B,PGENIUS.STK_EXCRA_BRANCH_LIST C
+		WHERE A.ISVALID=1 AND B.ISVALID=1 AND C.ISVALID=1
+		AND A.INNER_CODE=B.INNER_CODE
+		AND B.SEQ=C.P_SEQ
+		AND A.STOCKCODE=#{stockcode}
+		AND B.ENDDATE=#{enddate}
+		ORDER BY B.ENDDATE ,B.RANK_CLS DESC,INFO_CLS_CODE ASC;
+</select>
+</mapper>

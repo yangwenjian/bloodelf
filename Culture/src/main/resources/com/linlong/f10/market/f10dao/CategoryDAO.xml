@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.market.f10dao.CategoryDAO">
+	<!-- 根据证券市场查询所有证券的流通股本 -->
+	<select id="selectCategory" resultType="java.util.HashMap">
+		SELECT
+		id,
+		parent_id as parentid,
+		isleaf,
+		A.name AS catename
+		FROM
+		block_menu A
+		WHERE A.IS_VALID = 1
+		<if test="isLeaf != null">
+			AND A.ISLEAF
+			= #{isLeaf,jdbcType=BIGINT}
+		</if>
+		<if test="parentId != null">
+			AND A.parent_id =
+			#{parentId,jdbcType=BIGINT}
+		</if>
+	</select>
+	<select id="selectl1StCode" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT
+		B.menu_id AS menuid,
+		A.name AS menuname,
+		B.stock_code AS stockcode
+		FROM
+		block_menu A,
+		block_detail B
+		WHERE
+		B.is_valid = 1
+		AND A.id = B.menu_id
+		AND
+		B.menu_id IN
+		(SELECT
+		id
+		FROM
+		block_menu A
+		WHERE
+		A.parent_id =
+		(SELECT
+		id
+		FROM
+		block_menu
+		WHERE NAME =
+		#{categoryName} ))
+	</select>
+	<select id="selectl2StCode" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT
+		B.menu_id AS menuid,
+		A.name AS menuname,
+		B.stock_code AS stockcode
+		FROM
+		block_menu A,
+		block_detail B
+		WHERE B.is_valid = 1
+		AND A.id = B.menu_id
+		AND B.menu_id IN
+		(SELECT
+		id
+		FROM
+		block_menu A
+		WHERE A.`parent_id` IN
+		(SELECT
+		id
+		FROM
+		block_menu A
+		WHERE A.parent_id =
+		(SELECT
+		id
+		FROM
+		block_menu
+		WHERE NAME =
+		#{categoryName} )))
+	</select>
+	<select id="selectMenuId" resultType="Long" parameterType="String">
+		SELECT
+		id
+		FROM
+		block_menu
+		WHERE name=#{menuName}
+		AND
+		isleaf = 1
+		AND
+		is_valid =
+		1
+	</select>
+	<update id="updateStock">
+		UPDATE
+		block_detail A
+		SET
+		A.menu_id =
+		#{menuId,jdbcType=BIGINT}
+		WHERE A.stock_code =
+		#{stockCode,jdbcType=VARCHAR}
+	</update>
+	<insert id="insertStock">
+		INSERT INTO block_detail (
+		menu_id,
+		stock_code,
+		stock_name,
+		is_valid,
+		builder,
+		MODIFIER
+		)
+		VALUES
+		(#{menuId,jdbcType=BIGINT}, #{stockCode,jdbcType=VARCHAR},
+		#{stockName,jdbcType=VARCHAR}, 1, "", "")
+	</insert>
+</mapper>

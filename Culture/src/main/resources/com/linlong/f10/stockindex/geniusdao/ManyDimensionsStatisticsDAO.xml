@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.stockindex.geniusdao.ManyDimensionsStatisticsDAO">
+    <select id="getDividendScheme" resultType="java.util.Map">
+        SELECT CONCAT(A.STOCKSNAME,'(',A.STOCKCODE,')') as stock,   -- 股票
+	           C.REF_NAME as refName,                               -- 进展情况
+	           ROUND(B.BASE_VOL/10000, 2) as capitalization,        -- 总股本 亿
+	           ROUND(D.EPSP, 2) as mgsy,                            -- 每股收益_元 
+	           ROUND(D.PS_CR, 2) as mggj,                           -- 每股公积_元
+	           CONVERT(CONCAT('每10股'
+	                          , IFNULL(CONCAT('派',ROUND(IFNULL(B.CASH_BT,B.CASH_AT),2),'元'),'')
+	                          , IFNULL(CONCAT('送',ROUND(B.BONUS_SHR,2),'股'), '')
+	                          , IFNULL(CONCAT('转增',ROUND(B.CAP_SHR,2),'股'), '')
+	                         ),CHAR) as schemeExplain,              -- 方案说明 
+               -- 日期信息优先取股权登记日REG_DATE字段，如果没有的话则取公告日期相关字段
+	           IFNULL(CONCAT('股权登记日：',CONVERT(DATE(B.REG_DATE),CHAR)),
+				 CONVERT(CONCAT('公告日期：', DATE(IFNULL(CHNG_DATE,IFNULL(B.ACT_DEC_DATE,IFNULL(B.SH_DCL_DATE,B.DIR_DCL_DATE))))),CHAR)
+	           ) as declaredate                                     -- 日期
+         FROM STK_CODE A 
+         INNER JOIN STK_DIV_INFO B ON A.COMCODE=B.COMCODE AND A.STK_TYPE_REF=B.STK_TYPE_CODE
+         LEFT JOIN GEN_REF C ON B.PRG_CODE = C.REF_CODE AND C.CLS_CODE=1060
+	     LEFT JOIN ANA_STK_FIN_IDX D ON A.COMCODE=D.COMCODE AND B.END_DATE=D.ENDDATE
+         WHERE A.ISVALID=1 AND B.ISVALID=1 AND C.ISVALID=1 
+         AND B.REG_DATE> ADDDATE(CURDATE(),-30)
+         ORDER BY IFNULL(B.REG_DATE,B.DIR_DCL_DATE) DESC
+    </select>
+    
+    <select id="getManyDimensionsStatistics" resultType="java.util.Map">
+		SELECT SQL_NO_CACHE
+               DATE(a.declaredate) as declaredate, -- 公告日期  
+               b.src_name as resource,             -- 新闻来源
+               a.title_main as titleMain,          -- 新闻标题
+               c.txt_content as txtContent         -- 新闻正文 新闻内容 
+        FROM (SELECT guid 
+              FROM pgenius.news_cls 
+              WHERE 
+              declaredate>=date_add(curdate(),interval -3 day) 
+              and isvalid=1 
+              AND cls_code IN ('013004','013009')) d
+        INNER JOIN pgenius.news_main a ON a.guid=d.guid AND a.isvalid=1
+        INNER JOIN pub_infor_src b ON a.src_code=b.src_code AND b.isvalid=1
+        LEFT JOIN news_content c ON a.guid=c.guid AND c.isvalid=1
+        ORDER BY A.GUID DESC
+        LIMIT 0, 5;
+    </select>
+</mapper>

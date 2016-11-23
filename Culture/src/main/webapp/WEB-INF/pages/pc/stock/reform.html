@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>股权分置</title>
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+	name="viewport" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+</head>
+<body>
+
+	<div class="catalog gap">
+		<div class="catalog-name follow font-lg">目录</div>
+		<div id="catalog-list" class="catalog-bg follow font-md">
+			<ol type="" class="catalog-list">
+				<!-- 每4个一组 -->
+				<li><span class="index">1.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#1">股改进程</a></span></li>
+				<li><span class="index">2.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#2">限售股份</a></span></li>
+				<li><span class="index">3.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#3">相关资讯</a></span></li>
+				<li><span class="index">&nbsp;&nbsp;</span> <span class="text"><a
+						href="#4"></a></span></li>
+			</ol>
+		</div>
+	</div>
+<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				股改进程<a name="1"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<div class="info-table font-md">
+			<table>
+				<thead align="center">
+					<tr>
+						<th style="width: 30%">方案类型</th>
+						<th style="width: 35%">方案内容</th>
+						<th style="width: 35%">重点提示</th>
+					</tr>
+				</thead>
+				<tbody align="center">
+					<tr>
+						<td>${(shareChange.prg)!}: ${(shareChange.conscls)!}</br>改革方式
+						</td>
+						<td>${shareChange.optpjtInfo!}&nbsp;每10股送${shareChange.acttenshr!0}股&nbsp;派${shareChange.acttencash!0}元</br>
+							股改前总股本:${shareChange.bttot!}万</br> 股改后总股本:${shareChange.afttot!}万
+						</td>
+						<td>
+							<#if shareChange.resumedate2??>实施复牌日:${shareChange.resumedate2?string("yyyy-MM-dd")}</br></#if>
+							<#if shareChange.listdate??>上市流通日:${shareChange.listdate?string("yyyy-MM-dd")}</br></#if>
+							<#if shareChange.acctdate??>现金红利到账日:${shareChange.acctdate?string("yyyy-MM-dd")}</br></#if>
+							<#if shareChange.conscashdate??>对价现金到账日:${shareChange.conscashdate?string("yyyy-MM-dd")}</br></#if>
+							<#if shareChange.changedate??>股份变更登记日:${shareChange.changedate?string("yyyy-MM-dd")}</br></#if>
+							<#if shareChange.paydate??>支付对价到账日:${shareChange.paydate?string("yyyy-MM-dd")}</br></#if>
+							<#if shareChange.wrtcode??>权证代码1:${shareChange.wrtcode}</br></#if>
+							<#if shareChange.listdate2??>权证上市日:${shareChange.listdate2?string("yyyy-MM-dd")}</br></#if>
+							<#if shareChange.period??>权证存续期:(${shareChange.periodUnit}):${shareChange.period}</br></#if>
+							<#if shareChange.exedate??>行权日:${shareChange.exedate}</br></#if>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				限售股份<a name="2"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<#if !restrictShares?? || restrictShares?size == 0>
+		<div id="normal" class="left-gap font-md break">暂无数据</div>
+		<#else>
+		<div class="info-table font-md">
+			<table>
+				<thead align="center">
+					<tr>
+						<th style="width: 40%">股东名称</th>
+						<th style="width: 15%">限售原因</th>
+						<th style="width: 15%">预计上市日</th>
+						<th style="width: 15%">解禁数量(万)</th>
+						<th style="width: 15%">占总股本</th>
+					</tr>
+				</thead>
+				<tbody align="center">
+					<#list restrictShares as restrict>
+					<tr>
+						<td>${restrict.cname!}</td>
+						<td>${restrict.ltdreas!}</td>
+						<td>${restrict.tradedate?string("yyyy-MM-dd")}</td>
+						<td>${restrict.unltdvol!0.00}</td>
+						<td>${restrict.shrpct!0.00}</td>
+					</tr>
+					</#list>
+				</tbody>
+			</table>
+		</div>
+		</#if>
+	</div>
+	
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				相关资讯<a name="3"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<#if !relatedInfos?? || relatedInfos?size == 0>
+		<div id="normal" class="left-gap font-md break">暂无数据</div>
+		<#else>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<div class="info-table font-md">
+			<table>
+				<thead align="center">
+					<tr>
+						<th style="width: 20%">日期</th>
+						<th style="width: 20%">来源</th>
+						<th style="width: 20%">题目</th>
+						<th style="width: 40%">内容</th>
+					</tr>
+				</thead>
+				<tbody align="center">
+					<#list relatedInfos as info>
+					<tr>
+						<td>${info.declaredate?string("yyyy-MM-dd")}</td>
+						<td>${info.source!}</td>
+						<td>${info.title!}</td>
+						<td>${info.content!}</td>
+					</tr>
+					</#list>
+				</tbody>
+			</table>
+		</div>
+		</#if>
+	</div>
+	
+
+</body>
+</html>

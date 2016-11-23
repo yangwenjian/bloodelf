@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html class="ui-mobile">
+<head>
+<title>指数样本</title>
+<meta charset="utf-8" />
+
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+	name="viewport" />
+
+</head>
+<body>
+
+
+	<div class="catalog break">
+		<!--
+			<div class="name font-sm follow">目录</div>
+			<div class="line follow"></div>
+			-->
+		<div id="sub-menu" class="sub-menu font-sm follow">
+			<div class="ui-grid-b">
+				<div class="ui-block-a">
+					<div id="block-1" class="each">
+						<a href="#1"> <span class="index">1.&nbsp;</span> <span
+							class="text">指数样本</span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div id="dest-1" class="topic break min-h">
+		<div class="type">
+			<div class="exclam follow"></div>
+			<div class="text follow font-lg">
+				指数样本<a name="1"></a>
+			</div>
+		</div>
+		<div class="follow-R font-lg top">
+			<a href="#top">Top</a>
+		</div>
+		<#if !indexSamples?? || indexSamples?size == 0> 
+		<div id="normal" class="left-gap font-md break">暂无数据</div>
+		<#else>
+		<div class="info-table font-sm break">
+			<table style="width: 1000px; width: 100rem; text-align: center;">
+				<thead>
+					<tr>
+						<td style="width: 300px; width: 30rem;">样本股名称</td>
+						<td style="width: 200px; width: 20rem;">进入时间</td>
+						<td style="width: 300px; width: 30rem;">样本股名称</td>
+						<td style="width: 200px; width: 20rem;">进入时间</td>
+					</tr>
+				</thead>
+				<tbody>
+					<#list indexSamples as sample>
+					<#if sample_index%2 == 0>
+					<tr>
+					</#if>
+						<td>${sample.stockname!}</td>
+						<td>${sample.startdate!}</td>
+					<#if sample_index%2 == 1>
+					</tr>
+					</#if>
+					<#if !sample_has_next && sample_index%2 == 0>
+						<td></td>
+						<td></td>
+						</tr>
+					</#if> 
+					</#list>
+				</tbody>
+			</table>
+		</div>
+		</#if>
+	</div>
+
+</body>
+</html>

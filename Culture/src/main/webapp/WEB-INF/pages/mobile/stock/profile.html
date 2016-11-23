@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html class="ui-mobile">
+<head>
+<title>概况</title>
+<meta charset="utf-8" />
+
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>概况</title>
+<script src="${webRootPath}/res/js/mobile/jquery.js"></script>
+<script src="${webRootPath}/res/js/bootstrap.min.js"></script>
+<script src="${webRootPath}/res/js/echarts.simple.min.js"></script>
+
+<script type="text/javascript">
+	var basePath = "${webRootPath}";
+	var stockcode = '${stockcode}';
+</script>
+<link href="${webRootPath}/res/css/mobile/styles_mobile.css"
+	type="text/css" rel="stylesheet" />
+<link href="${webRootPath}/res/css/bootstrap.min.css" type="text/css"
+	rel="stylesheet" />
+</head>
+<body>
+	<div class="base">
+		<div id="quickNavigation" class="quick_nav"
+			style="background-color: #0f0f0f; width: 100%; z-index: 11;">
+			<div class="content topCss">
+				<table id="navtable"
+					class="table table-bordered table-condensed line"
+					style="border-style: solid; align: center; margin-bottom: 10px; border-style: solid;">
+					<tbody>
+						<td id="unic1" width="25%" align="center" style="border: 1px solid #353535;"
+							onclick="reload('${webRootPath}/f10/stock/cpbd/mobile/${stockcode}.html?tokenId=${tokenId}')">必读</td>
+						<td width="25%" align="center" style="border: 1px solid #353535;"
+							onclick="reload('${webRootPath}/f10/stock/gsgk/mobile/${stockcode}.html?tokenId=${tokenId}')">简况</td>
+						<td width="25%" align="center" style="border: 1px solid #353535;"
+							onclick="reload('${webRootPath}/f10/stock/cwfx/mobile/${stockcode}.html?tokenId=${tokenId}')">财务</td>
+						<td width="25%" align="center" style="border: 1px solid #353535;"
+							onclick="reload('${webRootPath}/f10/stock/gdyj/mobile/${stockcode}.html?tokenId=${tokenId}')">股本股东</td>
+					</tbody>
+				</table>
+			</div>
+			<div id="jump">
+				<ul class="hrefJumpCss">
+					<div class="row">
+						<li><a href="javascript:void(false);"
+							onclick="scrollHref('c1')">公司概况 </a>&nbsp;|&nbsp;</li>
+						<li><a href="javascript:void(false);"
+							onclick="scrollHref('c2')">主营业务</a>&nbsp;|&nbsp;</li>
+						<li><a href="javascript:void(false);"
+							onclick="scrollHref('c3')">主营构成</a>&nbsp;|&nbsp;</li>
+						<li><a href="javascript:void(false);"
+							onclick="scrollHref('c4')">行业市场表现</a></li>
+					</div>
+				</ul>
+			</div>
+		</div>
+		<br>
+		<div id="content" style="width: 100%; height: 100%; margin-top: 60px">
+			<div id="c1">
+				<div class="divSpacing">
+					<div class="nav nav-pills nav-stacked headline" role="tablist"
+						onclick="show1()">
+						公司概况 <span id="button1"
+							class="glyphicon glyphicon-circle-arrow-down right"></span>
+					</div>
+				</div>
+				<div id="content1">
+					<span class="headline" style="float: right; margin-right: 2px;"
+						onclick="comprofileDetail()"> >>更多 </span>
+					<div class="table-responsive">
+						<table class="table table-bordered table-condensed line">
+							<tbody>
+								<tr>
+									<td class="headtd">股票简称</td>
+									<td>${(comProfile['stockname'])!}</td>
+									<td class="headtd">股票代码</td>
+									<td>${(comProfile['stockcode'])!}</td>
+								</tr>
+								<tr>
+									<td class="headtd">中文名</td>
+									<td colspan="3">${(comProfile['cname'])!}</td>
+								</tr>
+								<tr>
+									<td class="headtd">英文名</td>
+									<td colspan="3">${(comProfile['ename'])!}</td>
+								</tr>
+								<tr>
+									<td class="headtd">公司网址</td>
+									<td>${(comProfile['website'])!}</td>
+									<td class="headtd">电话</td>
+									<td>${(comProfile['tel'])!}</td>
+								</tr>
+								<tr>
+									<td class="headtd">注册资本</td>
+									<td>${(comProfile['regicap'])!}万元</td>
+									<td class="headtd">法人代表</td>
+									<td>${(comProfile['legPerson'])!}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div id="c2">
+				<div class="divSpacing">
+					<div class="nav nav-pills nav-stacked headline" role="tablist"
+						onclick="show2()">
+						主营业务<span id="button2"
+							class="glyphicon glyphicon-circle-arrow-down right"></span>
+					</div>
+				</div>
+				<div id="content2" class="content">
+					<h5 class="line">主营业务</h5>
+					<div class="line">&nbsp;&nbsp;${business.priBus!'无'}</div>
+					<h5 class="line">产品名称</h5>
+					<div class="line">&nbsp;&nbsp;${business.priProduct!'无'}</div>
+				</div>
+			</div>
+			<div id="c3">
+				<div class="divSpacing">
+					<div class="nav nav-pills nav-stacked headline" role="tablist"
+						onclick="show3()">
+						主营构成 <span id="button3"
+							class="glyphicon glyphicon-circle-arrow-down right"></span>
+					</div>
+				</div>
+				<div id="content3">
+					<div id="mainbus" style="width: 400px; height: 300px;"></div>
+				</div>
+			</div>
+			<div id="c4">
+				<div class="divSpacing">
+					<div class="nav nav-pills nav-stacked headline" role="tablist"
+						onclick="show4()">
+						行业市场表现 <span id="button4"
+							class="glyphicon glyphicon-circle-arrow-down right"></span>
+					</div>
+				</div>
+				<div id="content4" style="margin-left: 128px;">
+					<div class="table-responsive">
+						<table class="table table-bordered table-condensed line"
+							style="float: left">
+							<thead>
+								<tr class="headtd">
+									<th class="headcol130"
+										style="border-top: 1px solid #ddd; border-left: 2px solid #ddd;">公司<#if
+										indu.enddate??>(${indu.enddate?string("yyyy-MM-dd")})<#else>-</#if>
+									</th>
+									<th>涨跌%</th>
+									<th>最近1个月涨跌%</th>
+									<th>最近3个月涨跌%</th>
+									<th>最近一年涨跌%</th>
+									<th>换手率%</th>
+									<th>月均换手率%</th>
+									<th>总市值(百万元)</th>
+								</tr>
+							</thead>
+							<tbody align="center">
+								<tr>
+									<td class="headcol130" style="border-top: 2px solid #ddd;border-left:2px solid #ddd;">${indu.induName!'-'}</td>
+									<td>${indu.chPctDay!0.00}</td>
+									<td>${indu.chPctMonth!0.00}</td>
+									<td>${indu.chPctSeason!0.00}</td>
+									<td>${indu.chPctYear!0.00}</td>
+									<td>${indu.turnoverDay!0.00}</td>
+									<td>${indu.turnoverMonth!0.00}</td>
+									<td>${indu.totalCap!0.00}</td>
+								</tr>
+								<#list induPos as pos>
+								<tr>
+									<td class="headcol130" style="border-top: 2px solid #ddd;border-left:2px solid #ddd;">${pos.rank?string("#")!}&nbsp;${pos.stockname!}</td>
+									<td>${pos.chPctDay!}</td>
+									<td>${pos.chPctMonth!}</td>
+									<td>${pos.chPctSeason!}</td>
+									<td>${pos.chPctYear!}</td>
+									<td>${pos.turnoverDay!}</td>
+									<td>${pos.turnoverMonth!}</td>
+									<td>${pos.totalCap!}</td>
+								</tr>
+								</#list>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<br>
+		<div id="goback_li" role="presentation"
+			style="float: right; display: none; margin-top: 15px">
+			<a href="javascript:void(0);" onclick="backtoMain()"
+				class="ui-btn grid-corner headline">返回</a>
+		</div>
+		<div id="detail"></div>
+	</div>
+
+</body>
+<script src="${webRootPath}/res/js/mobile/profile.js"></script>
+<script src="${webRootPath}/res/js/mobile/main.js"></script>
+</html>

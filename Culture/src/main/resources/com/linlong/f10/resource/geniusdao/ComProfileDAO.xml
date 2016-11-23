@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.resource.geniusdao.ComProfileDAO">
+	<!-- 根据证券市场查询所有证券的流通股本 -->
+	<select id="selectStockName" resultType="String" parameterType="String">SELECT
+		stocksname
+		FROM
+		PGENIUS.STK_CODE
+		WHERE ISVALID = 1
+		AND stockcode= #{stockcode}
+	</select>
+	<select id="selectStockCodes" resultType="String">
+		SELECT stockcode FROM stk_code WHERE isvalid=1;
+	</select>
+	<select id="selectShareHolder" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT
+		A.ENDDATE,
+		A.CTRL_NAME,
+		CONCAT(
+		B.CTRL_NAME,
+		'(',
+		B.CTRL_NATTURE,
+		')'
+		) AS CTRL_NAME_INFO,
+		RELATION
+		FROM
+		PGENIUS.STK_CTRL_HLD_INFO A,
+		PGENIUS.STK_ACT_CTRL_INFO B
+		WHERE A.ISVALID
+		= 1
+		AND B.ISVALID = 1
+		AND A.COMCODE = B.COMCODE
+		AND A.COMCODE =
+		(SELECT
+		COMCODE
+		FROM
+		PGENIUS.STK_CODE
+		WHERE ISVALID = 1
+		AND STOCKCODE =
+		#{stockcode})
+		AND A.ENDDATE =
+		(SELECT
+		MAX(ENDDATE)
+		FROM
+		PGENIUS.STK_CTRL_HLD_INFO
+		WHERE ISVALID = 1
+		AND COMCODE = A.COMCODE)
+		AND
+		A.ENDDATE = B.ENDDATE
+		LIMIT 1
+	</select>
+	<select id="selectInvestKeyPoint" resultType="String"
+		parameterType="String">
+		SELECT
+		INVEST_HOT
+		FROM
+		PGENIUS.DERI_INVEST_HOT A,
+		PGENIUS.STK_CODE B
+		WHERE A.ISVALID = 1
+		AND B.ISVALID = 1
+		AND A.COMCODE =
+		B.COMCODE
+		AND A.INVEST_HOT_TYPE = '公司'
+		AND B.STOCKCODE = #{stockcode}
+	</select>
+	<select id="selectPubOffer" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT
+		B.ONL_APL_DATE,
+		A.LIST_DATE,
+		A.TTL_SHR,
+		IFNULL(A.CAP, a.TTL_SHR * b.BOOK_VAL) AS NET_CAP,
+		A.ISS_PRC,
+		A.PE,
+		a.EPS,
+		a.NAPS,
+		A.ISS_SHR_PCT,
+		A.ONL_LOT_RATE,
+		(SELECT
+		TOPEN
+		FROM
+		PGENIUS.STK_MKT
+		WHERE ISVALID = 1
+		AND INNER_CODE = D.INNER_CODE
+		AND
+		TRADEDATE = A.LIST_DATE) TOPEN_FIR,
+		E.TCLOSE_FIR,
+		E.MAIN_UNDWRT,
+		B.ISS_CLS,
+		GROUP_CONCAT(C.ORG_NAME) AS
+		ORG_NAMES
+		FROM
+		PGENIUS.STK_LIST_RESULT A
+		LEFT JOIN
+		PGENIUS.STK_LIST_PLAN B
+		ON B.ISVALID
+		= 1
+		AND B.SEQ = A.P_SEQ
+		AND
+		B.CSRC_RESULT = '通过'
+		LEFT JOIN
+		PGENIUS.STK_LIST_ORG C
+		ON C.ISVALID = 1
+		AND B.SEQ = C.P_SEQ
+		AND
+		C.ORG_CLS_CODE = 4
+		INNER JOIN PGENIUS.STK_CODE D
+		ON D.ISVALID = 1
+		AND
+		D.COMCODE = A.COMCODE
+		AND D.STK_TYPE_REF =
+		B.STK_CLS_CODE
+		LEFT JOIN
+		PGENIUS.DERI_STK_LIST_PERFORM E
+		ON E.ISVALID =
+		1
+		AND E.INNER_CODE =
+		D.INNER_CODE
+		WHERE D.STOCKCODE = #{stockcode}
+		GROUP
+		BY D.INNER_CODE
+	</select>
+	<select id="selectComInfo" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT
+		b.STOCKSNAME,
+		b.STOCKCODE,
+		a.Cname,
+		a.Ename,
+		a.REGI_ADDR,
+		a.OFFICE_ADDR,
+		a.PRI_BIZ,
+		a.WEB_SITE,
+		a.EMAIL,
+		(SELECT
+		INDU_NAME
+		FROM
+		pgenius.PUB_INDU_REF
+		WHERE isvalid = 1
+		AND
+		INDU_CODE =
+		c.CSRC_INDU_CODE_2012_1
+		AND INDU_SYS_MARK = 14) AS
+		INDU_NAME,
+		a.BUILD_DATE,
+		a.REGI_CAP / 10000 AS REGI_CAP,
+		a.LEG_PERSON,
+		a.GEN_MANAGER,
+		a.BOARD_SECTRY,
+		a.REPR,
+		a.TEL,
+		a.FAX,
+		a.POSTCODE,
+		(SELECT
+		CName
+		FROM
+		pgenius.org_profile
+		WHERE isvalid = 1
+		AND orgcode =
+		a.LAW_ORGCODE)
+		AS
+		LAW_ORGCODE,
+		(SELECT
+		CName
+		FROM
+		pgenius.org_profile
+		WHERE
+		isvalid =
+		1
+		AND orgcode = a.ACC_ORGCODE) AS ACC_ORGCODE,
+		a.BRIEF_INTRO
+		FROM
+		pgenius.STK_COM_PROFILE A,
+		PGENIUS.STK_CODE b,
+		pgenius.STK_COM_INDU_REL c
+		WHERE A.ISVALID = 1
+		AND b.isvalid = 1
+		AND
+		c.isvalid = 1
+		AND A.COMCODE = b.COMCODE
+		AND a.comcode = c.comcode
+		AND
+		b.STOCKCODE = #{stockcode}
+	</select>
+	<select id="selectIndex" resultType="String" parameterType="String">
+		SELECT DISTINCT
+		b.indx_sname
+		FROM
+		pgenius.INDX_SAMP_INFO a,
+		pgenius.INDX_GEN_INFO b
+		WHERE a.isvalid = 1
+		AND b.ISVALID = 1
+		AND
+		a.INNER_CODE = b.INNER_CODE
+		AND a.SEC_INNER_CODE =
+		(SELECT
+		inner_code
+		FROM
+		pgenius.stk_code
+		WHERE isvalid = 1
+		AND STOCKCODE = #{stockcode})
+		AND
+		a.STARTDATE &lt; CURDATE()
+		AND IFNULL(
+		a.ENDDATE,
+		DATE_ADD(CURDATE(),
+		INTERVAL 1 DAY)
+		) &gt; CURDATE()
+	</select>
+	<select id="selectFormerName" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT
+		a.stocksname,
+		(SELECT
+		MIN(CHANGEDATE)
+		FROM
+		pgenius.STK_SNAME_CHNG
+		WHERE ISVALID = 1
+		AND inner_code = a.inner_code
+		AND CHANGEDATE > a.CHANGEDATE) AS CHANGEDATE -- 停用时间
+		FROM
+		pgenius.STK_SNAME_CHNG a
+		WHERE isvalid = 1
+		AND a.INNER_CODE =
+		(SELECT
+		inner_code
+		FROM
+		pgenius.stk_code
+		WHERE isvalid = 1
+		AND stockcode =
+		#{stockcode})
+		AND a.CHANGEDATE &lt;
+		(SELECT
+		MAX(CHANGEDATE)
+		FROM
+		pgenius.STK_SNAME_CHNG
+		WHERE isvalid = 1
+		AND inner_code = a.inner_code)
+		ORDER BY CHANGEDATE DESC
+	</select>
+	<select id="selectRelStock" resultType="java.util.HashMap"
+		parameterType="String">SELECT
+		(SELECT
+		ref_name
+		FROM
+		pgenius.gen_ref
+		WHERE isvalid =
+		1
+		AND ref_code = a.SEC_STYPE
+		AND cls_code = 2) AS sectype,
+		a.SEC_CODE AS seccode,
+		a.SEC_SNAME AS secsname,
+		(SELECT
+		ref_name
+		FROM
+		pgenius.gen_ref
+		WHERE isvalid = 1
+		AND
+		ref_code = a.MKT_TYPE
+		AND cls_code = 1009) AS
+		mkttype
+		FROM
+		pgenius.PUB_SEC_CODE a,
+		pgenius.stk_code b
+		WHERE
+		a.isvalid = 1
+		AND
+		b.`ISVALID` = 1
+		AND a.COMCODE = b.`COMCODE`
+		AND
+		b.`STOCKCODE` =
+		#{stockcode}
+		AND a.SEC_CODE != b.`STOCKCODE`
+		AND
+		a.SEC_CODE IS NOT NULL ;
+	</select>
+	<select id="selectEmplInfo" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT 
+			DATE(a.EndDate) AS enddate, -- 日期 
+			a.STAFF_NUM AS staffNum, -- 雇员总人数 人
+			a.WORK_NUM AS workNum, -- 在职员工 人
+			a.RETIRE_NUM AS retireNum-- 离退休员工 人
+		FROM pgenius.STK_HUMAN_RESOURCE a 
+		WHERE a.isvalid=1 
+		AND a.EndDate=(SELECT MAX(EndDate) FROM pgenius.STK_HUMAN_RESOURCE WHERE isvalid=1 AND comcode=a.`COMCODE`)
+		AND a.comcode=(SELECT comcode FROM pgenius.stk_code WHERE isvalid=1 AND stockcode=#{stockcode}
+		AND STATUS_TYPE_REF=1 LIMIT 1) ;
+	</select>
+	<select id="selectEmplSitu" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT
+		A.ENDDATE,
+		'按专业' AS HR_CLS,
+		A.ITEM_NAME,
+		A.EPLE_NUM,
+		A.EPLE_PCT
+		FROM
+		PGENIUS.STK_HUMAN_RESOURCE_DTL
+		A,
+		PGENIUS.STK_CODE B
+		WHERE
+		A.ISVALID = 1
+		AND B.ISVALID = 1
+		AND A.COMCODE
+		= B.COMCODE
+		AND A.ENDDATE =
+		(SELECT
+		MAX(ENDDATE)
+		FROM
+		PGENIUS.STK_HUMAN_RESOURCE_DTL
+		WHERE ISVALID = 1
+		AND
+		COMCODE =
+		A.COMCODE)
+		AND A.HR_CLS_CODE = 1
+		AND B.STOCKCODE =
+		#{stockcode}
+		UNION
+		ALL
+		SELECT
+		A.ENDDATE,
+		'按学历' AS HR_CLS,
+		A.ITEM_NAME,
+		A.EPLE_NUM,
+		A.EPLE_PCT
+		FROM
+		PGENIUS.STK_HUMAN_RESOURCE_DTL A,
+		PGENIUS.STK_CODE B
+		WHERE A.ISVALID = 1
+		AND B.ISVALID = 1
+		AND A.COMCODE =
+		B.COMCODE
+		AND A.ENDDATE =
+		(SELECT
+		MAX(ENDDATE)
+		FROM
+		PGENIUS.STK_HUMAN_RESOURCE_DTL
+		WHERE ISVALID = 1
+		AND
+		COMCODE =
+		A.COMCODE)
+		AND A.HR_CLS_CODE = 2
+		AND B.STOCKCODE = #{stockcode}
+		UNION
+		ALL
+		SELECT
+		A.ENDDATE,
+		'按年龄' AS HR_CLS,
+		A.ITEM_NAME,
+		A.EPLE_NUM,
+		A.EPLE_PCT
+		FROM
+		PGENIUS.STK_HUMAN_RESOURCE_DTL A,
+		PGENIUS.STK_CODE B
+		WHERE A.ISVALID = 1
+		AND B.ISVALID = 1
+		AND A.COMCODE =
+		B.COMCODE
+		AND A.ENDDATE =
+		(SELECT
+		MAX(ENDDATE)
+		FROM
+		PGENIUS.STK_HUMAN_RESOURCE_DTL
+		WHERE ISVALID = 1
+		AND
+		COMCODE =
+		A.COMCODE)
+		AND A.HR_CLS_CODE = 3
+		AND B.STOCKCODE = #{stockcode}
+		UNION
+		ALL
+		SELECT
+		A.ENDDATE,
+		'按职称' AS HR_CLS,
+		A.ITEM_NAME,
+		A.EPLE_NUM,
+		A.EPLE_PCT
+		FROM
+		PGENIUS.STK_HUMAN_RESOURCE_DTL A,
+		PGENIUS.STK_CODE B
+		WHERE A.ISVALID = 1
+		AND B.ISVALID = 1
+		AND A.COMCODE =
+		B.COMCODE
+		AND
+		A.ENDDATE =
+		(SELECT
+		MAX(ENDDATE)
+		FROM
+		PGENIUS.STK_HUMAN_RESOURCE_DTL
+		WHERE
+		ISVALID = 1
+		AND
+		COMCODE =
+		A.COMCODE)
+		AND A.HR_CLS_CODE = 4
+		AND B.STOCKCODE
+		= #{stockcode}
+		UNION
+		ALL
+		SELECT
+		A.ENDDATE,
+		'其他分类' AS HR_CLS,
+		A.ITEM_NAME,
+		A.EPLE_NUM,
+		A.EPLE_PCT
+		FROM
+		PGENIUS.STK_HUMAN_RESOURCE_DTL
+		A,
+		PGENIUS.STK_CODE B
+		WHERE A.ISVALID = 1
+		AND B.ISVALID = 1
+		AND A.COMCODE
+		=
+		B.COMCODE
+		AND A.ENDDATE =
+		(SELECT
+		MAX(ENDDATE)
+		FROM
+		PGENIUS.STK_HUMAN_RESOURCE_DTL
+		WHERE ISVALID = 1
+		AND
+		COMCODE =
+		A.COMCODE)
+		AND A.HR_CLS_CODE = 0
+		AND B.STOCKCODE = #{stockcode}
+	</select>
+	<select id="selectFirstShareHolder" resultType="java.util.HashMap"
+		parameterType="String">SELECT
+		DATE(A.DECLAREDATE) AS DECLAREDATE,
+		A.HOLDER_NAME,
+		A.SHR_HLD_TYPE,
+		A.IS_CTRL,
+		ROUND(A.HLD_NUM / 10000, 2) AS HLD_NUM,
+		A.AFT_SHR_PCT,
+		DATE(A.START_DATE) AS START_DATE,
+		ROUND(A.LOCK_PERIOD, 0)
+		AS LOCK_PERIOD -- 锁定期限 月
+		FROM
+		PGENIUS.STK_SH_CLS_DTL A,
+		PGENIUS.STK_CODE
+		B
+		WHERE A.ISVALID = 1
+		AND
+		B.ISVALID = 1
+		AND A.COMCODE = B.COMCODE
+		AND
+		B.STOCKCODE = #{stockcode}
+	</select>
+</mapper>

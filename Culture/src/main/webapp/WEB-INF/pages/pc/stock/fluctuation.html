@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>超幅涨跌</title>
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+	name="viewport" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+</head>
+<body>
+
+	<div class="catalog gap">
+		<div class="catalog-name follow font-lg">目录</div>
+		<div id="catalog-list" class="catalog-bg follow font-md">
+			<ol type="" class="catalog-list">
+				<!-- 每4个一组 -->
+				<li><span class="index">1.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#1">涨跌异动（交易所交易公开信息）</a></span></li>
+				<li><span class="index">&nbsp;&nbsp;</span> <span class="text"><a
+						href="#2"></a></span></li>
+				<li><span class="index">&nbsp;&nbsp;</span> <span class="text"><a
+						href="#3"></a></span></li>
+				<li><span class="index">&nbsp;&nbsp;</span> <span class="text"><a
+						href="#4"></a></span></li>
+			</ol>
+		</div>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				涨跌异动（交易所交易公开信息）<a name="1"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<#if !fluctuations?? || fluctuations?size == 0> 
+		<div>暂无数据</div>
+		<#else>
+		<#list fluctuations as fluct>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<div id="normal" class="normal font-md break">
+			<div>${(fluct_index+1)?string("#")}.&nbsp;${fluct.refName}</div>
+		</div>
+		<div id="normal" class="normal font-md break">
+			<div>【${fluct.enddate}】&nbsp;跌幅:${fluct.fflChangePct!}&nbsp;成交量:${fluct.volume!}(万)&nbsp;成交额:${fluct.value!}(万)</div>
+		</div>
+		<div class="info-table font-md">
+			<table>
+				<thead align="center">
+					<tr>
+						<th style="width: 60%">买入金额居前的营业部名称</th>
+						<th style="width: 20%">买入金额(元)</th>
+						<th style="width: 20%">卖出金额(元)</th>
+					</tr>
+				</thead>
+				<tbody align="center">
+					<#list fluct.details as detail>
+					<tr>
+						<#if detail.rankCls == "买入金额最大的前5名">
+						<td>${(detail.branchName)!}</td>
+						<td>${(detail.bvalue)!0.00}</td>
+						<td>${(detail.svalue)!0.00}</td>
+						</#if>
+					</tr>
+					</#list>
+				</tbody>
+			</table>
+		</div>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<div class="info-table font-md">
+			<table>
+				<thead align="center">
+					<tr>
+						<th style="width: 60%">卖出金额居前的营业部名称</th>
+						<th style="width: 20%">买入金额(元)</th>
+						<th style="width: 20%">卖出金额(元)</th>
+					</tr>
+				</thead>
+				<tbody align="center">
+					<#list fluct.details as detail>
+					<tr>
+						<#if detail.rankCls == "卖出金额最大的前5名">
+						<td>${(detail.branchName)!}</td>
+						<td>${(detail.bvalue)!0.00}</td>
+						<td>${(detail.svalue)!0.00}</td>
+						</#if>
+					</tr>
+					</#list>
+				</tbody>
+			</table>
+		</div>
+		</#list>
+		</#if>
+	</div>
+
+</body>
+</html>

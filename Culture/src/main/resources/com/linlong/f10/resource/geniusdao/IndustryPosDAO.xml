@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.resource.geniusdao.IndustryPosDAO">
+	<!-- 根据证券市场查询所有证券的流通股本 -->
+	<select id="selectIndu" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT SQL_NO_CACHE B.TRD_DATE AS enddate
+		      ,(SELECT INDU_NAME FROM pgenius.PUB_INDU_REF WHERE inner_code=b.inner_code) AS induName
+		      ,B.CHNG_PCT_DAY AS chPctDay
+		      ,B.CHNG_PCT_MONTH AS chPctMonth
+		      ,B.CHNG_PCT_THREE_MONTH AS chPctSeason
+		      ,B.CHNG_PCT_YEAR AS chPctYear
+		      ,NULL AS turnoverDay
+		      ,NULL AS turnoverMonth
+		      ,B.TCAP AS totalCap
+		  FROM PGENIUS.ANA_INDU_EXPR_IDX b
+		  WHERE B.TRD_DATE = (SELECT MAX(TRD_DATE) FROM PGENIUS.ANA_INDU_EXPR_IDX WHERE INNER_CODE =(SELECT Z.INNER_CODE FROM PGENIUS.STK_COM_INDU_REL X INNER JOIN PGENIUS.STK_CODE Y ON X.COMCODE= Y.COMCODE INNER JOIN PGENIUS.PUB_INDU_REF Z ON Z.INDU_SYS_MARK=6 AND Z.INDU_CODE = X.CF_INDU_CODE
+		 WHERE Y.STOCKCODE = #{stockcode}))
+		 AND b.INNER_CODE = (SELECT Z.INNER_CODE FROM PGENIUS.STK_COM_INDU_REL X INNER JOIN PGENIUS.STK_CODE Y ON X.COMCODE= Y.COMCODE INNER JOIN PGENIUS.PUB_INDU_REF Z ON Z.INDU_SYS_MARK=6 AND Z.INDU_CODE = X.CF_INDU_CODE
+		WHERE Y.STOCKCODE = #{stockcode}) ;
+	</select>
+	<select id="selectInduPos" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT 
+		  XX.ENDDATE as enddate,
+		  XX.RANK as rank,
+		  XX.STOCKSNAME as stockname,
+		  XX.CHNG_PCT_DAY as chPctDay,
+		  XX.CHNG_PCT_MONTH as chPctMonth,
+		  XX.CHNG_PCT_THREE_MONTH as chPctSeason,
+		  XX.CHNG_PCT_YEAR chPctYear,
+		  XX.TURNOVER_DAY as turnoverDay,
+		  XX.TURNOVER_MONTH as turnoverMonth,
+		  XX.TCAP_1 / 1000000 AS totalCap 
+		FROM
+		  (SELECT 
+		    A.*,
+		    @RANK := @RANK + 1 AS RANK -- 排名
+		  FROM
+		    (SELECT 
+		      T.ENDDATE,
+		      R.STOCKCODE,
+		      R.STOCKSNAME,
+		      T.CHNG_PCT_DAY,
+		      T.CHNG_PCT_MONTH,
+		      T.CHNG_PCT_THREE_MONTH,
+		      T.CHNG_PCT_YEAR,
+		      T.TURNOVER_DAY,
+		      T.TURNOVER_MONTH,
+		      T.TCAP_1 
+		    FROM
+		      PGENIUS.STK_CODE R 
+		      INNER JOIN PGENIUS.STK_COM_INDU_REL S 
+		        ON R.COMCODE = S.COMCODE 
+		      INNER JOIN PGENIUS.ANA_STK_EXPR_IDX_LAT T 
+		        ON R.INNER_CODE = T.INNER_CODE 
+		    WHERE R.STK_TYPE_REF IN (1) 
+		      AND R.STATUS_TYPE_REF IN (1) 
+		      AND S.CF_INDU_CODE = 
+		      (SELECT 
+		        X.CF_INDU_CODE 
+		      FROM
+		        PGENIUS.STK_COM_INDU_REL X
+		        INNER JOIN PGENIUS.STK_CODE Y
+		          ON X.COMCODE = Y.COMCODE 
+		      WHERE Y.STOCKCODE = #{stockcode})) A,
+		    (SELECT 
+		      @RANK := 0) P 
+		  ORDER BY A.CHNG_PCT_MONTH DESC 
+		  LIMIT 15) XX 
+		UNION
+		SELECT 
+		  YY.ENDDATE -- 截止日期
+		  ,
+		  YY.RANK -- 排名
+		  ,
+		  YY.STOCKSNAME -- 股票简称
+		  ,
+		  YY.CHNG_PCT_DAY -- 日涨跌幅
+		  ,
+		  YY.CHNG_PCT_MONTH -- 月涨跌幅
+		  ,
+		  YY.CHNG_PCT_THREE_MONTH -- 3月涨跌幅
+		  ,
+		  YY.CHNG_PCT_YEAR -- 年涨跌幅
+		  ,
+		  YY.TURNOVER_DAY -- 日换手率
+		  ,
+		  YY.TURNOVER_MONTH -- 月均换手率
+		  ,
+		  YY.TCAP_1 / 1000000 AS TCAP -- 总市值(百万元)
+		FROM
+		  (SELECT 
+		    O.*,
+		    @RANK1 := @RANK1 + 1 AS RANK -- 排名
+		  FROM
+		    (SELECT 
+		      T.ENDDATE,
+		      R.STOCKCODE,
+		      R.STOCKSNAME,
+		      T.CHNG_PCT_DAY,
+		      T.CHNG_PCT_MONTH,
+		      T.CHNG_PCT_THREE_MONTH,
+		      T.CHNG_PCT_YEAR,
+		      T.TURNOVER_DAY,
+		      T.TURNOVER_MONTH,
+		      T.TCAP_1 
+		    FROM
+		      PGENIUS.STK_CODE R 
+		      INNER JOIN PGENIUS.STK_COM_INDU_REL S 
+		        ON R.COMCODE = S.COMCODE 
+		      INNER JOIN PGENIUS.ANA_STK_EXPR_IDX_LAT T 
+		        ON R.INNER_CODE = T.INNER_CODE 
+		    WHERE R.STK_TYPE_REF IN (1) 
+		      AND R.STATUS_TYPE_REF IN (1) 
+		      AND S.CF_INDU_CODE = 
+		      (SELECT 
+		        X.CF_INDU_CODE 
+		      FROM
+		        PGENIUS.STK_COM_INDU_REL X
+		        INNER JOIN PGENIUS.STK_CODE Y
+		          ON X.COMCODE = Y.COMCODE 
+		      WHERE Y.STOCKCODE = #{stockcode})) O,
+		    (SELECT 
+		      @RANK1 := 0) P 
+		  ORDER BY O.CHNG_PCT_MONTH DESC) YY 
+		WHERE YY.STOCKCODE = #{stockcode} 
+	</select>
+	<select id="selectEnddate" resultType="java.util.Date"
+		parameterType="String">
+	SELECT DISTINCT 
+		  T.ENDDATE AS enddate
+		FROM
+		  PGENIUS.STK_CODE R 
+		  INNER JOIN PGENIUS.STK_COM_INDU_REL S 
+		    ON R.COMCODE = S.COMCODE 
+		  INNER JOIN PGENIUS.ANA_STK_FIN_IDX_LAT T 
+		    ON R.COMCODE = T.COMCODE 
+		WHERE R.STK_TYPE_REF IN (1) 
+		  AND R.STATUS_TYPE_REF IN (1) 
+		  AND S.CF_INDU_CODE = 
+		  (SELECT 
+		    X.CF_INDU_CODE 
+		  FROM
+		    PGENIUS.STK_COM_INDU_REL X
+		    INNER JOIN PGENIUS.STK_CODE Y
+		      ON X.COMCODE = Y.COMCODE 
+		  WHERE Y.STOCKCODE = #{stockcode}) ;
+		  </select>
+	<select id="selectInduCom" resultType="java.util.HashMap">
+		SELECT 
+		  XX.STOCKSNAME AS stockname,
+		  XX.EPSP AS epsp,
+		  XX.RIS_EPS AS riseps,
+		  XX.INC_J AS incj,
+		  XX.RIS_OR AS risor,
+		  XX.ROED AS roed,
+		  XX.RIS_ROE AS risroe,
+		  XX.BPSNED AS bpsned,
+		  XX.PS_NET_VAL AS psnetval,
+		  XX.RIS_BPF AS risbpf,
+		  XX.INC_I AS inci,
+		  XX.SEL_RINT AS selrint,
+		  XX.BAL_O AS balo,
+		  XX.CAP_LAB AS caplab,
+		  XX.OPE_TAI AS opetai,
+		  @RANK := @RANK + 1 AS rank -- 排名
+		FROM
+		  (SELECT 
+		    T.ENDDATE,
+		    R.STOCKCODE,
+		    R.STOCKSNAME,
+		    T.EPSP,
+		    T.RIS_EPS,
+		    T.INC_J / 1000000 AS INC_J,
+		    T.RIS_OR,
+		    T.ROED,
+		    T.RIS_ROE,
+		    T.BPSNED,
+		    T.PS_NET_VAL,
+		    T.RIS_BPF,
+		    T.INC_I / 1000000 AS INC_I,
+		    T.SEL_RINT,
+		    T.BAL_O / 1000000 AS BAL_O,
+		    T.CAP_LAB,
+		    T.OPE_TAI 
+		  FROM
+		    PGENIUS.STK_CODE R 
+		    INNER JOIN PGENIUS.STK_COM_INDU_REL S 
+		      ON R.COMCODE = S.COMCODE 
+		    INNER JOIN PGENIUS.ANA_STK_FIN_IDX_LAT T 
+		      ON R.COMCODE = T.COMCODE 
+		  WHERE R.STK_TYPE_REF IN (1) 
+		    AND R.STATUS_TYPE_REF IN (1) 
+		    AND S.CF_INDU_CODE = 
+		    (SELECT 
+		      X.CF_INDU_CODE 
+		    FROM
+		      PGENIUS.STK_COM_INDU_REL X
+		      INNER JOIN PGENIUS.STK_CODE Y
+		        ON X.COMCODE = Y.COMCODE 
+		    WHERE Y.STOCKCODE = #{stockcode}) 
+		    AND t.ENDDATE = #{enddate}) XX,
+		  (SELECT 
+		    @RANK := 0) Q 
+		ORDER BY XX.EPSP DESC ;
+	</select>
+	<select id="selectEpspRank" resultType="java.util.HashMap">
+	SELECT 
+		  YY.STOCKSNAME,
+		  YY.RANK 
+		FROM
+		  (SELECT 
+		    XX.STOCKCODE,
+		    XX.STOCKSNAME,
+		    @RANK := @RANK + 1 AS RANK -- 排名
+		  FROM
+		    (SELECT 
+		      T.ENDDATE,
+		      R.STOCKCODE,
+		      R.STOCKSNAME,
+		      T.EPSP,
+		      T.RIS_EPS,
+		      T.INC_J / 1000000 AS INC_J,
+		      T.RIS_OR,
+		      T.ROED,
+		      T.RIS_ROE,
+		      T.BPSNED,
+		      T.PS_NET_VAL,
+		      T.RIS_BPF,
+		      T.INC_I / 1000000 AS INC_I,
+		      T.SEL_RINT,
+		      T.BAL_O / 1000000 AS BAL_O,
+		      T.CAP_LAB,
+		      T.OPE_TAI 
+		    FROM
+		      PGENIUS.STK_CODE R 
+		      INNER JOIN PGENIUS.STK_COM_INDU_REL S 
+		        ON R.COMCODE = S.COMCODE 
+		      INNER JOIN PGENIUS.ANA_STK_FIN_IDX_LAT T 
+		        ON R.COMCODE = T.COMCODE 
+		    WHERE R.STK_TYPE_REF IN (1) 
+		      AND R.STATUS_TYPE_REF IN (1) 
+		      AND S.CF_INDU_CODE = 
+		      (SELECT 
+		        X.CF_INDU_CODE 
+		      FROM
+		        PGENIUS.STK_COM_INDU_REL X
+		        INNER JOIN PGENIUS.STK_CODE Y
+		          ON X.COMCODE = Y.COMCODE 
+		      WHERE Y.STOCKCODE = #{stockcode}) 
+		      AND t.ENDDATE = #{enddate}) XX,
+		    (SELECT 
+		      @RANK := 0) Q 
+		  ORDER BY XX.EPSP DESC) YY 
+		WHERE YY.STOCKCODE = #{stockcode} ;
+	</select>
+	<select id="selectIncjRank" resultType="java.util.HashMap">
+	SELECT 
+		  YY.STOCKSNAME,
+		  YY.RANK 
+		FROM
+		  (SELECT 
+		    XX.STOCKCODE,
+		    XX.STOCKSNAME,
+		    @RANK := @RANK + 1 AS RANK -- 排名
+		  FROM
+		    (SELECT 
+		      T.ENDDATE,
+		      R.STOCKCODE,
+		      R.STOCKSNAME,
+		      T.EPSP,
+		      T.RIS_EPS,
+		      T.INC_J / 1000000 AS INC_J,
+		      T.RIS_OR,
+		      T.ROED,
+		      T.RIS_ROE,
+		      T.BPSNED,
+		      T.PS_NET_VAL,
+		      T.RIS_BPF,
+		      T.INC_I / 1000000 AS INC_I,
+		      T.SEL_RINT,
+		      T.BAL_O / 1000000 AS BAL_O,
+		      T.CAP_LAB,
+		      T.OPE_TAI 
+		    FROM
+		      PGENIUS.STK_CODE R 
+		      INNER JOIN PGENIUS.STK_COM_INDU_REL S 
+		        ON R.COMCODE = S.COMCODE 
+		      INNER JOIN PGENIUS.ANA_STK_FIN_IDX_LAT T 
+		        ON R.COMCODE = T.COMCODE 
+		    WHERE R.STK_TYPE_REF IN (1) 
+		      AND R.STATUS_TYPE_REF IN (1) 
+		      AND S.CF_INDU_CODE = 
+		      (SELECT 
+		        X.CF_INDU_CODE 
+		      FROM
+		        PGENIUS.STK_COM_INDU_REL X
+		        INNER JOIN PGENIUS.STK_CODE Y
+		          ON X.COMCODE = Y.COMCODE 
+		      WHERE Y.STOCKCODE = #{stockcode}) 
+		      AND t.ENDDATE = #{enddate}) XX,
+		    (SELECT 
+		      @RANK := 0) Q 
+		  ORDER BY XX.INC_J DESC) YY 
+		WHERE YY.STOCKCODE = #{stockcode} ;
+	</select>
+	<select id="selectRoedRank" resultType="java.util.HashMap">
+	SELECT YY.STOCKSNAME,YY.RANK
+		  FROM
+		(
+		SELECT XX.STOCKCODE,XX.STOCKSNAME,@RANK := @RANK+1 AS RANK -- 排名
+		  FROM (SELECT T.ENDDATE,R.STOCKCODE,R.STOCKSNAME,T.EPSP,T.RIS_EPS,T.INC_J/1000000 AS INC_J,T.RIS_OR,T.ROED,T.RIS_ROE
+		               ,T.BPSNED,T.PS_NET_VAL,T.RIS_BPF,T.INC_I/1000000 AS INC_I,T.SEL_RINT,T.BAL_O/1000000 AS BAL_O,T.CAP_LAB,T.OPE_TAI
+		  				FROM PGENIUS.STK_CODE R
+					   INNER JOIN PGENIUS.STK_COM_INDU_REL S
+						  	ON R.COMCODE = S.COMCODE
+					   INNER JOIN PGENIUS.ANA_STK_FIN_IDX_LAT T
+							  ON R.COMCODE = T.COMCODE
+		 			   WHERE R.STK_TYPE_REF IN (1)
+						   AND R.STATUS_TYPE_REF IN (1)
+						   AND S.CF_INDU_CODE = (SELECT X.CF_INDU_CODE FROM PGENIUS.STK_COM_INDU_REL X
+																		INNER JOIN PGENIUS.STK_CODE Y ON X.COMCODE= Y.COMCODE
+																		WHERE Y.STOCKCODE = #{stockcode})
+		           and t.ENDDATE=#{enddate}
+				   )XX ,
+		(SELECT @RANK := 0) Q
+		 ORDER BY XX.ROED DESC
+		) YY
+		 WHERE YY.STOCKCODE = #{stockcode} ;
+	</select>
+	<select id="selectBpsnedRank" resultType="java.util.HashMap">
+	SELECT YY.STOCKSNAME,YY.RANK
+		  FROM
+		(
+		SELECT XX.STOCKCODE,XX.STOCKSNAME,@RANK := @RANK+1 AS RANK -- 排名
+		  FROM (SELECT T.ENDDATE,R.STOCKCODE,R.STOCKSNAME,T.EPSP,T.RIS_EPS,T.INC_J/1000000 AS INC_J,T.RIS_OR,T.ROED,T.RIS_ROE
+		               ,T.BPSNED,T.PS_NET_VAL,T.RIS_BPF,T.INC_I/1000000 AS INC_I,T.SEL_RINT,T.BAL_O/1000000 AS BAL_O,T.CAP_LAB,T.OPE_TAI
+		  				FROM PGENIUS.STK_CODE R
+					   INNER JOIN PGENIUS.STK_COM_INDU_REL S
+						  	ON R.COMCODE = S.COMCODE
+					   INNER JOIN PGENIUS.ANA_STK_FIN_IDX_LAT T
+							  ON R.COMCODE = T.COMCODE
+		 			   WHERE R.STK_TYPE_REF IN (1)
+						   AND R.STATUS_TYPE_REF IN (1)
+						   AND S.CF_INDU_CODE = (SELECT X.CF_INDU_CODE FROM PGENIUS.STK_COM_INDU_REL X
+																		INNER JOIN PGENIUS.STK_CODE Y ON X.COMCODE= Y.COMCODE
+																		WHERE Y.STOCKCODE = #{stockcode})
+		           and t.ENDDATE=#{enddate}
+				   )XX ,
+		(SELECT @RANK := 0) Q
+		 ORDER BY XX.BPSNED DESC
+		) YY
+		 WHERE YY.STOCKCODE = #{stockcode} ;
+	</select>
+	<select id="selectPsnetvalRank" resultType="java.util.HashMap">
+	SELECT YY.STOCKSNAME,YY.RANK
+		  FROM
+		(
+		SELECT XX.STOCKCODE,XX.STOCKSNAME,@RANK := @RANK+1 AS RANK -- 排名
+		  FROM (SELECT T.ENDDATE,R.STOCKCODE,R.STOCKSNAME,T.EPSP,T.RIS_EPS,T.INC_J/1000000 AS INC_J,T.RIS_OR,T.ROED,T.RIS_ROE
+		               ,T.BPSNED,T.PS_NET_VAL,T.RIS_BPF,T.INC_I/1000000 AS INC_I,T.SEL_RINT,T.BAL_O/1000000 AS BAL_O,T.CAP_LAB,T.OPE_TAI
+		  				FROM PGENIUS.STK_CODE R
+					   INNER JOIN PGENIUS.STK_COM_INDU_REL S
+						  	ON R.COMCODE = S.COMCODE
+					   INNER JOIN PGENIUS.ANA_STK_FIN_IDX_LAT T
+							  ON R.COMCODE = T.COMCODE
+		 			   WHERE R.STK_TYPE_REF IN (1)
+						   AND R.STATUS_TYPE_REF IN (1)
+						   AND S.CF_INDU_CODE = (SELECT X.CF_INDU_CODE FROM PGENIUS.STK_COM_INDU_REL X
+																		INNER JOIN PGENIUS.STK_CODE Y ON X.COMCODE= Y.COMCODE
+																		WHERE Y.STOCKCODE = #{stockcode})
+		           and t.ENDDATE=#{enddate}
+				   )XX ,
+		(SELECT @RANK := 0) Q
+		 ORDER BY XX.PS_NET_VAL DESC
+		) YY
+		 WHERE YY.STOCKCODE = #{stockcode} ;
+	</select>
+	<select id="selectInciRank" resultType="java.util.HashMap">
+	SELECT YY.STOCKSNAME,YY.RANK
+		  FROM
+		(
+		SELECT XX.STOCKCODE,XX.STOCKSNAME,@RANK := @RANK+1 AS RANK -- 排名
+		  FROM (SELECT T.ENDDATE,R.STOCKCODE,R.STOCKSNAME,T.EPSP,T.RIS_EPS,T.INC_J/1000000 AS INC_J,T.RIS_OR,T.ROED,T.RIS_ROE
+		               ,T.BPSNED,T.PS_NET_VAL,T.RIS_BPF,T.INC_I/1000000 AS INC_I,T.SEL_RINT,T.BAL_O/1000000 AS BAL_O,T.CAP_LAB,T.OPE_TAI
+		  				FROM PGENIUS.STK_CODE R
+					   INNER JOIN PGENIUS.STK_COM_INDU_REL S
+						  	ON R.COMCODE = S.COMCODE
+					   INNER JOIN PGENIUS.ANA_STK_FIN_IDX_LAT T
+							  ON R.COMCODE = T.COMCODE
+		 			   WHERE R.STK_TYPE_REF IN (1)
+						   AND R.STATUS_TYPE_REF IN (1)
+						   AND S.CF_INDU_CODE = (SELECT X.CF_INDU_CODE FROM PGENIUS.STK_COM_INDU_REL X
+																		INNER JOIN PGENIUS.STK_CODE Y ON X.COMCODE= Y.COMCODE
+																		WHERE Y.STOCKCODE = #{stockcode})
+		           and t.ENDDATE=#{enddate}
+				   )XX ,
+		(SELECT @RANK := 0) Q
+		 ORDER BY XX.INC_I DESC
+		) YY
+		 WHERE YY.STOCKCODE = #{stockcode} ;
+	</select>
+	<select id="selectSelrintRank" resultType="java.util.HashMap">
+		SELECT YY.STOCKSNAME,YY.RANK
+		  FROM
+		(
+		SELECT XX.STOCKCODE,XX.STOCKSNAME,@RANK := @RANK+1 AS RANK -- 排名
+		  FROM (SELECT T.ENDDATE,R.STOCKCODE,R.STOCKSNAME,T.EPSP,T.RIS_EPS,T.INC_J/1000000 AS INC_J,T.RIS_OR,T.ROED,T.RIS_ROE
+		               ,T.BPSNED,T.PS_NET_VAL,T.RIS_BPF,T.INC_I/1000000 AS INC_I,T.SEL_RINT,T.BAL_O/1000000 AS BAL_O,T.CAP_LAB,T.OPE_TAI
+		  				FROM PGENIUS.STK_CODE R
+					   INNER JOIN PGENIUS.STK_COM_INDU_REL S
+						  	ON R.COMCODE = S.COMCODE
+					   INNER JOIN PGENIUS.ANA_STK_FIN_IDX_LAT T
+							  ON R.COMCODE = T.COMCODE
+		 			   WHERE R.STK_TYPE_REF IN (1)
+						   AND R.STATUS_TYPE_REF IN (1)
+						   AND S.CF_INDU_CODE = (SELECT X.CF_INDU_CODE FROM PGENIUS.STK_COM_INDU_REL X
+																		INNER JOIN PGENIUS.STK_CODE Y ON X.COMCODE= Y.COMCODE
+																		WHERE Y.STOCKCODE = #{stockcode})
+		           and t.ENDDATE=#{enddate}
+				   )XX ,
+		(SELECT @RANK := 0) Q
+		 ORDER BY XX.SEL_RINT DESC
+		) YY
+		 WHERE YY.STOCKCODE = #{stockcode} ;
+	</select>
+	<select id="selectBaloRank" resultType="java.util.HashMap">
+	SELECT YY.STOCKSNAME,YY.RANK
+		  FROM
+		(
+		SELECT XX.STOCKCODE,XX.STOCKSNAME,@RANK := @RANK+1 AS RANK -- 排名
+		  FROM (SELECT T.ENDDATE,R.STOCKCODE,R.STOCKSNAME,T.EPSP,T.RIS_EPS,T.INC_J/1000000 AS INC_J,T.RIS_OR,T.ROED,T.RIS_ROE
+		               ,T.BPSNED,T.PS_NET_VAL,T.RIS_BPF,T.INC_I/1000000 AS INC_I,T.SEL_RINT,T.BAL_O/1000000 AS BAL_O,T.CAP_LAB,T.OPE_TAI
+		  				FROM PGENIUS.STK_CODE R
+					   INNER JOIN PGENIUS.STK_COM_INDU_REL S
+						  	ON R.COMCODE = S.COMCODE
+					   INNER JOIN PGENIUS.ANA_STK_FIN_IDX_LAT T
+							  ON R.COMCODE = T.COMCODE
+		 			   WHERE R.STK_TYPE_REF IN (1)
+						   AND R.STATUS_TYPE_REF IN (1)
+						   AND S.CF_INDU_CODE = (SELECT X.CF_INDU_CODE FROM PGENIUS.STK_COM_INDU_REL X
+																		INNER JOIN PGENIUS.STK_CODE Y ON X.COMCODE= Y.COMCODE
+																		WHERE Y.STOCKCODE = #{stockcode})
+		           and t.ENDDATE=#{enddate}
+				   )XX ,
+		(SELECT @RANK := 0) Q
+		 ORDER BY XX.BAL_O DESC
+		) YY
+		 WHERE YY.STOCKCODE = #{stockcode} ;
+	</select>
+	<select id="selectCaplabRank" resultType="java.util.HashMap">
+	SELECT YY.STOCKSNAME,YY.RANK
+		  FROM
+		(
+		SELECT XX.STOCKCODE,XX.STOCKSNAME,@RANK := @RANK+1 AS RANK -- 排名
+		  FROM (SELECT T.ENDDATE,R.STOCKCODE,R.STOCKSNAME,T.EPSP,T.RIS_EPS,T.INC_J/1000000 AS INC_J,T.RIS_OR,T.ROED,T.RIS_ROE
+		               ,T.BPSNED,T.PS_NET_VAL,T.RIS_BPF,T.INC_I/1000000 AS INC_I,T.SEL_RINT,T.BAL_O/1000000 AS BAL_O,T.CAP_LAB,T.OPE_TAI
+		  				FROM PGENIUS.STK_CODE R
+					   INNER JOIN PGENIUS.STK_COM_INDU_REL S
+						  	ON R.COMCODE = S.COMCODE
+					   INNER JOIN PGENIUS.ANA_STK_FIN_IDX_LAT T
+							  ON R.COMCODE = T.COMCODE
+		 			   WHERE R.STK_TYPE_REF IN (1)
+						   AND R.STATUS_TYPE_REF IN (1)
+						   AND S.CF_INDU_CODE = (SELECT X.CF_INDU_CODE FROM PGENIUS.STK_COM_INDU_REL X
+																		INNER JOIN PGENIUS.STK_CODE Y ON X.COMCODE= Y.COMCODE
+																		WHERE Y.STOCKCODE = #{stockcode})
+		           and t.ENDDATE=#{enddate}
+				   )XX ,
+		(SELECT @RANK := 0) Q
+		 ORDER BY XX.CAP_LAB DESC
+		) YY
+		 WHERE YY.STOCKCODE = #{stockcode} ;
+	</select>
+	<select id="selectOpetaiRank" resultType="java.util.HashMap">
+	SELECT YY.STOCKSNAME,YY.RANK
+  		FROM
+		(
+		SELECT XX.STOCKCODE,XX.STOCKSNAME,@RANK := @RANK+1 AS RANK -- 排名
+		  FROM (SELECT T.ENDDATE,R.STOCKCODE,R.STOCKSNAME,T.EPSP,T.RIS_EPS,T.INC_J/1000000 AS INC_J,T.RIS_OR,T.ROED,T.RIS_ROE
+		               ,T.BPSNED,T.PS_NET_VAL,T.RIS_BPF,T.INC_I/1000000 AS INC_I,T.SEL_RINT,T.BAL_O/1000000 AS BAL_O,T.CAP_LAB,T.OPE_TAI
+		  				FROM PGENIUS.STK_CODE R
+					   INNER JOIN PGENIUS.STK_COM_INDU_REL S
+						  	ON R.COMCODE = S.COMCODE
+					   INNER JOIN PGENIUS.ANA_STK_FIN_IDX_LAT T
+							  ON R.COMCODE = T.COMCODE
+		 			   WHERE R.STK_TYPE_REF IN (1)
+						   AND R.STATUS_TYPE_REF IN (1)
+						   AND S.CF_INDU_CODE = (SELECT X.CF_INDU_CODE FROM PGENIUS.STK_COM_INDU_REL X
+																		INNER JOIN PGENIUS.STK_CODE Y ON X.COMCODE= Y.COMCODE
+																		WHERE Y.STOCKCODE = #{stockcode})
+		           and t.ENDDATE=#{enddate}
+				   )XX ,
+		(SELECT @RANK := 0) Q
+		 ORDER BY XX.OPE_TAI DESC
+		) YY
+		 WHERE YY.STOCKCODE = #{stockcode} ;
+	</select>
+</mapper>

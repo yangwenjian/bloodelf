@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html class="ui-mobile">
+<head>
+<title>指数新闻</title>
+<meta charset="utf-8" />
+
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+	name="viewport" />
+
+</head>
+<body>
+
+	<div class="catalog break">
+		<!--
+			<div class="name font-sm follow">目录</div>
+			<div class="line follow"></div>
+			-->
+		<div id="sub-menu" class="sub-menu font-sm follow">
+			<div class="ui-grid-b">
+				<div class="ui-block-a">
+					<div id="block-1" class="each">
+						<a href="#1"> <span class="index">1.&nbsp;</span> <span
+							class="text">指数新闻</span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="dest-1" class="topic break min-h">
+		<div class="type">
+			<div class="exclam follow"></div>
+			<div class="text follow font-lg">
+				指数新闻<a name="1"></a>
+			</div>
+			<div class="follow-R font-lg top">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<#if !indexNews?? || indexNews?size == 0> 
+		<div id="normal" class="normal font-md break">暂无数据</div>
+		<#else>
+		<div id="normal" class="normal font-md break">
+			<#list indexNews as indexNew>
+			<div>${(indexNew_index+1)?string("#")}、${indexNew.title!}</div>
+			</#list>
+		</div>
+		</#if>
+	</div>
+	<div class="line"></div>
+
+	<div id="dest-5" class="topic break min-h">
+		<#list indexNews as indexNew>
+		<div class="type">
+			<div class="exclam follow"></div>
+			<div class="text follow font-lg">
+				${(indexNew_index+1)?string("#")}、&nbsp;【${(indexNew.declaredate?string("yyyy-MM-dd"))!}&nbsp;${indexNew.srcname!}】<a name="5"></a>
+			</div>
+			<div class="follow-R font-lg top">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="notice-list" class="notice-list break">
+			<div class="notice">
+				<div class="subject font-md">${indexNew.title!}</div>
+				<div class="content font-sm break">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span>${indexNew.content!}</span>
+				</div>
+			</div>
+			<div class="line"></div>
+
+		</div>
+		</#list>
+	</div>
+
+</body>
+</html>

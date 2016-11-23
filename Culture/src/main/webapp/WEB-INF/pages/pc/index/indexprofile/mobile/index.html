@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html class="ui-mobile">
+<head>
+<title>指数概况</title>
+<meta charset="utf-8" />
+
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+	name="viewport" />
+
+</head>
+<body>
+
+
+	<div class="catalog break">
+		<!--
+			<div class="name font-sm follow">目录</div>
+			<div class="line follow"></div>
+			-->
+		<div id="sub-menu" class="sub-menu font-sm follow">
+			<div class="ui-grid-b">
+				<div class="ui-block-a">
+					<div id="block-1" class="each">
+						<a href="#1"> <span class="index">1.&nbsp;</span> <span
+							class="text">指数概况</span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div id="dest-1" class="topic break min-h">
+		<div class="type">
+			<div class="exclam follow"></div>
+			<div class="text follow font-lg">
+				指数概况<a name="1"></a>
+			</div>
+		</div>
+		<div class="follow-R font-lg top">
+			<a href="#top">Top</a>
+		</div>
+		<div class="info-table font-sm break">
+			<table style="width: 1000px; width: 100rem; text-align: center;">
+				<tbody>
+					<tr>
+						<td style="width: 200px; width: 20rem;">指数名称</td>
+						<td style="width: 300px; width: 30rem;">${indexProfile.cname!}</td>
+						<td style="width: 200px; width: 20rem;">指数代码
+						</th>
+						<th style="width: 300px; width: 30rem;">${indexProfile.code!}
+						</td>
+					</tr>
+					<tr>
+						<td>指数简称</td>
+						<td>${indexProfile.sname!}</td>
+						<td>指数分类</td>
+						<td>${indexProfile.orientcls!}</td>
+					</tr>
+					<tr>
+						<td>启用日期</td>
+						<td>${indexProfile.pubdate?string("yyyy-MM-dd")}</td>
+						<td>基准日期</td>
+						<td>${indexProfile.basedate?string("yyyy-MM-dd")}</td>
+					</tr>
+					<tr>
+						<td>基准点</td>
+						<td>${indexProfile.basepoint?string("#")}</td>
+						<td>调整频率</td>
+						<td>${indexProfile.adjfreq!}</td>
+					</tr>
+					<tr>
+						<td>加权方式</td>
+						<td>${indexProfile.whgmeth!}</td>
+						<td>行业关联</td>
+						<td>${indexProfile.tt!}</td>
+					</tr>
+					<tr>
+						<td>指数体系</td>
+						<td>${indexProfile.sampcls!}</td>
+						<td>发布机构</td>
+						<td>${indexProfile.puborgName!}</td>
+					</tr>
+					<tr>
+						<td>覆盖范围</td>
+						<td colspan="3">${indexProfile.sampmeth!}</td>
+					</tr>
+					<tr>
+						<td>调整方式</td>
+						<td colspan="3">${indexProfile.adjmeth!}</td>
+					</tr>
+					<tr>
+						<td>指数说明</td>
+						<td colspan="3">${indexProfile.indexIntro!}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+</body>
+</html>

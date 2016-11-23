@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>指数样本</title>
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+	name="viewport" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+</head>
+<body>
+
+	<div class="catalog gap">
+		<div class="catalog-name follow font-lg">目录</div>
+		<div id="catalog-list" class="catalog-bg follow font-md">
+			<ol type="" class="catalog-list">
+				<!-- 每4个一组 -->
+				<li><span class="index">1.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#1">指数样本</a></span></li>
+				<li><span class="index">&nbsp;&nbsp;</span> <span class="text"><a
+						href="#2"></a></span></li>
+				<li><span class="index">&nbsp;&nbsp;</span> <span class="text"><a
+						href="#3"></a></span></li>
+				<li><span class="index">&nbsp;&nbsp;</span> <span class="text"><a
+						href="#4"></a></span></li>
+			</ol>
+		</div>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				指数样本<a name="1"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<#if !indexSamples?? || indexSamples?size == 0> 
+		<div id="normal" class="left-gap font-md break">暂无数据</div>
+		<#else>
+		<div class="info-table font-md">
+			<table>
+				<thead align="center">
+					<tr>
+						<th style="width: 30%">样本股名称</th>
+						<th style="width: 20%">进入时间</th>
+						<th style="width: 30%">样本股名称</th>
+						<th style="width: 20%">进入时间</th>
+					</tr>
+				</thead>
+				<tbody align="center">
+					<#list indexSamples as sample>
+					<#if sample_index%2 == 0>
+					<tr>
+					</#if>
+						<td>${sample.stockname!}</td>
+						<td>${sample.startdate!}</td>
+					<#if sample_index%2 == 1>
+					</tr>
+					</#if>
+					<#if !sample_has_next && sample_index%2 == 0>
+						<td></td>
+						<td></td>
+						</tr>
+					</#if> 
+					</#list>
+				</tbody>
+			</table>
+		</div>
+		</#if>
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>股东研究</title>
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+	name="viewport" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+<link href="${webRootPath}/res/css/pc/styles.css" type="text/css"
+	rel="stylesheet" />
+
+<script src="${webRootPath}/res/js/pc/jquery-1.7.1.min.js"></script>
+<script src="${webRootPath}/res/js/pc/main.js"></script>
+
+</head>
+<body>
+	<div class="base" name="top">
+
+		<div class="catalog gap">
+			<div class="catalog-name follow font-lg">目录</div>
+			<div id="catalog-list" class="catalog-bg follow font-md">
+				<ol type="" class="catalog-list">
+					<!-- 每4个一组 -->
+					<li><span class="index">1.&nbsp;&nbsp;</span> <span
+						class="text"><a href="#1">控盘情况</a></span></li>
+					<li><span class="index">2.&nbsp;&nbsp;</span> <span
+						class="text"><a href="#2">最新股东</a></span></li>
+					<li><span class="index">3.&nbsp;&nbsp;</span> <span
+						class="text"><a href="#3">历史股东</a></span></li>
+					<li><span class="index">&nbsp;&nbsp;</span> <span
+						class="text"><a href="#4"></a></span></li>
+				</ol>
+			</div>
+		</div>
+
+		<div class="topic topic-gap">
+			<div class="font-lg">
+				<div class="topic-square follow"></div>
+				<div class="follow">
+					控盘情况<a name="1"></a>
+				</div>
+				<div class="follow-R">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<div id="normal" class="left-gap break">
+				<div class="table-top"></div>
+			</div>
+			<#if !holdSitus?? || holdSitus?size == 0>
+			<div id="normal" class="left-gap font-md break">暂无数据</div>
+			<#else>
+			<div class="info-table font-md">
+				<table>
+					<thead align="center">
+						<tr>
+							<th style="width: 20%">时间\指标</th>
+							<th style="width: 20%">股东户数(户)</th>
+							<th style="width: 20%">户均持股(股)</th>
+							<th style="width: 20%">较上期变动 %</th>
+							<th style="width: 20%">流通A股(万股)</th>
+						</tr>
+					</thead>
+					<tbody align="center">
+						<#list holdSitus as holdSitu>
+						<tr>
+							<td>${((holdSitu['changedate'])?string("yyyy-MM-dd"))!}</td>
+							<td>${(holdSitu['totHolder'])!}</td>
+							<td>${(holdSitu['pershr'])!}</td>
+							<td>${(holdSitu['tshrChange'])!}</td>
+							<td>${(holdSitu['flashr'])!}</td>
+						</tr>
+						</#list>
+					</tbody>
+				</table>
+			</div>
+			</#if>
+		</div>
+		
+		<div class="topic topic-gap">
+			<div class="font-lg">
+				<div class="topic-square follow"></div>
+				<div class="follow">
+					最新股东<a name="2"></a>
+				</div>
+				<div class="follow-R">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<div id="normal" class="left-gap break">
+				<div class="table-top"></div>
+			</div>
+			<#if !shareHolder.newHolders?? || shareHolder.newHolders?size == 0>
+			<div id="normal" class="left-gap font-md break">暂无最新股东数据</div>
+			<#else>
+			<div class="info-table font-md">
+				<table>
+					<thead align="center">
+						<tr>
+							<th style="width: 40%">十大股东(${shareHolder.changeDate?string("yyyy-MM-dd")!})股东总数:(${(shareHolder.totalHolders!0)?string("#")})</th>
+							<th style="width: 15%">持股数(万股)</th>
+							<th style="width: 15%">占总股本 %</th>
+							<th style="width: 15%">股份性质</th>
+							<th style="width: 15%">持股变动(万股)</th>
+						</tr>
+					</thead>
+					<tbody align="center">
+						<#list shareHolder.newHolders as holder>
+						<tr>
+							<td>${(holder['name'])!}</td>
+							<td>${(holder['holdNum'])!}</td>
+							<td>${(holder['holdPct'])!}</td>
+							<td>${(holder['shrCls'])!}</td>
+							<td>${(holder['holdchange'])!}</td>
+						</tr>
+						</#list>
+					</tbody>
+				</table>
+			</div>
+			</#if>
+			<div id="normal" class="left-gap break">
+				<div class="table-top"></div>
+			</div>
+			<#if !shareHolder.floatHolders?? || shareHolder.floatHolders?size == 0>
+			<div id="normal" class="left-gap font-md break">暂无十大流通股东数据</div>
+			<#else>
+			<div class="info-table font-md">
+				<table>
+					<thead align="center">
+						<tr>
+							<th style="width: 40%">十大流通股东(${shareHolder.changeDate?string("yyyy-MM-dd")!})股东总数:(${(shareHolder.totalHolders!0)?string("#")})</th>
+							<th style="width: 15%">持股数(万股)</th>
+							<th style="width: 15%">占总股本 %</th>
+							<th style="width: 15%">股份性质</th>
+							<th style="width: 15%">持股变动(万股)</th>
+						</tr>
+					</thead>
+					<tbody align="center">
+						<#list shareHolder.floatHolders as holder>
+						<tr>
+							<td>${(holder['name'])!}</td>
+							<td>${(holder['holdNum'])!}</td>
+							<td>${(holder['holdPct'])!}</td>
+							<td>${(holder['shrCls'])!}</td>
+							<td>${(holder['holdchange'])!}</td>
+						</tr>
+						</#list>
+						<tr>
+						<td colspan="5">${shareHolder.totalShare!}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			</#if>
+			<div id="normal" class="left-gap break">
+				<div class="table-top"></div>
+			</div>
+			<#if !shareHolder.limitHolders?? || shareHolder.limitHolders?size == 0>
+			<div id="normal" class="left-gap font-md break">暂无限制股东数据</div>
+			<#else>
+			<div class="info-table font-md">
+				<table>
+					<thead align="center">
+						<tr>
+							<th style="width: 40%">十大限制股东(${shareHolder.changeDate?string("yyyy-MM-dd")!})股东总数:(${(shareHolder.totalHolders!0)?string("#")})</th>
+							<th style="width: 15%">持股数(万股)</th>
+							<th style="width: 15%">占总股本 %</th>
+							<th style="width: 15%">股份性质</th>
+							<th style="width: 15%">持股变动(万股)</th>
+						</tr>
+					</thead>
+					<tbody align="center">
+						<#list shareHolder.limitHolders as holder>
+						<tr>
+							<td>${(holder['name'])!}</td>
+							<td>${(holder['holdNum'])!}</td>
+							<td>${(holder['holdPct'])!}</td>
+							<td>${(holder['shrCls'])!}</td>
+							<td>${(holder['holdchange'])!}</td>
+						</tr>
+						</#list>
+					</tbody>
+				</table>
+			</div>
+			</#if>
+		</div>
+		
+		<div class="topic topic-gap">
+			<div class="font-lg">
+				<div class="topic-square follow"></div>
+				<div class="follow">
+					历史股东<a name="3"></a>
+				</div>
+				<div class="follow-R">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<#if !hisShareHolders?? || hisShareHolders?size == 0>
+			<div id="normal" class="left-gap font-md break">暂无历史股东数据</div>
+			<#else>
+			<#list hisShareHolders as shareHolder>
+			<div id="normal" class="left-gap break">
+				<div class="table-top"></div>
+			</div>
+			<div class="info-table font-md">
+				<table>
+					<thead align="center">
+						<tr>
+							<th style="width: 40%">十大股东(${shareHolder.changeDate?string("yyyy-MM-dd")!})股东总数:(${(shareHolder.totalHolders!0)?string("#")})</th>
+							<th style="width: 15%">持股数(万股)</th>
+							<th style="width: 15%">占总股本 %</th>
+							<th style="width: 15%">股份性质</th>
+							<th style="width: 15%">持股变动(万股)</th>
+						</tr>
+					</thead>
+					<tbody align="center">
+						<#list shareHolder.newHolders as holder>
+						<tr>
+							<td>${(holder['name'])!}</td>
+							<td>${(holder['holdNum'])!}</td>
+							<td>${(holder['holdPct'])!}</td>
+							<td>${(holder['shrCls'])!}</td>
+							<td>${(holder['holdchange'])!}</td>
+						</tr>
+						</#list>
+					</tbody>
+				</table>
+			</div>
+			<div id="normal" class="left-gap break">
+				<div class="table-top"></div>
+			</div>
+			<div class="info-table font-md">
+				<table>
+					<thead align="center">
+						<tr>
+							<th style="width: 40%">十大流通股东(${shareHolder.changeDate?string("yyyy-MM-dd")!})股东总数:(${(shareHolder.totalHolders!0)?string("#")})</th>
+							<th style="width: 15%">持股数(万股)</th>
+							<th style="width: 15%">占总股本 %</th>
+							<th style="width: 15%">股份性质</th>
+							<th style="width: 15%">持股变动(万股)</th>
+						</tr>
+					</thead>
+					<tbody align="center">
+						<#list shareHolder.floatHolders as holder>
+						<tr>
+							<td>${(holder['name'])!}</td>
+							<td>${(holder['holdNum'])!}</td>
+							<td>${(holder['holdPct'])!}</td>
+							<td>${(holder['shrCls'])!}</td>
+							<td>${(holder['holdchange'])!}</td>
+						</tr>
+						</#list>
+						<tr>
+						<td colspan="5">${shareHolder.totalShare!}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<#if shareHolder.limitHolders??>
+			<div id="normal" class="left-gap break">
+				<div class="table-top"></div>
+			</div>
+			<div class="info-table font-md">
+				<table>
+					<thead align="center">
+						<tr>
+							<th style="width: 40%">十大限制股东(${shareHolder.changeDate?string("yyyy-MM-dd")!})股东总数:(${(shareHolder.totalHolders!0)?string("#")})</th>
+							<th style="width: 15%">持股数(万股)</th>
+							<th style="width: 15%">占总股本 %</th>
+							<th style="width: 15%">股份性质</th>
+							<th style="width: 15%">持股变动(万股)</th>
+						</tr>
+					</thead>
+					<tbody align="center">
+						<#list shareHolder.limitHolders as holder>
+						<tr>
+							<td>${(holder['name'])!}</td>
+							<td>${(holder['holdNum'])!}</td>
+							<td>${(holder['holdPct'])!}</td>
+							<td>${(holder['shrCls'])!}</td>
+							<td>${(holder['holdchange'])!}</td>
+						</tr>
+						</#list>
+					</tbody>
+				</table>
+			</div>
+			</#if>
+			</#list>
+			</#if>
+		</div>
+	</div>
+
+</body>
+</html>

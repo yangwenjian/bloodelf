@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title><sitemesh:write property='title' /></title>
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+	name="viewport" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<link href="${webRootPath}/res/css/pc/styles.css" type="text/css"
+	rel="stylesheet" />
+
+<script src="${webRootPath}/res/js/pc/jquery-1.7.1.min.js"></script>
+<script src="${webRootPath}/res/js/pc/main.js"></script>
+<sitemesh:write property='head' />
+</head>
+<body>
+
+	<div class="base" name="top">
+		<div class="head font-md gap">
+			<div id="m1" class="menu-grid">
+				<a
+					href="${webRootPath}/f10/stock/cpbd/pc/${stockcode}.html?tokenId=${tokenId}">操盘必读</a>
+			</div>
+			<div id="m2" class="menu-grid">
+				<a
+					href="${webRootPath}/f10/stock/gsgk/pc/${stockcode}.html?tokenId=${tokenId}">公司概况</a>
+			</div>
+			<div id="m3" class="menu-grid">
+				<a
+					href="${webRootPath}/f10/stock/gbfh/pc/${stockcode}.html?tokenId=${tokenId}">股本分红</a>
+			</div>
+			<div id="m4" class="menu-grid">
+				<a
+					href="${webRootPath}/f10/stock/gdyj/pc/${stockcode}.html?tokenId=${tokenId}">股东研究</a>
+			</div>
+			<div id="m5" class="menu-grid">
+				<a
+					href="${webRootPath}/f10/stock/jgcg/pc/${stockcode}.html?tokenId=${tokenId}">机构持股</a>
+			</div>
+			<div id="m6" class="menu-grid">
+				<a
+					href="${webRootPath}/f10/stock/cfzd/pc/${stockcode}.html?tokenId=${tokenId}">超幅涨跌</a>
+			</div>
+			<div id="m7" class="menu-grid">
+				<a
+					href="${webRootPath}/f10/stock/ggjs/pc/${stockcode}.html?tokenId=${tokenId}">高管介绍</a>
+			</div>
+			<div id="m8" class="menu-grid">
+				<a
+					href="${webRootPath}/f10/stock/gqfz/pc/${stockcode}.html?tokenId=${tokenId}">股权分置</a>
+			</div>
+			<div id="m9" class="menu-grid break">
+				<a
+					href="${webRootPath}/f10/stock/jyzk/pc/${stockcode}.html?tokenId=${tokenId}">经营状况</a>
+			</div>
+			<div id="m10" class="menu-grid">
+				<a
+					href="${webRootPath}/f10/stock/hydw/pc/${stockcode}.html?tokenId=${tokenId}">行业地位</a>
+			</div>
+			<div id="m11" class="menu-grid">
+				<a
+					href="${webRootPath}/f10/stock/cwfx/pc/${stockcode}.html?tokenId=${tokenId}">财务分析</a>
+			</div>
+			<div id="m12" class="menu-grid">
+				<a
+					href="${webRootPath}/f10/stock/gsgg/pc/${stockcode}.html?tokenId=${tokenId}">公司公告</a>
+			</div>
+			<div id="m13" class="menu-grid">
+				<a
+					href="${webRootPath}/f10/stock/mtbd/pc/${stockcode}.html?tokenId=${tokenId}">媒体报道</a>
+			</div>
+			<div id="m14" class="menu-grid">
+				<a
+					href="${webRootPath}/f10/stock/scpl/pc/${stockcode}.html?tokenId=${tokenId}">市场评论</a>
+			</div>
+			<div id="m15" class="menu-grid">
+				<a
+					href="${webRootPath}/f10/stock/zysx/pc/${stockcode}.html?tokenId=${tokenId}">重要事项</a>
+			</div>
+			<div class="menu-non-active"></div>
+		</div>
+
+		<div class="third-party gap">
+			<div class="h1 font-lg">
+				${stockname!'-'}(<span>${stockcode!'-'}</span>)
+			</div>
+			<br>
+			<div class="h2">
+				<span>${.now?string("yyyy-MM-dd")}</span> 更新
+			</div>
+		</div>
+		<sitemesh:write property='body' />
+
+		<div class="topic topic-gap">
+			<div class="declare-label font-md follow">免责声明</div>
+			<div class="declare-text follow">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本信息由聚灵信息公司提供,
+				仅供参考. 巨灵信息力求但不保证数据完全准确. 如有错漏, 请以中国证监会指定上市公司信息披露媒体为准.
+				巨灵信息不对信息全部或部份内容导致的盈亏承担任何责任.</div>
+		</div>
+
+		<div class="foot break">巨灵信息, 中国金融资讯服务第一品牌! Email:
+			Service@genius.com.cn</div>
+	</div>
+
+</body>
+<script type="text/javascript">
+	x = document.title;
+	var map = {
+		"操盘必读" : "m1",
+		"公司概况" : "m2",
+		"股本分红" : "m3",
+		"股东研究" : "m4",
+		"机构持股" : "m5",
+		"超幅涨跌" : "m6",
+		"高管介绍" : "m7",
+		"股权分置" : "m8",
+		"经营状况" : "m9",
+		"行业地位" : "m10",
+		"财务分析" : "m11",
+		"公司公告" : "m12",
+		"媒体报道" : "m13",
+		"市场评论" : "m14",
+		"重要事项" : "m15"
+	};
+	var index = map[x]; 
+	var atag = document.getElementById(index);
+	$("#"+index).attr("style","background-image: url(${webRootPath}/res/css/pc/button-bg.png)");
+</script>
+</html>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.stockindex.geniusdao.TradeMemoDAO">
+    <select id="getMemo" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT SQL_NO_CACHE
+			   DATE(a.declaredate) as declaredate,  -- 公告日期
+			   a.title_main as titleMain,           -- 新闻标题
+               c.txt_content as txtContent          -- 新闻正文
+        FROM (SELECT guid
+              FROM news_cls 
+              WHERE cls_code =#{indexCode,jdbcType=VARCHAR}
+              AND declaredate > ADDDATE(CURDATE(),-3)
+              ORDER BY declaredate DESC LIMIT 30) d
+        INNER JOIN pgenius.news_main a ON a.guid=d.guid AND a.isvalid=1
+        LEFT JOIN news_content c ON a.guid=c.guid AND c.isvalid=1;
+    </select>
+</mapper>

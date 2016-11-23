@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html class="ui-mobile">
+<head>
+<title>样本统计</title>
+<meta charset="utf-8" />
+
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+	name="viewport" />
+
+</head>
+<body>
+
+
+	<div class="catalog break">
+		<div id="sub-menu" class="sub-menu font-sm follow">
+			<div class="ui-grid-b">
+				<div class="ui-block-a">
+					<div id="block-1" class="each">
+						<a href="#1"> <span class="index">1.&nbsp;</span> <span
+							class="text">样本统计</span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div id="dest-1" class="topic break min-h">
+		<div class="type">
+			<div class="exclam follow"></div>
+			<div class="text follow font-lg">
+				样本统计<a name="1"></a>
+			</div>
+		</div>
+		<div class="follow-R font-lg top">
+			<a href="#top">Top</a>
+		</div>
+		<#if !sampleStatistics?? || sampleStatistics?size == 0>
+		<div id="normal" class="left-gap font-md break">暂无数据</div>
+		<#else>
+		<div class="info-table font-sm break">
+			<table style="width: 1000px; width: 100rem; text-align: center;">
+				<thead>
+					<tr>
+						<th style="width: 300px; width: 30rem;">证券名称</th>
+						<th style="width: 200px; width: 20rem;">样本选用时间</th>
+						<th style="width: 150px; width: 15rem;">总股本(亿)</th>
+						<th style="width: 100px; width: 10rem;">总股本排名</th>
+						<th style="width: 150px; width: 15rem;">流通股本(亿)</th>
+						<th style="width: 100px; width: 10rem;">流通股排名</th>
+					</tr>
+				</thead>
+				<tbody>
+					<#list sampleStatistics as stat>
+					<tr>
+						<td>${(stat.ss)!}</td>
+						<td>${(stat.mm?string("yyyy-MM-dd"))!}</td>
+						<td>${(stat.kk)!}</td>
+						<td>${(stat.rank1?string("#"))!}</td>
+						<td>${(stat.yy)!}</td>
+						<td>${(stat.rank2?string("#"))!}</td>
+					</tr>
+					</#list>
+				</tbody>
+			</table>
+		</div>
+		</#if>
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.stockindex.geniusdao.DailyTipDAO">
+    <select id="getTips" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT A.DECLAREDATE as declaredate, -- 公告日期
+			   A.TITLE_MAIN  as titleMain,   -- 新闻标题
+               C.TXT_CONTENT as txtContent   -- 新闻正文
+        FROM NEWS_MAIN A
+        INNER JOIN NEWS_CLS B
+        ON A.GUID=B.GUID AND A.DECLAREDATE=B.DECLAREDATE
+        INNER JOIN NEWS_CONTENT C
+        ON A.GUID=C.GUID
+        AND A.ISVALID=1 
+        AND B.ISVALID=1 AND C.ISVALID=1
+        AND B.CLS_CODE=#{indexCode,jdbcType=VARCHAR}
+        AND A.DECLAREDATE=(SELECT X.DECLAREDATE 
+                           FROM NEWS_MAIN X 
+                           INNER JOIN NEWS_CLS Y ON X.GUID = Y.GUID 
+                           WHERE Y.CLS_CODE ='001008' ORDER BY X.DECLAREDATE DESC 
+                           LIMIT 1);
+    </select>
+    
+    <select id="getAllotmentTips" resultType="java.util.Map" useCache="false">
+        SELECT SQL_NO_CACHE
+               DATE(a.declaredate) as declaredate,  -- 公告日期
+               a.title_main as titleMain,           -- 新闻标题
+               c.txt_content as txtContent          -- 新闻正文
+        FROM (SELECT guid FROM pgenius.news_cls 
+              WHERE declaredate>=date_add(curdate(),interval -1 month) 
+              and isvalid=1 
+              AND cls_code='001006'
+              ORDER BY declaredate DESC
+              LIMIT 30) d
+        INNER JOIN pgenius.news_main a ON a.guid=d.guid AND a.isvalid=1
+        LEFT JOIN pgenius.news_content c ON a.guid=c.guid AND c.isvalid=1
+        ORDER BY a.DECLAREDATE DESC LIMIT 1;
+    </select>
+</mapper>

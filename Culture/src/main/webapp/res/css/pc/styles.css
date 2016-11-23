@@ -1,0 +1,285 @@
+html {
+	background-color: #252525;
+}
+
+body {
+	position: relative;
+	width: 95%;
+	font-family: "Microsoft YaHei", Î¢ÈíÑÅºÚ;
+	font-weight: 400;
+	font-style: normal;
+	font-size: 13px;
+	margin-left: auto;
+	margin-right: auto;
+	min-width: 1024px;
+	max-width: 1600px;
+	color: #fef3cb;
+	font-size: 16px;
+}
+
+.font-lg {
+	font-size: 22px;
+	line-height: 22px;
+}
+
+.font-md {
+	font-size: 18px;
+}
+
+.gap {
+	padding: 22px 39px 0px 39px;
+	clear: both;
+}
+
+.follow {
+	float: left;
+}
+
+.follow-R {
+	float: right;
+}
+
+.topic-gap {
+	padding: 30px 39px 0px 39px;
+	clear: both;
+}
+
+a:link {
+	color: #fef3cb;
+	text-decoration: none;
+}
+
+a:visited {
+	color: #fef3cb;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #fef3cb;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.base {
+	width: 100%;
+	margin-left: auto;
+	margin-right: auto;
+	position: relative;
+	height: 100%;
+	min-height: 600px;
+	text-align: center;
+	background-color: rgba(37, 37, 37, 1);
+}
+
+.head {
+	position: relative;
+	height: 72px;
+}
+
+.menu-grid {
+	width: 12.5%;
+	height: 36px;
+	color: #fef3cb;
+	background-color: rgba(143, 92, 9, 1);
+	float: left;
+	text-align: center;
+	line-height: 36px;
+	cursor: pointer;
+}
+
+.menu-non-active {
+	width: 12.5%;
+	height: 36px;
+	color: #fef3cb;
+	background-color: rgba(143, 92, 9, 1);
+	float: left;
+	text-align: center;
+	line-height: 36px;
+	cursor: pointer;
+}
+
+.break {
+	clear: both;
+}
+
+.menu-grid:hover {
+	/*background-color: rgba(245, 181, 62, 0.5);*/
+	background-image: url(button-hover-bg.png);
+}
+
+.third-party {
+	position: relative;
+	text-align: center;
+}
+
+.third-party>.h1 {
+	height: 18px;
+	line-height: 18px;
+}
+
+.third-party>.h2 {
+	height: 14px;
+	line-height: 14px;
+	filter: alpha(opacity = 50);
+	-khtml-opacity: 0.5;
+	-moz-opacity: 0.5;
+	opacity: 0.5;
+}
+
+.catalog {
+	position: relative;
+}
+
+.catalog-name {
+	width: 20%;
+	margin: auto;
+	height: 160px;
+	line-height: 160px;
+	text-align: center;
+	background-color: rgba(143, 92, 9, 1);
+	color: #fef3cb;
+}
+
+.catalog-bg {
+	width: 80%;
+	margin: auto;
+	min-height: 160px;
+	line-height: 160px;
+	position: relative;
+	background-color: rgba(254, 243, 203, 1);
+	color: #000;
+}
+
+ol.catalog-list {
+	list-style: none;
+	margin: 22px;
+	float: left;
+	line-height: 1.618;
+	text-align: left;
+}
+
+ol.catalog-list a {
+	color: #000;
+}
+
+.topic {
+	/*width: 100%;*/
+	text-align: left;
+	min-height: 160px;
+}
+
+.topic-square {
+	width: 8px;
+	height: 22px;
+	background-color: rgba(143, 92, 9, 1);
+	float: left;
+	margin-right: 8px;
+}
+
+.left-gap {
+	padding: 22px 0px 0px 50px;
+}
+
+table {
+	width: 100%;
+}
+
+/*
+table.event-table tr {
+	height: 60px;
+}
+
+table.event-table td.colum1 {
+	width: 15%;
+	text-align: right;
+	vertical-align: top;
+}
+
+table.event-table td.colum2 {
+	width: 80%;
+	text-align: left;
+	vertical-align: top;
+}
+*/
+.table-top {
+	font-size: 13px;
+	text-align: right;
+}
+
+.table-bottom  div {
+	font-size: 15px;
+	text-align: left;
+	line-height: 1.618;
+	color: #f5b53e
+}
+
+.info-table th {
+	color: #000;
+	background-size: 100% 100%;
+	background-image: url(table-title-bg.png);
+	background-repeat: no-repeat;
+	font-weight: normal;
+}
+
+.info-table td {
+	color: #000;
+	background-color: rgba(254, 243, 203, 1);
+}
+
+.notice-list {
+	padding: 22px 0px 0px 0px;
+}
+
+.notice {
+	color: #fef3cb;
+	margin-bottom: 22px;
+	padding: 10px;
+	/*background-color: rgba(254, 243, 203, 1);*/
+}
+
+.line {
+	height: 2px;
+	height: 0.2rem;
+	background-color: #f5b53e;
+	margin: 0px 60px 0px 60px;
+}
+
+.notice>.subject {
+	float: left;
+}
+
+.notice>.publish-date {
+	float: right;
+}
+
+.notice .content {
+	text-align: left;
+	line-height: 1.618;
+}
+
+.notice .issuer {
+	text-align: right;
+	line-height: 1.618;
+}
+
+.declare-label {
+	width: 100%;
+	padding: 10px 0px 10px 10px;
+	text-align: left;
+	background-color: rgba(143, 92, 9, 1);
+	line-height: 1.618;
+}
+
+.declare-text {
+	width: 100%;
+	padding: 0px 0px 10px 10px;
+	text-align: left;
+	background-color: rgba(143, 92, 9, 1);
+	line-height: 1.618;
+}
+
+.foot {
+	text-align: center;
+	line-height: 1.618;
+}
+

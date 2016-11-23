@@ -1,0 +1,366 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>公司概况</title>
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+	name="viewport" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+<link href="${webRootPath}/res/css/pc/styles.css" type="text/css"
+	rel="stylesheet" />
+
+<script src="${webRootPath}/res/js/pc/jquery-1.7.1.min.js"></script>
+<script src="${webRootPath}/res/js/pc/main.js"></script>
+
+</head>
+<body>
+
+
+	<div class="catalog gap">
+		<div class="catalog-name follow font-lg">目录</div>
+		<div id="catalog-list" class="catalog-bg follow font-md">
+			<ol type="" class="catalog-list">
+				<!-- 每4个一组 -->
+				<li><span class="index">1.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#1">控股股东</a></span></li>
+				<li><span class="index">2.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#2">投资要点</a></span></li>
+				<li><span class="index">3.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#3">发行上市</a></span></li>
+				<li><span class="index">4.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#4">公司概况</a></span></li>
+			</ol>
+			<ol class="catalog-list">
+				<!-- 每4个一组 -->
+				<li><span class="index">5.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#5">雇员情况</a></span></li>
+				<li><span class="index">6.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#6">首发股东</a></span></li>
+			</ol>
+		</div>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				控股股东与实际控制人关系<a name="1"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<div class="info-table font-md">
+			<table>
+				<tbody align="center">
+					<tr>
+						<td style="width: 20%">【控股股东】</td>
+						<td style="width: 80%">${(shareHolder["ctrlName"])!}</td>
+					</tr>
+					<tr>
+						<td style="width: 20%">控制人情况</td>
+						<td style="width: 80%">${(shareHolder['ctrlNameInfo'])!}</td>
+					</tr>
+					<tr>
+						<td style="width: 20%">控股股东与实际控制人关系</td>
+						<td style="width: 80%">${(shareHolder['relation'])!}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				投资要点<a name="2"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap font-md break">
+			<div>
+				${investKeyPoint?replace("\r\n", '</br>')!}
+			</div>
+		</div>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				发行上市<a name="3"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<div class="info-table font-md">
+			<table>
+				<tbody align="center">
+					<tr>
+						<td style="width: 25%">发行日期</td>
+						<td style="width: 25%">${(pubOffer["apldate"])!'-'}</td>
+						<td style="width: 25%">上市日期</td>
+						<td style="width: 25%">${(pubOffer["listdate"])!}</td>
+					</tr>
+					<tr>
+						<td style="width: 25%">发行量(万股)</td>
+						<td style="width: 25%">${(pubOffer["totalShare"])!}</td>
+						<td style="width: 25%">募集资金万</td>
+						<td style="width: 25%">${(pubOffer["netcap"])!}</td>
+					</tr>
+					<tr>
+						<td style="width: 25%">发行价格(元)</td>
+						<td style="width: 25%">${(pubOffer["issPrice"])!}</td>
+						<td style="width: 25%">摊薄市盈率</td>
+						<td style="width: 25%">${(pubOffer["pe"])!}</td>
+					</tr>
+					<tr>
+						<td style="width: 25%">每股收益(元)</td>
+						<td style="width: 25%">${(pubOffer["eps"])!'0.00'}</td>
+						<td style="width: 25%">每股净资产</td>
+						<td style="width: 25%">${(pubOffer["naps"])!}</td>
+					</tr>
+					<tr>
+						<td style="width: 25%">发行占总股本</td>
+						<td style="width: 25%">${(pubOffer["sharePercent"])!'0.00'}</td>
+						<td style="width: 25%">中签率 (%)</td>
+						<td style="width: 25%">${(pubOffer["lotRate"])!}</td>
+					</tr>
+					<tr>
+						<td style="width: 25%">首日开盘价元</td>
+						<td style="width: 25%">${(pubOffer["topenFirst"])!}</td>
+						<td style="width: 25%">首日收盘价</td>
+						<td style="width: 25%">${(pubOffer["tcloseFirst"])!}</td>
+					</tr>
+					<tr>
+						<td style="width: 25%">发行方式</td>
+						<td colspan="3">${(pubOffer["issCls"])!}</td>
+					</tr>
+					<tr>
+						<td style="width: 25%">主承销商</td>
+						<td colspan="3">${(pubOffer["mainundwrt"])!}</td>
+					</tr>
+					<tr>
+						<td style="width: 25%">上市推荐人</td>
+						<td colspan="3">${(pubOffer["orgNames"])!}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				公司概况<a name="4"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<div class="info-table font-md">
+			<table>
+				<tbody align="center">
+					<tr>
+						<td style="width: 20%">股票简称</td>
+						<td style="width: 40%">${(comProfile['stockname'])!}</td>
+						<td style="width: 20%">股票代码</td>
+						<td style="width: 20%">${(comProfile['stockcode'])!}</td>
+					</tr>
+					<tr>
+						<td style="width: 20%">相关证券</td>
+						<td colspan="3"><#list comProfile.relStocks as relStock>
+							【${relStock.sectype!}:${relStock.secsname!}(${relStock.seccode}),${relStock.mkttype!}】</br>
+							</#list>
+						</td>
+					</tr>
+					<tr>
+						<td rowspan=${comProfile['formerNames']?size!1}>曾用简称</td>
+						<td colspan="3">${(comProfile['formerNames']?first)!}</td>
+					</tr>
+					<#list comProfile['formerNames'] as formerName> <#if
+					formerName_index != 0>
+					<tr>
+						<td colspan="3">${formerName!}</td>
+					</tr>
+					</#if> </#list>
+					<tr>
+						<td style="width: 20%">中文名</td>
+						<td colspan="3">${(comProfile['cname'])!}</td>
+					</tr>
+					<tr>
+						<td style="width: 20%">英文名</td>
+						<td colspan="3">${(comProfile['ename'])!}</td>
+					</tr>
+					<tr>
+						<td style="width: 20%">相关指数</td>
+						<td colspan="3"><#list comProfile['index'] as index>${index!}</#list></td>
+					</tr>
+					<tr>
+						<td style="width: 20%">注册地址</td>
+						<td colspan="3">${(comProfile['regiAddr'])!}</td>
+					</tr>
+					<tr>
+						<td style="width: 20%">办公地址</td>
+						<td colspan="3">${(comProfile['officeAddr'])!}</td>
+					</tr>
+					<tr>
+						<td style="width: 20%">主营业务</td>
+						<td colspan="3">${(comProfile['briefBuz'])!}</td>
+					</tr>
+					<tr>
+						<td style="width: 20%">公司网址</td>
+						<td style="width: 40%">${(comProfile['website'])!}</td>
+						<td style="width: 20%">电子信箱</td>
+						<td style="width: 20%">${(comProfile['email'])!}</td>
+					</tr>
+					<tr>
+						<td style="width: 20%">所属行业</td>
+						<td style="width: 40%">${(comProfile['induName'])!}</td>
+						<td style="width: 20%">成立日期</td>
+						<td style="width: 20%">${(comProfile['builddate'])!}</td>
+					</tr>
+					<tr>
+						<td style="width: 20%">注册资本</td>
+						<td style="width: 40%">${(comProfile['regicap'])!}</td>
+						<td style="width: 20%">法人代表</td>
+						<td style="width: 20%">${(comProfile['legPerson'])!}</td>
+					</tr>
+					<tr>
+						<td style="width: 20%">总经理</td>
+						<td style="width: 40%">${(comProfile['manager'])!}</td>
+						<td style="width: 20%">董秘</td>
+						<td style="width: 20%">${(comProfile['boardSectry'])!}</td>
+					</tr>
+					<tr>
+						<td style="width: 20%">证券事务代表</td>
+						<td style="width: 40%">${(comProfile['redr'])!}</td>
+						<td style="width: 20%">电话</td>
+						<td style="width: 20%">${(comProfile['tel'])!}</td>
+					</tr>
+					<tr>
+						<td style="width: 20%">传真</td>
+						<td style="width: 40%">${(comProfile['fax'])!}</td>
+						<td style="width: 20%">邮政编码</td>
+						<td style="width: 20%">${(comProfile['postcode'])!}</td>
+					</tr>
+					<tr>
+						<td style="width: 20%">律师事务所</td>
+						<td colspan="3">${(comProfile['lawOrgCode'])!}</td>
+					</tr>
+					<tr>
+						<td style="width: 20%">财务审计</td>
+						<td colspan="3">${(comProfile['accOrgCode'])!}</td>
+					</tr>
+					<tr>
+						<td style="width: 20%">历史沿革</td>
+						<td colspan="3">${(comProfile['briefIntro'])!}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				雇员情况 <#if
+				emplInfo.enddate??>(${emplInfo.enddate?string("yyyy-MM-dd")})</#if><a
+					name="5"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<#if !emplSitus?? || emplSitus?size == 0>
+		<div>暂无数据</div>
+		<#else>
+		<div class="info-table font-md">
+			<table>
+				<tbody align="center">
+					<tr>
+						<td colspan="4">员工总数${(emplInfo.stuffNum!0)?string("#")}人，其中在职员工${(emplInfo.workNum!0)?string("#")}人，
+							离退休员工离退休员工${(emplInfo.retireNum!0)?string("#")}人</td>
+					</tr>
+					<#list emplSitus as emplSitu>
+					<tr>
+						<td style="width: 25%">${(emplSitu['hrcls'])!}</td>
+						<td style="width: 25%">${(emplSitu['itemName'])!}</td>
+						<td style="width: 25%">${((emplSitu['emplNum'])!0)?string("#")}</td>
+						<td style="width: 25%">占${(emplSitu['emplPct'])!}%</td>
+					</tr>
+					</#list>
+				</tbody>
+			</table>
+		</div>
+		</#if>
+	</div>
+
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				首发原股东持股明细<a name="3"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<#if !fristShareHolders?? || fristShareHolders?size == 0>
+		<div>暂无数据</div>
+		<#else>
+		<div class="info-table font-md">
+			<table>
+				<thead align="center">
+					<tr>
+						<th style="width: 20%">股东名称(及备注)</th>
+						<th style="width: 10%">是否控股</th>
+						<th style="width: 20%">持股数(万)</th>
+						<th style="width: 20%">持股比例(%)</th>
+						<th style="width: 20%">开始日期</th>
+						<th style="width: 10%">锁定期月</th>
+					</tr>
+				</thead>
+				<tbody align="center">
+					<#list fristShareHolders as shareHolder>
+					<tr>
+						<td>${(shareHolder['holderName'])!}</td>
+						<td>${(shareHolder['isControl'])!}</td>
+						<td>${(shareHolder['holdNum'])!}</td>
+						<td>${(shareHolder['sharePct'])!}</td>
+						<td>${(shareHolder['startdate'])!}</td>
+						<td>${(shareHolder['lockPeriod'])!}</td>
+					</tr>
+					</#list>
+				</tbody>
+			</table>
+		</div>
+		</#if>
+	</div>
+
+
+</body>
+</html>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.resource.geniusf10dao.FinancialF10DAO">
+	<!-- 根据证券市场查询所有证券的流通股本 -->
+	<select id="selectInvestment" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT enddate AS enddate
+		      ,epsp  AS epsp   -- 基本每股收益（元）
+		      ,EPSEED  AS epseed -- 摊薄每股收益（元）
+		      ,BPS   AS bps   -- 每股净资产（元）
+		      ,shr_rt AS shrrt -- 股息发放率
+		      ,DIV_RATE AS divrate -- 普通股获利率%
+		      ,PEG   AS peg   -- 本利比
+		      ,PE    AS pe   -- 市盈率
+		      ,PB    AS pb   -- 市净率
+		FROM f10.u_stk_val_idx WHERE stockcode=#{stockcode}  ORDER BY enddate DESC LIMIT 5;
+	</select>
+</mapper>

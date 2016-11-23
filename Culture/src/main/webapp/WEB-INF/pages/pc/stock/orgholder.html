@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>机构持股</title>
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+	name="viewport" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+<link href="${webRootPath}/res/css/pc/styles.css" type="text/css"
+	rel="stylesheet" />
+
+<script src="${webRootPath}/res/js/pc/jquery-1.7.1.min.js"></script>
+<script src="${webRootPath}/res/js/pc/main.js"></script>
+
+</head>
+<body>
+
+	<div class="catalog gap">
+		<div class="catalog-name follow font-lg">目录</div>
+		<div id="catalog-list" class="catalog-bg follow font-md">
+			<ol type="" class="catalog-list">
+				<!-- 每4个一组 -->
+				<li><span class="index">1.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#1">机构持仓统计</a></span></li>
+				<li><span class="index">2.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#2">基金持仓统计</a></span></li>
+				<li><span class="index">3.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#3">机构持股</a></span></li>
+				<li><span class="index">&nbsp;&nbsp;</span> <span class="text"><a
+						href="#4"></a></span></li>
+			</ol>
+		</div>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				机构持仓统计<a name="1"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<#if !orgPositions?? || orgPositions?size == 0> 
+		<div id="normal" class="left-gap font-md break">暂无数据</div>
+		<#else>
+		<div class="info-table font-md">
+			<table>
+				<thead align="center">
+					<tr>
+						<th style="width: 22%">机构持仓(万股)</th> <#list orgPositions?keys as
+						key>
+						<th style="width: 13%">${key}</th> </#list>
+					</tr>
+				</thead>
+				<tbody align="center">
+					<tr>
+						<td>信托投资公司<br>占资产净值比%
+						</td> <#list orgPositions?keys as key> <#if
+						orgPositions[key]['信托公司']??>
+						<td>${(orgPositions[key]['信托公司']?replace('\n','<br>'))!'0.00'}
+						</td> <#else>
+						<td>0.00<br>0.000
+						</td> </#if> </#list>
+					</tr>
+					<tr>
+						<td>银行<br>占资产净值比%
+						</td> <#list orgPositions?keys as key> <#if orgPositions[key]['银行']??>
+						<td>${(orgPositions[key]['银行']?replace('\n','<br>'))!'0.00'}
+						</td> <#else>
+						<td>0.00<br>0.000
+						</td> </#if> </#list>
+					</tr>
+					<tr>
+						<td>一般企业<br>占资产净值比%
+						</td> <#list orgPositions?keys as key> <#if
+						orgPositions[key]['一般企业(非政府机构、事业单位、金融机构)']??>
+						<td>${(orgPositions[key]['一般企业(非政府机构、事业单位、金融机构)']?replace('\n','<br>'))!'0.00'}
+						</td> <#else>
+						<td>0.00<br>0.000
+						</td> </#if> </#list>
+					</tr>
+					<tr>
+						<td>全国社保基金<br>占资产净值比%
+						</td> <#list orgPositions?keys as key> <#if
+						orgPositions[key]['全国社保基金']??>
+						<td>${(orgPositions[key]['全国社保基金']?replace('\n','<br>'))!'0.00'}
+						</td> <#else>
+						<td>0.00<br>0.000
+						</td> </#if> </#list>
+					</tr>
+					<tr>
+						<td>证券投资基金<br>占资产净值比%
+						</td> <#list orgPositions?keys as key> <#if
+						orgPositions[key]['证券投资基金']??>
+						<td>${(orgPositions[key]['证券投资基金']?replace('\n','<br>'))!'0.00'}
+						</td> <#else>
+						<td>0.00<br>0.000
+						</td> </#if> </#list>
+					</tr>
+					<tr>
+						<td>券商理财产品<br>占资产净值比%
+						</td> <#list orgPositions?keys as key> <#if
+						orgPositions[key]['券商理财产品']??>
+						<td>${(orgPositions[key]['券商理财产品']?replace('\n','<br>'))!'0.00'}
+						</td> <#else>
+						<td>0.00<br>0.000
+						</td> </#if> </#list>
+					</tr>
+					<tr>
+						<td>保险理财产品<br>占资产净值比%
+						</td> <#list orgPositions?keys as key> <#if
+						orgPositions[key]['保险理财产品']??>
+						<td>${(orgPositions[key]['保险理财产品']?replace('\n','<br>'))!'0.00'}
+						</td> <#else>
+						<td>0.00<br>0.000
+						</td> </#if> </#list>
+					</tr>
+					<tr>
+						<td>基金理财产品<br>占资产净值比%
+						</td> <#list orgPositions?keys as key> <#if
+						orgPositions[key]['基金理财产品']??>
+						<td>${(orgPositions[key]['基金理财产品']?replace('\n','<br>'))!'0.00'}
+						</td> <#else>
+						<td>0.00<br>0.000
+						</td> </#if> </#list>
+					</tr>
+					<tr>
+						<td>非机构之其他类型<br>占资产净值比%
+						</td> <#list orgPositions?keys as key> <#if
+						orgPositions[key]['非营利性机构']??>
+						<td>${(orgPositions[key]['非营利性机构']?replace('\n','<br>'))!}
+						</td> <#else>
+						<td>0.00<br>0.000
+						</td> </#if> </#list>
+					</tr>
+					<tr>
+						<td>持仓合计<br>占资产净值比%
+						</td> <#list orgPositions?keys as key> <#if
+						orgPositions[key]['持仓合计']??>
+						<td>${(orgPositions[key]['持仓合计']?replace('\n','<br>'))!'0.00'}
+						</td> <#else>
+						<td>0.00<br>0.000
+						</td> </#if> </#list>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div>
+			说明：统计数据来源于各基金定期报告和上市公司定期报告，季报数据由于基金只公布前十名持仓，为不完全统计。最新报告期或因基金和上市公司定期报告未批露完毕，导致汇总数据不完整。
+		</div>
+		</#if>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				基金持仓统计<a name="2"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<#if !fundPostions?? || fundPostions?size == 0> 
+		<div id="normal" class="left-gap font-md break">暂无数据</div>
+		<#else>
+		<div class="info-table font-md">
+			<table>
+				<thead align="center">
+					<tr>
+						<th style="width: 20%">截止日期</th>
+						<th style="width: 20%">基金持有家数</th>
+						<th style="width: 20%">期末总持股(万)</th>
+						<th style="width: 20%">占总股本比%</th>
+						<th style="width: 20%">占流通股比%</th>
+					</tr>
+				</thead>
+				<tbody align="center">
+					<#list fundPostions as fund>
+					<tr>
+						<td>${(fund.enddate?string("yyyy-MM-dd"))!}</td>
+						<td>${(fund.fundNum)!}</td>
+						<td>${(fund.secamt)!}</td>
+						<td>${(fund.stkpct)!}</td>
+						<td>${(fund.flpct)!}</td>
+					</tr>
+					</#list>
+				</tbody>
+			</table>
+		</div>
+		</#if>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				机构持股<a name="3"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<#if !orgHolders?? || orgHolders?size == 0 > 
+			<div id="normal" class="left-gap font-md break">暂无数据</div>
+			<#else>
+		<#list orgHolders as holder>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<div class="info-table font-md">
+			<table>
+				<thead align="center">
+					<tr>
+						<th style="width: 40%">股东名称(${holder.enddate?string("yyyy-MM-dd")})</th>
+						<th style="width: 10%">持股数(万股)</th>
+						<th style="width: 10%">占流通股比(%)</th>
+						<th style="width: 30%">股东性质</th>
+						<th style="width: 10%">持股变动(万股)</th>
+					</tr>
+				</thead>
+				<tbody align="center">
+					<#list holder.positions as position>
+					<tr>
+						<td>${(position.cname)!}</td>
+						<td>${(position.holdNum)!}</td>
+						<td>${(position.holdPct)!}</td>
+						<td>${(position.org_typename)!}</td>
+						<td>${(position.holdchange)!}</td>
+					</tr>
+					</#list>
+				</tbody>
+			</table>
+		</div>
+		</#list>
+		</#if>
+	</div>
+</body>
+</html>

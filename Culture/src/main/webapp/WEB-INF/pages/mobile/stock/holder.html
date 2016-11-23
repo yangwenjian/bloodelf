@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html class="ui-mobile">
+<head>
+<meta charset="utf-8" />
+
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>股本股东</title>
+
+<script src="${webRootPath}/res/js/mobile/jquery.js"></script>
+<script src="${webRootPath}/res/js/bootstrap.min.js"></script>
+<script src="${webRootPath}/res/js/mobile/main.js"></script>
+<script src="${webRootPath}/res/js/mobile/holder.js"></script>
+<script type="text/javascript">
+	var basePath = "${webRootPath}";
+	var stockcode = '${stockcode}';
+</script>
+<link href="${webRootPath}/res/css/mobile/styles_mobile.css"
+	type="text/css" rel="stylesheet" />
+<link href="${webRootPath}/res/css/bootstrap.min.css" type="text/css"
+	rel="stylesheet" />
+
+</head>
+<body>
+	<div class="base">
+		<div id="quickNavigation" class="quick_nav"
+			style="background-color: #0f0f0f; width: 100%; z-index: 11;">
+			<div class="content topCss">
+				<table id="navtable"
+					class="table table-bordered table-condensed line"
+					style="border-style: solid; align: center; margin-bottom: 10px; border-style: solid;">
+					<tbody>
+						<td id="unic1" width="25%" align="center" style="border: 1px solid #353535;"
+							onclick="reload('${webRootPath}/f10/stock/cpbd/mobile/${stockcode}.html?tokenId=${tokenId}')">必读</td>
+						<td width="25%" align="center" style="border: 1px solid #353535;"
+							onclick="reload('${webRootPath}/f10/stock/gsgk/mobile/${stockcode}.html?tokenId=${tokenId}')">简况</td>
+						<td width="25%" align="center" style="border: 1px solid #353535;"
+							onclick="reload('${webRootPath}/f10/stock/cwfx/mobile/${stockcode}.html?tokenId=${tokenId}')">财务</td>
+						<td width="25%" align="center" style="border: 1px solid #353535;"
+							onclick="reload('${webRootPath}/f10/stock/gdyj/mobile/${stockcode}.html?tokenId=${tokenId}')">股本股东</td>
+					</tbody>
+				</table>
+			</div>
+			<div id="jump">
+				<ul class="hrefJumpCss">
+					<div class="row">
+						<li><a href="javascript:void(false);"
+							onclick="scrollHref('c1')">股份构成 &nbsp;|&nbsp;</a></li>
+						<li><a href="javascript:void(false);"
+							onclick="scrollHref('c2')">最新股东&nbsp;|&nbsp;</a></li>
+						<li><a href="javascript:void(false);"
+							onclick="scrollHref('c3')">流通股东&nbsp;|&nbsp;</a></li>
+						<li><a href="javascript:void(false);"
+							onclick="scrollHref('c4')">高管持股&nbsp;|&nbsp;</a></li>
+						<li><a href="javascript:void(false);"
+							onclick="scrollHref('c5')">基金持股</a></li>
+					</div>
+				</ul>
+			</div>
+		</div>
+		<br>
+		<div id="content" style="width: 100%; height: 100%; margin-top: 60px">
+			<br>
+			<div id="c1">
+				<div>
+					<div class="nav nav-pills nav-stacked headline" role="tablist"
+						onclick="show1()">
+						股份构成 <span id="button1"
+							class="glyphicon glyphicon-circle-arrow-down right"></span>
+					</div>
+				</div>
+				<div id="content1">
+					<span class="headline" style="float: right; margin-right: 2px;"
+						onclick="shareDetail()"> >>更多 </span>
+					<div class="table-responsive">
+						<table class="table table-bordered table-condensed line"
+							style="float: left">
+							<thead class="headtd">
+								<tr>
+									<td>股份构成</td> <#list shareCons as shareCon>
+									<td>${(shareCon['changedate'])!'-'}</td> </#list>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class="headtd">总股本</td> <#list shareCons as shareCon>
+									<td>${(shareCon['total'])!'0.00'}</td> </#list>
+								</tr>
+								<tr>
+									<td class="headtd">流通股</td> <#list shareCons as shareCon>
+									<td>${(shareCon['flshr'])!'0.00'}</td> </#list>
+								</tr>
+								<tr>
+									<td class="headtd">流通A股</td> <#list shareCons as shareCon>
+									<td>${(shareCon['flashr'])!'0.00'}</td> </#list>
+								</tr>
+								<tr>
+									<td class="headtd">已上市流通A股</td> <#list shareCons as shareCon>
+									<td>${(shareCon['listFlashr'])!'0.00'}</td> </#list>
+								</tr>
+								<tr>
+									<td class="headtd">受限流通股份</td> <#list shareCons as shareCon>
+									<td>${(shareCon['totLtdfl'])!'0.00'}</td> </#list>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div id="c2">
+				<div class="divSpacing">
+					<div class="nav nav-pills nav-stacked headline" role="tablist"
+						onclick="show2()">
+						最新股东<span id="button2"
+							class="glyphicon glyphicon-circle-arrow-down right"></span>
+					</div>
+				</div>
+				<div id="content2">
+					<#if !shareHolder.newHolders?? || shareHolder.newHolders?size == 0>
+					<div>暂无最新股东数据</div>
+					<#else>
+					<div class="table-responsive">
+						<table class="table table-bordered table-condensed line"
+							style="float: left">
+							<thead class="headtd">
+								<tr>
+									<td>十大股东(${shareHolder.changeDate?string("yyyy-MM-dd")!})股东总数:(${(shareHolder.totalHolders!0)?string("#")!})</td>
+									<td>持股数(万股)</td>
+									<td>占总股本 %</td>
+									<td>股份性质</td>
+									<td>持股变动(万股)</td>
+								</tr>
+							</thead>
+							<tbody>
+								<#list shareHolder.newHolders as holder>
+								<tr>
+									<td class="headtd">${(holder['name'])!}</td>
+									<td>${(holder['holdNum'])!}</td>
+									<td>${(holder['holdPct'])!}</td>
+									<td>${(holder['shrCls'])!}</td>
+									<td>${(holder['holdchange'])!}</td>
+								</tr>
+								</#list>
+							</tbody>
+						</table>
+					</div>
+					</#if>
+				</div>
+			</div>
+			<div id="c3">
+				<div class="divSpacing">
+					<div class="nav nav-pills nav-stacked headline" role="tablist"
+						onclick="show3()">
+						十大流通股东 <span id="button3"
+							class="glyphicon glyphicon-circle-arrow-down right"></span>
+					</div>
+				</div>
+				<div id="content3">
+					<#if !shareHolder.floatHolders?? || shareHolder.floatHolders?size
+					== 0>
+					<div>暂无十大流通股东数据</div>
+					<#else>
+					<div class="table-responsive">
+						<table class="table table-bordered table-condensed line"
+							style="float: left">
+							<thead class="headtd">
+								<tr>
+									<td>十大股东(${shareHolder.changeDate?string("yyyy-MM-dd")!})股东总数:(${(shareHolder.totalHolders!0)?string("#")!})</td>
+									<td>持股数(万股)</td>
+									<td>占总股本 %</td>
+									<td>股份性质</td>
+									<td>持股变动(万股)</td>
+								</tr>
+							</thead>
+							<tbody>
+								<#list shareHolder.floatHolders as holder>
+								<tr>
+									<td class="headtd">${(holder['name'])!}</td>
+									<td>${(holder['holdNum'])!}</td>
+									<td>${(holder['holdPct'])!}</td>
+									<td>${(holder['shrCls'])!}</td>
+									<td>${(holder['holdchange'])!}</td>
+								</tr>
+								</#list>
+							</tbody>
+						</table>
+					</div>
+					</#if>
+				</div>
+			</div>
+			<div id="c4">
+				<div class="divSpacing">
+					<div class="nav nav-pills nav-stacked headline" role="tablist"
+						onclick="show4()">
+						高管持股明细<span id="button4"
+							class="glyphicon glyphicon-circle-arrow-down right"></span>
+					</div>
+				</div>
+				<div id="content4">
+					<#if !execDetials?? || execDetials?size == 0>
+					<div>暂无高管持股明细数据</div>
+					<#else>
+					<div class="table-responsive">
+						<table class="table table-bordered table-condensed line"
+							style="float: left">
+							<thead class="headtd">
+								<tr>
+									<td style="border-right: none !important">股东名称</td>
+									<td>公司职务</td>
+									<td>年薪(万元)</td>
+									<td>期初持股(股)</td>
+									<td>期末持股(股)</td>
+								</tr>
+							</thead>
+							<tbody>
+								<#list execDetials as detail>
+								<tr>
+									<td class="headtd" style="border-right: none !important">${detail.name!}</td>
+									<td>${detail.pos!}</td>
+									<td>${detail.reward!0.00}</td>
+									<td>${(detail.startshr!0)?string("#")}</td>
+									<td>${(detail.endshr!0)?string("#")}</td>
+								</tr>
+								</#list>
+							</tbody>
+						</table>
+					</div>
+					</#if>
+				</div>
+			</div>
+			<div id="c5">
+				<div class="divSpacing">
+					<div class="nav nav-pills nav-stacked headline" role="tablist"
+						onclick="show5()">
+						机构持股 <span id="button5"
+							class="glyphicon glyphicon-circle-arrow-down right"></span>
+					</div>
+				</div>
+				<div id="content5">
+					<#if !orgPositions?? || orgPositions?size == 0>
+					<div>暂无数据</div>
+					<#else>
+					<div class="headtd">机构持仓统计</div>
+					<div class="table-responsive">
+						<table
+							class="table table-bordered table-condensed line table_body">
+							<thead class="headtd">
+								<tr>
+									<td>机构持仓(万股)</td> <#list orgPositions?keys as key>
+									<td>${key}</td> </#list>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>信托投资公司<br>占资产净值比%
+									</td> <#list orgPositions?keys as key> <#if
+									orgPositions[key]['信托公司']??>
+									<td>${(orgPositions[key]['信托公司']?replace('\n','<br>'))!'0.00'}
+									</td> <#else>
+									<td>0.00<br>0.000
+									</td> </#if> </#list>
+								</tr>
+								<tr>
+									<td>银行<br>占资产净值比%
+									</td> <#list orgPositions?keys as key> <#if
+									orgPositions[key]['银行']??>
+									<td>${(orgPositions[key]['银行']?replace('\n','<br>'))!'0.00'}
+									</td> <#else>
+									<td>0.00<br>0.000
+									</td> </#if> </#list>
+								</tr>
+								<tr>
+									<td>一般企业<br>占资产净值比%
+									</td> <#list orgPositions?keys as key> <#if
+									orgPositions[key]['一般企业(非政府机构、事业单位、金融机构)']??>
+									<td>${(orgPositions[key]['一般企业(非政府机构、事业单位、金融机构)']?replace('\n','<br>'))!'0.00'}
+									</td> <#else>
+									<td>0.00<br>0.000
+									</td> </#if> </#list>
+								</tr>
+								<tr>
+									<td>全国社保基金<br>占资产净值比%
+									</td> <#list orgPositions?keys as key> <#if
+									orgPositions[key]['全国社保基金']??>
+									<td>${(orgPositions[key]['全国社保基金']?replace('\n','<br>'))!'0.00'}
+									</td> <#else>
+									<td>0.00<br>0.000
+									</td> </#if> </#list>
+								</tr>
+								<tr>
+									<td>证券投资基金<br>占资产净值比%
+									</td> <#list orgPositions?keys as key> <#if
+									orgPositions[key]['证券投资基金']??>
+									<td>${(orgPositions[key]['证券投资基金']?replace('\n','<br>'))!'0.00'}
+									</td> <#else>
+									<td>0.00<br>0.000
+									</td> </#if> </#list>
+								</tr>
+								<tr>
+									<td>券商理财产品<br>占资产净值比%
+									</td> <#list orgPositions?keys as key> <#if
+									orgPositions[key]['券商理财产品']??>
+									<td>${(orgPositions[key]['券商理财产品']?replace('\n','<br>'))!'0.00'}
+									</td> <#else>
+									<td>0.00<br>0.000
+									</td> </#if> </#list>
+								</tr>
+								<tr>
+									<td>保险理财产品<br>占资产净值比%
+									</td> <#list orgPositions?keys as key> <#if
+									orgPositions[key]['保险理财产品']??>
+									<td>${(orgPositions[key]['保险理财产品']?replace('\n','<br>'))!'0.00'}
+									</td> <#else>
+									<td>0.00<br>0.000
+									</td> </#if> </#list>
+								</tr>
+								<tr>
+									<td>基金理财产品<br>占资产净值比%
+									</td> <#list orgPositions?keys as key> <#if
+									orgPositions[key]['基金理财产品']??>
+									<td>${(orgPositions[key]['基金理财产品']?replace('\n','<br>'))!'0.00'}
+									</td> <#else>
+									<td>0.00<br>0.000
+									</td> </#if> </#list>
+								</tr>
+								<tr>
+									<td>非机构之其他类型<br>占资产净值比%
+									</td> <#list orgPositions?keys as key> <#if
+									orgPositions[key]['非营利性机构']??>
+									<td>${(orgPositions[key]['非营利性机构']?replace('\n','<br>'))!}
+									</td> <#else>
+									<td>0.00<br>0.000
+									</td> </#if> </#list>
+								</tr>
+								<tr>
+									<td>持仓合计<br>占资产净值比%
+									</td> <#list orgPositions?keys as key> <#if
+									orgPositions[key]['持仓合计']??>
+									<td>${(orgPositions[key]['持仓合计']?replace('\n','<br>'))!'0.00'}
+									</td> <#else>
+									<td>0.00<br>0.000
+									</td> </#if> </#list>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					</#if> <#if !fundPostions?? || fundPostions?size == 0>
+					<div>暂无数据</div>
+					<#else>
+					<div class="headtd">基金持仓</div>
+					<div class="table-responsive">
+						<table
+							class="table table-bordered table-condensed line table_body">
+							<thead class="headtd">
+								<tr>
+									<th>截止日期</th>
+									<th>基金持有家数</th>
+									<th>期末总持股(万)</th>
+									<th>占总股本比%</th>
+									<th>占流通股比%</th>
+								</tr>
+							</thead>
+							<tbody>
+								<#list fundPostions as fund>
+								<tr>
+									<td class="headtd">${(fund.enddate?string("yyyy-MM-dd"))!}</td>
+									<td>${(fund.fundNum)!}</td>
+									<td>${(fund.secamt)!}</td>
+									<td>${(fund.stkpct)!}</td>
+									<td>${(fund.flpct)!}</td>
+								</tr>
+								</#list>
+							</tbody>
+						</table>
+					</div>
+					</#if><#if !orgHolder.positions?? || orgHolder.positions?size == 0>
+					<div>暂无数据</div>
+					<#else>
+					<div class="headtd">机构持股</div>
+					<div class="table-responsive">
+						<table
+							class="table table-bordered table-condensed line table_body">
+							<thead class="headtd">
+								<th>股东名称(${orgHolder.enddate?string("yyyy-MM-dd")})</th>
+								<th>持股数(万股)</th>
+								<th>占流通股比(%)</th>
+								<th>股东性质</th>
+								<th>持股变动(万股)</th>
+							</thead>
+							<tbody>
+								<#list orgHolder.positions as position>
+								<tr>
+									<td class="headtd">${(position.cname)!}</td>
+									<td>${(position.holdNum)!}</td>
+									<td>${(position.holdPct)!}</td>
+									<td>${(position.org_typename)!}</td>
+									<td>${(position.holdchange)!}</td>
+								</tr>
+								</#list>
+							</tbody>
+						</table>
+					</div>
+					</#if>
+				</div>
+			</div>
+		</div>
+		<!-- 内容div -->
+		<br>
+		<div id="goback_li" role="presentation"
+			style="float: right; margin-top: 15px; display: none;">
+			<a href="javascript:void(0);" onclick="backtoMain()"
+				class="ui-btn grid-corner headline">返回</a>
+		</div>
+		<div id="detail"></div>
+	</div>
+
+</body>
+</html>

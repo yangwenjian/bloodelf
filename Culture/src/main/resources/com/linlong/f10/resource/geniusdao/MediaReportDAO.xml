@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.resource.geniusdao.MediaReportDAO">
+	<!-- 根据证券市场查询所有证券的流通股本 -->
+	<select id="selectMediaReports" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT A.DECLAREDATE AS declaredate -- 发布日期
+		,A.TITLE_MAIN AS title -- 标题
+		,G.SRC_NAME AS source -- 新闻来源
+		,F.TXT_CONTENT As content -- 全文
+		FROM PGENIUS.NEWS_MAIN A
+		INNER JOIN PGENIUS.NEWS_STK B
+		ON A.GUID = B.GUID
+		INNER JOIN PGENIUS.STK_CODE C
+		ON B.COMCODE = C.COMCODE
+		AND C.STOCKCODE = #{stockcode}
+		INNER JOIN PGENIUS.NEWS_CLS D
+		ON A.GUID = D.GUID
+		AND D.CLS_CODE = '003002' -- 分类：上市公司新闻
+		INNER JOIN NEWS_CLS_REF E
+		ON D.CLS_CODE = E.CLS_CODE
+		INNER JOIN PGENIUS.NEWS_CONTENT F
+		ON A.GUID = F.GUID
+		INNER JOIN PGENIUS.PUB_INFOR_SRC G
+		ON A.SRC_CODE = G.SRC_CODE
+		WHERE A.DECLAREDATE >= '2014-11-1'
+		ORDER BY
+		A.DECLAREDATE DESC
+		LIMIT 15
+	</select>
+	<select id="selectMediaReportTitles" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT 
+		  A.GUID AS guId,
+		  A.TITLE_MAIN AS title -- 标题
+		FROM
+		  PGENIUS.NEWS_MAIN A 
+		  INNER JOIN PGENIUS.NEWS_STK B 
+		    ON A.GUID = B.GUID 
+		  INNER JOIN PGENIUS.STK_CODE C 
+		    ON B.COMCODE = C.COMCODE 
+		    AND C.STOCKCODE = #{stockcode} 
+		  INNER JOIN PGENIUS.NEWS_CLS D 
+		    ON A.GUID = D.GUID 
+		    AND D.CLS_CODE = '003002' -- 分类：上市公司新闻
+		WHERE A.DECLAREDATE &gt;= '2014-11-1' 
+		ORDER BY A.DECLAREDATE DESC 
+		LIMIT 5 
+	</select>
+	<select id="selectMediaReportById" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT 
+		  A.DECLAREDATE AS declaredate -- 发布日期
+		  ,
+		  A.TITLE_MAIN AS title -- 标题
+		  ,
+		  G.SRC_NAME AS source -- 新闻来源
+		  ,
+		  F.TXT_CONTENT AS content -- 全文
+		FROM
+		  PGENIUS.NEWS_MAIN A 
+		  INNER JOIN PGENIUS.NEWS_CONTENT F 
+		    ON A.GUID = F.GUID 
+		  INNER JOIN PGENIUS.PUB_INFOR_SRC G 
+		    ON A.SRC_CODE = G.SRC_CODE 
+		WHERE A.GUID=#{guid}
+	</select>
+	<select id="selectMediaReports2" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT A.DECLAREDATE AS declaredate -- 发布日期
+		,A.TITLE_MAIN AS title -- 标题
+		,G.SRC_NAME AS source -- 新闻来源
+		,F.TXT_CONTENT As content -- 全文
+		FROM PGENIUS.NEWS_MAIN A
+		INNER JOIN PGENIUS.NEWS_STK B
+		ON A.GUID = B.GUID
+		INNER JOIN PGENIUS.NEWS_CLS D
+		ON A.GUID = D.GUID
+		AND D.CLS_CODE = '003002' -- 分类：上市公司新闻
+		INNER JOIN NEWS_CLS_REF E
+		ON D.CLS_CODE = E.CLS_CODE
+		INNER JOIN PGENIUS.NEWS_CONTENT F
+		ON A.GUID = F.GUID
+		INNER JOIN PGENIUS.PUB_INFOR_SRC G
+		ON A.SRC_CODE = G.SRC_CODE
+		WHERE A.DECLAREDATE >= '2014-11-1'
+		AND
+		B.COMCODE=(SELECT C.COMCODE FROM PGENIUS.STK_CODE C WHERE
+		C.STOCKCODE=#{stockcode})
+		ORDER BY A.DECLAREDATE DESC
+		LIMIT 15
+	</select>
+</mapper>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html class="ui-mobile">
+<head>
+    <title>必读</title>
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>必读</title>
+    <script type="text/javascript">
+        function reload(url) {
+            window.location.href = url;
+        }
+    </script>
+    <script src="${webRootPath}/res/js/mobile/jquery.js"></script>
+    <!-- <script src="${webRootPath}/res/js/mobile/jquery.mobile-1.4.5.js"></script> -->
+    <script src="${webRootPath}/res/js/bootstrap.min.js"></script>
+    <!-- <script src="${webRootPath}/res/js/mobile/main.js"></script> -->
+    <script src="${webRootPath}/res/js/mobile/require.js"></script>
+    <script src="${webRootPath}/res/js/mobile/dragonDetail.js"></script>
+    <script type="text/javascript">
+        var basePath = "${webRootPath}";
+    </script>
+    <!-- <link href="${webRootPath}/res/css/mobile/jquery.mobile-1.4.5.css"
+        type="text/css" rel="stylesheet" /> -->
+    <link href="${webRootPath}/res/css/mobile/styles_mobile.css"
+          type="text/css" rel="stylesheet" />
+    <link href="${webRootPath}/res/css/bootstrap.min.css" type="text/css"
+          rel="stylesheet" />
+    <style type="text/css">
+        .divSpacing{
+            padding-top: 15px;
+            padding-bottom: 10px;
+        }
+        .olStyle{
+            padding-left: 5px;
+        }
+        .olStyle li{
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            -o-text-overflow: ellipsis;
+            overflow: auto;
+            list-style-position: inside;
+            letter-spacing: 1px;
+            color: #EEE685;
+        }
+        .olStyle li a{
+            color: #fef3cb;
+        }
+    </style>
+</head>
+<body>
+<div class="base">
+    <ul class="nav nav-pills topCss" role="tablist">
+        <div class="col-xs-3" style="width: 23%">
+            <li role="presentation" align="center"><a id="m1"
+                                                      href="javascript:void(0);"
+                                                      onclick="reload('${webRootPath}/f10/stock/cpbd/mobile/${stockcode}.html?tokenId=${tokenId}')"
+                                                      class="ui-btn grid-corner"><p >必读</p></a></li>
+        </div>
+        <div class="col-xs-3" style="width: 23%">
+            <li role="presentation" align="center"><a id="m2"
+                                                      href="javascript:void(0);"
+                                                      onclick="reload('${webRootPath}/f10/stock/gsgk/mobile/${stockcode}.html?tokenId=${tokenId}')"
+                                                      class="ui-btn grid-corner"><p >简况</p></a></li>
+        </div>
+        <div class="col-xs-3" style="width: 23%">
+            <li role="presentation" align="center"><a id="m11"
+                                                      href="javascript:void(0);"
+                                                      onclick="reload('${webRootPath}/f10/stock/cwfx/mobile/${stockcode}.html?tokenId=${tokenId}')"
+                                                      class="ui-btn grid-corner"><p >财务</p></a></li>
+        </div>
+        <div class="col-xs-3" style="width: 31%">
+            <li role="presentation" align="center"><a id="m4"
+                                                      href="javascript:void(0);"
+                                                      onclick="reload('${webRootPath}/f10/stock/gdyj/mobile/${stockcode}.html?tokenId=${tokenId}')"
+                                                      class="ui-btn grid-corner"><p >股本股东</p></a></li>
+        </div>
+    </ul>
+    <div id="content">
+
+        <div >
+            <div class="divSpacing">
+                <div class="nav nav-pills nav-stacked headline" role="tablist"
+                     onclick="show5()">
+                    龙虎榜 <span id="button5"
+                              class="glyphicon glyphicon-circle-arrow-right right"></span>
+                </div>
+            </div>
+            <div id="content5" style="display: none">
+                <div class="line" style="color: #fef3cb;">1.&nbsp;${fluct.refName}
+                    <br/>&nbsp;&nbsp;[${fluct.enddate}]&nbsp;跌幅：${fluct.fflChangePct!}&nbsp;成交量：${fluct.volume!}(万)&nbsp;
+                    <br/>&nbsp;&nbsp;成交额：${fluct.value!}(万)
+						<span style="float: right;margin-right: 2px;">
+							<a style="color: #f5b53e;" href="">>>更多</a>
+						</span>
+                </div>
+                <div class="table-responsive" style="margin-bottom: 0px;margin-left: 1px;">
+                    <table
+                            class="table table-bordered table-condensed line table_body" style="border:1px solid #fff;">
+                        <thead class="headtd">
+                        <tr>
+                            <td>买入金额居前的营业部名称</td>
+                            <td>买入金额(元)</td>
+                            <td>卖出金额(元)</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <#list fluct.details as detail>
+                            <tr>
+                                <#if detail.rankCls == "买入金额最大的前5名">
+                                    <td>${(detail.branchName)!}</td>
+                                    <td>${(detail.bvalue)!0.00}</td>
+                                    <td>${(detail.svalue)!0.00}</td> </#if>
+                            </tr>
+                        </#list>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 内容div -->
+    <div class="line">
+			<textarea id="detail" class='form-control' rows='30' style='background-color: #0f0f0f;width: 100%;color: #b9def0;display: none;'>
+
+			</textarea>
+    </div>
+</div>
+
+</body>
+</html>

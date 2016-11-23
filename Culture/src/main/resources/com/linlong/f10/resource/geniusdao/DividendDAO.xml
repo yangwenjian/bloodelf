@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.resource.geniusdao.DividendDAO">
+	<!-- 根据证券市场查询所有证券的流通股本 -->
+	<select id="selectShareCons" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT
+		DATE(a.CHANGEDATE) AS CHANGEDATE,
+		ROUND(a.TOTAL /
+		10000, 2) AS TOTAL,
+		ROUND(a.FL_SHR / 10000, 2) AS FL_SHR,
+		ROUND(a.FL_ASHR / 10000, 2) AS FL_ASHR,
+		ROUND(a.LIST_FL_ASHR /
+		10000, 2)
+		AS LIST_FL_ASHR,
+		ROUND(a.MNG_FL / 10000, 2) AS
+		MNG_FL,
+		ROUND(a.STRA_PLA /
+		10000, 2) AS STRA_PLA,
+		ROUND(a.FUND_PLA / 10000, 2) AS FUND_PLA ,
+		ROUND(a.LEG_PLA / 10000, 2) AS LEG_PLA,
+		ROUND(a.B_SHR / 10000,
+		2) AS
+		B_SHR,
+		ROUND(a.H_SHR / 10000, 2) AS H_SHR,
+		ROUND(a.S_SHR / 10000, 2) AS
+		S_SHR,
+		ROUND(a.N_SHR / 10000, 2) AS
+		N_SHR,
+		ROUND(a.OTH_ABROAD / 10000, 2)
+		AS OTH_ABROAD,
+		ROUND(a.OTH_FL / 10000, 2) AS OTH_FL,
+		ROUND(a.TOT_NONFL /
+		10000, 2) AS TOT_NONFL,
+		ROUND(a.TOT_LTDFL / 10000, 2) AS
+		TOT_LTDFL,
+		ROUND(a.STATE_LEG_SHR / 10000, 2) AS STATE_LEG_SHR,
+		ROUND(a.STATE /
+		10000, 2) AS STATE,
+		ROUND(a.STATE_LEG / 10000, 2) AS STATE_LEG,
+		ROUND(a.DOM_LEG / 10000, 2) AS DOM_LEG,
+		ROUND(a.DOM_NATURAL /
+		10000, 2)
+		AS DOM_NATURAL,
+		ROUND(a.OTH_SPON / 10000, 2) AS
+		OTH_SPON,
+		ROUND(a.FRGN_SHR / 10000, 2) AS FRGN_SHR,
+		ROUND(a.FRGN_LEG / 10000, 2)
+		AS FRGN_LEG,
+		ROUND(a.FRGN_NATURAL / 10000, 2) AS FRGN_NATURAL,
+		ROUND(a.RAIS_LEG / 10000, 2) AS RAIS_LEG,
+		ROUND(a.INNER_EMPL /
+		10000, 2)
+		AS INNER_EMPL,
+		ROUND(a.MNG_NONFL / 10000, 2) AS
+		MNG_NONFL,
+		ROUND(a.PREF /
+		10000, 2) AS PREF,
+		ROUND(a.TRANS / 10000, 2) AS TRANS,
+		ROUND(a.OTH_NONFL / 10000,
+		2) AS OTH_NONFL
+		FROM
+		PGENIUS.STK_SHR_STRU A
+		WHERE A.ISVALID = 1
+		AND A.COMCODE =
+		(SELECT
+		COMCODE
+		FROM
+		PGENIUS.STK_CODE
+		WHERE ISVALID = 1
+		AND
+		STOCKCODE = #{stockcode})
+		ORDER BY a.CHANGEDATE
+		DESC
+		LIMIT 4 ;
+	</select>
+	<select id="selectShareChange" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT
+		A.CHANGEDATE AS changedate,
+		(SELECT
+		REF_NAME
+		FROM
+		PGENIUS.GEN_REF
+		WHERE ISVALID = 1
+		AND A.CHNG_REAS_CODE = REF_CODE
+		AND
+		CLS_CODE = 7000) AS refName,
+		A.NEW_TOT / 10000 AS newtotal,
+		A.NEW_A_SHR
+		/ 10000 AS newashr,
+		A.NEW_LTDFL / 10000 AS newltdfl,
+		a.NES_B_SHR / 10000
+		AS nesbshr,
+		ROUND(100 * A.NEW_A_SHR / A.NEW_TOT, 2) AS apercent
+		FROM
+		PGENIUS.STK_SHR_STRU_CHNG A
+		WHERE A.ISVALID = 1
+		AND A.CHNG_REAS_CODE NOT
+		IN (10, 11, 12, 13)
+		AND A.COMCODE =
+		(SELECT
+		COMCODE
+		FROM
+		PGENIUS.STK_CODE
+		WHERE ISVALID = 1
+		AND STOCKCODE = #{stockcode})
+		ORDER BY A.CHANGEDATE DESC ;
+	</select>
+	<select id="selectDividend" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT
+		A.END_DATE AS enddate,
+		IFNULL(
+		CASE
+		WHEN
+		A.DIV_TYPE_CODE IN (1, 3)
+		THEN CONCAT(
+		'以总股本:',
+		ROUND(BASE_VOL * 10000,
+		0),
+		'股为基数，向',
+		A.DIV_OBJ,
+		'10派',
+		(
+		CASE
+		A.CURNCY_CODE
+		WHEN 1
+		THEN '人民币'
+		WHEN 2
+		THEN '港币'
+		WHEN 3
+		THEN '美元'
+		END
+		),
+		ROUND(A.CASH_BT, 2),
+		'元(含税)(税后',
+		ROUND(A.CASH_AT, 2),
+		'元)',
+		'送',
+		IFNULL(a.BONUS_SHR, '--'),
+		'股转增',
+		IFNULL(a.CAP_SHR, '--'),
+		'股'
+		)
+		WHEN A.DIV_TYPE_CODE = 2
+		THEN
+		IFNULL(A.DIV_INFO, '不分红')
+		END,
+		A.DIV_INFO
+		) AS divinfo,
+		(SELECT
+		F111001
+		FROM
+		pgenius.STK_FIN_IDX ss
+		WHERE ss.isvalid = 1
+		AND ss.comcode =
+		a.comcode
+		AND ss.RPT_DATE = ss.ENDDATE
+		AND ss.ENDDATE =
+		(SELECT
+		MAX(ENDDATE)
+		FROM
+		pgenius.STK_FIN_IDX
+		WHERE isvalid = 1
+		AND comcode =
+		ss.comcode
+		AND RPT_DATE = ENDDATE
+		AND ENDDATE &lt;= a.DIR_DCL_DATE)) AS
+		eps,
+		CASE
+		A.PRG_CODE
+		WHEN 29
+		THEN CONCAT(
+		'公布日期:',
+		IFNULL(DATE(A.ACT_DEC_DATE), '--'),
+		' ',
+		'股权登记日:',
+		IFNULL(DATE(A.REG_DATE), '--'),
+		' ',
+		'除权除息日:',
+		IFNULL(DATE(EX_DIVI_DATE), '--'),
+		' ',
+		'股息到帐日:',
+		IFNULL(DATE(ACNT_DATE),
+		'--'),
+		' ',
+		'红股上市日:',
+		IFNULL(DATE(A.BS_TRA_DATE), '--'),
+		' ',
+		'转增股上市日:',
+		IFNULL(DATE(A.CS_TRA_DATE), '--')
+		)
+		ELSE CONCAT(
+		'预案 公布日期:',
+		COALESCE(
+		DATE(SH_DCL_DATE),
+		DATE(DIR_DCL_DATE)
+		)
+		)
+		END AS actdecDate
+		FROM
+		PGENIUS.STK_DIV_INFO A,
+		PGENIUS.STK_CODE B
+		WHERE A.ISVALID = 1
+		AND
+		B.ISVALID = 1
+		AND A.COMCODE = B.COMCODE
+		AND A.INNER_CODE = B.INNER_CODE
+		AND B.STOCKCODE = #{stockcode}
+		ORDER BY DIR_DCL_DATE DESC ;
+	</select>
+	<select id="selectAllotment" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT
+		B.DECLAREDATE AS basedate,
+		CONCAT(
+		'以',
+		ROUND(
+		COALESCE(
+		C.BASE_SHR,
+		B.BASE_VOL,
+		A.BASE_VOL
+		),
+		2
+		),
+		'万股为基数，向',
+		(SELECT
+		REF_NAME
+		FROM
+		PGENIUS.GEN_REF
+		WHERE ISVALID = 1
+		AND A.ALLOT_OBJ_CODE =
+		REF_CODE
+		AND CLS_CODE = 2012),
+		'10配',
+		C.ALLOT_PCT,
+		'股,配股价',
+		IFNULL(
+		CONCAT(C.ALLOT_PRC, '元/股'),
+		CONCAT(C.CURNCY, C.FOR_PRC, '元/股')
+		)
+		) AS
+		refName,
+		CASE
+		WHEN d.STATUS_TYPE_REF = 1
+		AND d.STK_TYPE_REF IN (2, 4)
+		THEN CONCAT(
+		'公布日期:',
+		IFNULL(DATE(B.DECLAREDATE), '--'),
+		' ',
+		'承销团包销:',
+		IFNULL(C.UND_SHR, '--'),
+		' ',
+		'B股股权登记日:',
+		IFNULL(
+		DATE(
+		COALESCE(B.A_REG_DATE, C.A_REG_DATE)
+		),
+		'--'
+		),
+		' ',
+		'B股获配上市日:',
+		IFNULL(DATE(C.LIST_DATE), '--'),
+		' ',
+		'B股除权基准日:',
+		IFNULL(DATE(C.B_EXRGT_DATE), '--'),
+		' ',
+		'B股配售缴款日:',
+		IFNULL(DATE(B.STR_BUY_DATE), ''),
+		'至',
+		IFNULL(DATE(B.END_BUY_DATE), '')
+		)
+		ELSE CONCAT(
+		'公布日期:',
+		IFNULL(DATE(B.DECLAREDATE), '--'),
+		'承销团包销:',
+		IFNULL(C.UND_SHR, '--'),
+		' ',
+		'A股股权登记日:',
+		IFNULL(
+		DATE(
+		COALESCE(B.B_REG_DATE, C.B_REG_DATE)
+		),
+		'--'
+		),
+		' ',
+		'A股获配上市日:',
+		IFNULL(DATE(C.LIST_DATE), '--'),
+		' ',
+		'A股除权基准日:',
+		IFNULL(DATE(C.A_EXRGT_DATE), '--'),
+		' ',
+		'A股配售缴款日:',
+		IFNULL(DATE(B.STR_BUY_DATE), ''),
+		'至',
+		IFNULL(DATE(B.END_BUY_DATE), '')
+		)
+		END AS endbuyDate
+		FROM
+		PGENIUS.STK_ALLOT_PLAN A,
+		PGENIUS.STK_ALLOT_INTRO B,
+		PGENIUS.STK_ALLOT_RESULT C,
+		PGENIUS.STK_CODE
+		d
+		WHERE A.ISVALID = 1
+		AND B.ISVALID = 1
+		AND C.ISVALID = 1
+		AND A.SEQ =
+		B.P_SEQ
+		AND A.SEQ = C.P_SEQ_PLAN
+		AND C.P_SEQ_INTRO = B.SEQ
+		AND A.PRG_CODE
+		= 29
+		AND A.COMCODE = d.COMCODE
+		AND d.ISVALID = 1
+		AND d.STOCKCODE =
+		#{stockcode}
+		ORDER BY basedate DESC
+	</select>
+	<select id="selectAddition" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT
+		CASE
+		WHEN A.PRG_CODE = 29
+		THEN CONCAT(
+		'进度说明】:',
+		(SELECT
+		REF_NAME
+		FROM
+		PGENIUS.GEN_REF
+		WHERE ISVALID = 1
+		AND REF_CODE = A.PRG_CODE
+		AND CLS_CODE = 1060),
+		' ',
+		'增发价格(元/股):',
+		C.PRC,
+		' ',
+		'预计增发数量(万股):',
+		ROUND(B.VOL, 2),
+		' ',
+		'实际增发数量(万股):',
+		ROUND(C.TTL_SHR, 2),
+		' ',
+		'际募集金额(万元):',
+		ROUND(C.RAISE_CAP, 2),
+		' ',
+		'定价方式】:',
+		IFNULL(A.PRC_INFO, '--'),
+		' ',
+		'补充说明】:',
+		IFNULL(A.CHNG_INFO, '--'),
+		' ',
+		'发行方式】:',
+		IFNULL(A.ISS_TYPE, '--')
+		)
+		ELSE CONCAT(
+		'进度说明】:',
+		(SELECT
+		REF_NAME
+		FROM
+		PGENIUS.GEN_REF
+		WHERE ISVALID = 1
+		AND REF_CODE = A.PRG_CODE
+		AND CLS_CODE = 1060),
+		' ',
+		'预计增发数量(万股):',
+		IFNULL(ROUND(B.VOL, 2), '--'),
+		' ',
+		'定价方式】:',
+		IFNULL(A.PRC_INFO, '--'),
+		' ',
+		'补充说明】:',
+		IFNULL(A.CHNG_INFO, '--'),
+		' ',
+		'发行方式】:',
+		IFNULL(A.ISS_TYPE, '--')
+		)
+		END AS addinfo,
+		CASE
+		WHEN A.PRG_CODE = 29
+		THEN CONCAT(
+		'公告日期:',
+		DATE(A.DECLAREDATE),
+		' ',
+		'股权登记日:',
+		IFNULL(DATE(B.REG_DATE), '--'),
+		' ',
+		'增发上市日:',
+		IFNULL(DATE(C.LIST_DATE), '--'),
+		' ',
+		'网下发行申购日:',
+		IFNULL(DATE(B.OFL_APL_STR_DT), '--'),
+		' ',
+		'网下申购截止日:',
+		IFNULL(DATE(B.OFL_APL_END_DT), '--'),
+		' ',
+		'网上发行申购日:',
+		IFNULL(DATE(B.ONL_APL_STR_DT), '--'),
+		' ',
+		'网上申购截止日:',
+		IFNULL(DATE(B.ONL_APL_END_DT), '--')
+		)
+		ELSE CONCAT(
+		'公告日期:',
+		DATE(A.DECLAREDATE)
+		)
+		END AS spesug
+		FROM
+		PGENIUS.STK_ISS_PLAN A
+		LEFT JOIN PGENIUS.STK_ISS_INTRO B
+		ON B.P_SEQ = A.SEQ
+		AND B.ISVALID = 1
+		LEFT JOIN PGENIUS.STK_ISS_RESULT C
+		ON B.SEQ = C.P_SEQ_INTRO
+		AND C.P_SEQ_PLAN = A.SEQ
+		AND C.ISVALID = 1
+		INNER JOIN PGENIUS.STK_CODE D
+		ON D.ISVALID = 1
+		AND D.COMCODE = A.COMCODE
+		AND A.STK_CLS_CODE = D.STK_TYPE_REF
+		AND D.STOCKCODE = #{stockcode}
+		WHERE A.ISVALID = 1
+		ORDER BY a.DECLAREDATE DESC ;
+	</select>
+	<select id="selectConvBond" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT
+		CONCAT(
+		'可转债简称:',
+		A.BONDSNAME,
+		'(',
+		A.BONDCODE,
+		') 计划发行量:',
+		ROUND(C.PLAN_ISS_VAL / 10000, 2),
+		'万元 实际发行量:',
+		ROUND(C.ACTU_ISS_VAL / 10000, 2),
+		'万元 【发行方式】:',
+		C.ISS_CLS,
+		' 【发行对象】:',
+		C.ISS_OBJ
+		) AS convinfo,
+		CONCAT(
+		'公告日期 :',
+		IFNULL(DATE(C.ISS_DECLAREDATE), '--'),
+		' 发行开始日:',
+		IFNULL(DATE(C.ISS_STARTDATE), '--'),
+		' 债券到期日:',
+		IFNULL(
+		(SELECT
+		DATE(TRADE_ENDDATE)
+		FROM
+		PGENIUS.BND_LIST
+		WHERE INNER_CODE = A.INNER_CODE
+		AND ISVALID = 1),
+		'--'
+		),
+		' 停止交易日:',
+		IFNULL(
+		(SELECT
+		DATE(ACTU_DELIST_DATE)
+		FROM
+		PGENIUS.BND_LIST
+		WHERE INNER_CODE = A.INNER_CODE
+		AND ISVALID = 1),
+		'--'
+		),
+		' 转股开始日:',
+		IFNULL(DATE(B.CONV_STARTDATE), '--'),
+		' 转股结束日:',
+		IFNULL(DATE(B.CONV_ENDDATE), '--')
+		) AS spesug
+		FROM
+		PGENIUS.BND_GEN_INFO A,
+		PGENIUS.BND_CONV_TERM_SUMM B,
+		PGENIUS.BND_ISS C,
+		PGENIUS.STK_CODE D
+		WHERE A.ISVALID = 1
+		AND B.ISVALID = 1
+		AND C.ISVALID = 1
+		AND D.ISVALID = 1
+		AND A.COMCODE = D.COMCODE
+		AND C.ISS_CODE = D.COMCODE
+		AND A.INNER_CODE = B.INNER_CODE
+		AND A.BOND_ID = C.BOND_ID
+		AND A.BND_TYPE = 5
+		AND D.STOCKCODE = #{stockcode}
+	</select>
+</mapper>

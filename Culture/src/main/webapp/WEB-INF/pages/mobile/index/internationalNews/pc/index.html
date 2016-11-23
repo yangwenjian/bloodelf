@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>国际风云</title>
+</head>
+<body>
+	<div class="base" name="top">
+		<div class="third-party gap">
+			<div class="h2"><span>WWW.GENIUS.COM.CN-----巨灵信息-----${.now?string("yyyy-MM-dd")}更新</span></div>
+		</div>
+		<div class="catalog gap">
+			<div class="catalog-name follow font-lg">目录</div>
+			<div id="catalog-list" class="catalog-bg follow font-md">
+				<ol type="" class="catalog-list">
+					<li><span class="index">1.&nbsp;&nbsp;</span> <span
+						class="text"><a href="#1">环球股市指数</a></span></li>
+					<li><span class="index">2.&nbsp;&nbsp;</span> <span
+						class="text"><a href="#2">国际风云</a></span></li>
+				</ol>
+			</div>
+		</div>
+
+		<div class="topic topic-gap">	
+			<div class="font-lg">
+				<div class="topic-square follow"></div>
+				<div class="follow">环球股市指数</a></div>
+				<div class="follow-R"><a href="#top">Top</a></div>
+			</div>
+			<div id="notice-list" class="notice-list break">
+				<div class="notice">
+					<div class="break"><br></div>
+					<div class="content font-md">
+						<span><#if globalIndex.txtContent != null>${globalIndex.txtContent?replace('\n', '<br/>')}<#else>暂无环球股市指数</#if></span>
+					</div>
+					<div><br></div>
+					<div class="line"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="topic topic-gap">
+			<div class="font-lg">
+				<div class="topic-square follow"></div>
+				<div class="follow">国际风云<a name="2"></a></div>
+				<div class="follow-R"><a href="#top">Top</a></div>
+			</div>
+			<div id="notice-list" class="notice-list break">
+				<#if internationalNews??>
+				<#list internationalNews!! as entity>
+				<div class="notice">
+					<div class="subject font-lg">${entity.titleMain}</div>
+					<div class="publish-date">${entity.declaredate?string("yyyy-MM-dd")}&nbsp;&nbsp;&nbsp;&nbsp;${entity.resource}</div>
+					<div class="break">
+						<br>
+					</div>
+					<div class="content font-md">
+						<span>${entity.txtContent?replace('[\r\n]+', '<br>', 'r')}</span>
+					</div>
+					<div>
+						<br>
+					</div>
+					<div class="issuer"></div>
+					<div class="line"></div>
+				</div>
+				</#list>
+				<#else>
+				<div class="notice">
+					<div class="break"><br></div>
+					<div class="content font-md">
+						<span>暂无国际风云</span>
+					</div>
+					<div><br></div>
+					<div class="line"></div>
+				</div>
+				</#if>
+			</div>
+		</div>
+
+	</div>
+
+</body>
+</html>

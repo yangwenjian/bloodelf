@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.resource.geniusdao.OperationDAO">
+	<!-- 根据证券市场查询所有证券的流通股本 -->
+	<select id="selectBusiness" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT B.PRI_BIZ  AS priBus 
+		      ,B.PRI_PRD AS priProduct
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.STK_COM_PROFILE B
+		    ON A.COMCODE = B.COMCODE
+		      WHERE A.STOCKCODE = #{stockcode}
+	</select>
+	<select id="selectBusPerioddate" resultType="java.util.Date"
+		parameterType="String">
+		SELECT DISTINCT B.PERIODDATE AS perioddate
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.STK_PRI_INCOME_INDUSTRY B
+		    ON A.COMCODE = B.COMCODE
+		 WHERE A.STOCKCODE = #{stockcode} 
+		ORDER BY PERIODDATE DESC LIMIT 3
+	</select>
+	<select id="selectMainBusiness" resultType="java.util.HashMap">
+	SELECT XX.PERIODDATE  AS perioddate -- 报告日期
+		      ,XX.DIMENSION   AS dimension -- 维度
+		      ,XX.ITEM_NAME   AS itemName -- 项目名称
+		      ,XX.INCOME      AS income  -- 主营收入（亿元） 
+		      ,XX.PRI_RVNU_PCT AS priRvnuPct-- 占营收比重（%） 
+		      ,XX.INCOME_CHNG  AS incomeChange-- 主营收入比上年增减比例（%）
+		      ,XX.COST         AS cost -- 营业成本（亿元）
+		      ,XX.GP_RATIO     AS gpratio -- 主营业务毛利率（%）
+		      ,XX.GP_CHNG      AS gpchange -- 毛利率比上年增减比例（%）
+		FROM 
+		(
+		SELECT B.PERIODDATE,'按行业分' AS DIMENSION,B.ITEM_NAME,B.INCOME/10000 AS INCOME
+		      ,B.PRI_RVNU_PCT,B.INCOME_CHNG,B.COST/10000 AS COST,B.GP_RATIO,B.GP_CHNG,B.ITEM_ID
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.STK_PRI_INCOME_INDUSTRY B
+		    ON A.COMCODE = B.COMCODE
+		 WHERE A.STOCKCODE = #{stockcode} -- 入口参数
+		   AND b.PERIODDATE=#{enddate}
+		   AND B.RPT_TYPE = '合并'
+		 UNION ALL 
+		SELECT B.PERIODDATE,'按产品分' AS DIMENSION,B.ITEM_NAME,B.INCOME/10000 AS INCOME
+		      ,B.PRI_RVNU_PCT,B.INCOME_CHNG,B.COST/10000 AS COST,B.GP_RATIO,B.GP_CHNG,B.ITEM_ID
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.STK_PRI_INCOME_PRODUCT B
+		    ON A.COMCODE = B.COMCODE
+		 WHERE A.STOCKCODE = #{stockcode} -- 入口参数
+		   AND b.PERIODDATE=#{enddate}
+		   AND B.RPT_TYPE = '合并'
+		 UNION ALL 
+		SELECT B.PERIODDATE,'按地区分' AS DIMENSION,B.ITEM_NAME,B.INCOME/10000 AS INCOME
+		      ,B.PRI_RVNU_PCT,B.INCOME_CHNG,B.COST/10000 AS COST,B.GP_RATIO,B.GP_CHNG,B.ITEM_ID
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.STK_PRI_INCOME_DISTRICT B
+		    ON A.COMCODE = B.COMCODE
+		 WHERE A.STOCKCODE = #{stockcode} -- 入口参数
+		   AND b.PERIODDATE=#{enddate}
+		   AND B.RPT_TYPE = '合并'
+		) XX
+		WHERE XX.PERIODDATE >= DATE_SUB(NOW(),INTERVAL 2 YEAR) 
+		ORDER BY XX.PERIODDATE DESC,XX.DIMENSION DESC,XX.ITEM_ID DESC;
+	</select>
+	<select id="selectSecPerioddate" resultType="java.util.Date"
+		parameterType="String">
+		SELECT  DISTINCT B.PERIODDATE   
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.STK_SEC_IVST B
+		    ON A.COMCODE = B.COMCODE
+		 INNER JOIN PGENIUS.ORG_PROFILE C
+		    ON B.IVST_OBJ_CODE = C.ORGCODE
+		 WHERE A.STOCKCODE = #{stockcode}
+		 ORDER BY B.PERIODDATE DESC
+		LIMIT 3;
+	</select>
+	<select id="selectSecInfo" resultType="java.util.HashMap">
+	SELECT B.PERIODDATE  AS perioddate  -- 报表日期
+		      ,C.CSNAME      AS csname  -- 投资对象
+		      ,B.SEC_CLS     AS selcls  -- 证券类型
+		      ,B.SEC_CODE    AS seccode  -- 证券代码
+		      ,B.SEC_SRC     AS secsrc  -- 股份来源
+		      ,B.SEC_NUM     AS secnum  -- 持有数量
+		      ,B.SEC_PCT     AS secpct  -- 持有比例
+		      ,B.ORIGIN_VALUE/10000 AS value1 -- 初始投资（万元）
+		      ,B.BOOK_VALUE/10000 AS value2   -- 期末账面（万元）
+		      ,B.PERIOD_INCOME/10000 AS income -- 损益（万元）
+		      ,B.EQUITY_CHNG/10000 AS ch     -- 所有者权益变动（万元）
+		      ,B.ACC_TITLE  AS acctitle   -- 会计核算科目
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.STK_SEC_IVST B
+		    ON A.COMCODE = B.COMCODE
+		 INNER JOIN PGENIUS.ORG_PROFILE C
+		    ON B.IVST_OBJ_CODE = C.ORGCODE
+		 WHERE A.STOCKCODE = #{stockcode}
+		  AND b.PERIODDATE=#{enddate}
+		 ORDER BY B.PERIODDATE DESC
+		LIMIT 10;
+	</select>
+	<select id="selectRaiseInfo" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT B.DECLAREDATE AS declaredate -- 公布日期
+		      ,(SELECT REF_NAME FROM PGENIUS.GEN_REF WHERE CLS_CODE = 1013 AND REF_CODE = B.CAP_SRC_CODE)AS capsrc-- 资金来源
+		      ,B.CLCT_PLAN/10000 AS clctplan -- 计划募资金额（亿元）
+		      ,C.CLCT_ACT/10000 AS clctact   -- 实际募资金额（亿元）
+		      ,C.ENDDATE  AS enddate   -- 截止日期
+		      ,C.UNUSED_CAP/10000 AS unusedCap  -- 剩余资金（亿元） 
+		      ,C.UNUSED_INFO AS unusedInfo-- 尚未使用资金去向
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.STK_CAP_SRC B
+		    ON A.COMCODE = B.COMCODE
+		 INNER JOIN PGENIUS.STK_IVST_INFO C
+		    ON C.P_SEQ = B.SEQ
+		 WHERE A.STOCKCODE = #{stockcode}
+		 ORDER BY B.DECLAREDATE DESC,C.ENDDATE DESC
+	</select>
+	<select id="selectProjectsrc" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT DISTINCT B.DECLAREDATE AS declaredate -- 公布日期
+		      ,(SELECT REF_NAME FROM PGENIUS.GEN_REF WHERE CLS_CODE = 1013 AND REF_CODE = B.CAP_SRC_CODE)AS capsrc-- 资金来源
+		      ,B.CLCT_PLAN/10000 AS clctplan -- 计划募资金额（亿元）
+		      ,C.CLCT_ACT/10000 AS clctact   -- 实际募资金额（亿元）
+		      ,B.SEQ AS seq-- 关联STK_IVST_PRJ.P_SEQ
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.STK_CAP_SRC B
+		    ON A.COMCODE = B.COMCODE
+		 INNER JOIN PGENIUS.STK_IVST_INFO C
+		    ON C.P_SEQ = B.SEQ
+		 WHERE A.STOCKCODE = #{stockcode}
+		ORDER BY B.DECLAREDATE DESC ;
+	</select>
+	<select id="selectProjectList" resultType="java.util.HashMap">
+		SELECT C.PRJ_NAME AS prjname -- 项目名称
+		      ,C.IVST_PLAN/10000 AS ivstplan  -- 本项目总投资额（亿元）
+		      ,C.CLCT_CAP/10000 AS clctcap    -- 预计使用募集资金（亿元）
+		      ,C.IVST_PRFT AS ivstprft -- 投资利润率（%）
+		      ,C.SALE_INCOME/10000 AS saleIncome -- 年销售收入（亿元）
+		      ,C.GRS_PRFT/10000 AS grsprft    -- 净利润（亿元）
+		      ,c.IVST_TP AS ivsttp-- 投资回收期（年）
+		      ,c.IRR AS irr -- 财务内部收益率%
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.STK_CAP_SRC B
+		    ON A.COMCODE = B.COMCODE
+		 INNER JOIN PGENIUS.STK_IVST_PRJ C
+		    ON C.P_SEQ = B.SEQ
+		 WHERE A.STOCKCODE = #{stockcode}
+		    AND c.P_SEQ='1860'      -- 从第一个sql语句查询来的结果     
+		 ORDER BY B.DECLAREDATE DESC;
+	</select>
+	<select id="selectProjectDetail" resultType="java.util.HashMap">
+		SELECT D.PRJ_NAME AS prjname -- 项目名称
+		      ,C.ENDDATE   AS enddate  -- 截止日期
+		      ,D.IVST_PRG   AS ivstprg -- 进度（%）
+		      ,D.IVST_PLAN/10000 AS ivstplan
+		      ,D.USED_CAP/10000 AS usedcap
+		      ,D.TTL_USED_CAP/10000 AS totalUsedcap
+		      ,D.PRG_INFO AS prginfo-- 计划进度或收益说明
+		      ,D.P_SEQ AS pseq-- 关联STK_IVST_INFO.SEQ，用以与上面结果关联
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.STK_CAP_SRC B
+		    ON A.COMCODE = B.COMCODE
+		 INNER JOIN PGENIUS.STK_IVST_INFO C
+		    ON C.P_SEQ = B.SEQ
+		 INNER JOIN PGENIUS.STK_IVST_INFO_DTL D
+		    ON D.P_SEQ = C.SEQ
+		 WHERE A.STOCKCODE = #{stockcode}
+		 AND PRJ_NAME =#{project}   -- 这个条件从第二sql语句中
+		 ORDER BY B.DECLAREDATE DESC,D.PRJ_NAME,C.ENDDATE DESC;
+	</select>
+	<select id="selectOperation" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT B.PERIODDATE AS perioddate-- 报表日期
+		      ,B.ITEM_CONT  AS content-- 经营分析内容
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.STK_RPT_TEXT B
+		    ON A.COMCODE = B.COMCODE
+		 WHERE A.STOCKCODE = #{stockcode} -- 入口参数
+		   AND B.ITEM_CODE = 1
+		   AND B.PERIODDATE = (SELECT MAX(PERIODDATE) FROM PGENIUS.STK_RPT_TEXT WHERE COMCODE = B.COMCODE AND ITEM_CODE = B.ITEM_CODE)
+		 ORDER BY B.PERIODDATE DESC
+	</select>
+</mapper>

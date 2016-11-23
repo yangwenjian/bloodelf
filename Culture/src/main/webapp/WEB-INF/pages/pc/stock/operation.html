@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>经营状况</title>
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+	name="viewport" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+</head>
+<body>
+
+	<div class="catalog gap">
+		<div class="catalog-name follow font-lg">目录</div>
+		<div id="catalog-list" class="catalog-bg follow font-md">
+			<ol type="" class="catalog-list">
+				<!-- 每4个一组 -->
+				<li><span class="index">1.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#1">业务范围</a></span></li>
+				<li><span class="index">2.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#2">主营构成</a></span></li>
+				<li><span class="index">3.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#3">证券投资情况</a></span></li>
+				<li><span class="index">4.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#4">募集及使用</a></span></li>
+			</ol>
+			<ol class="catalog-list">
+				<!-- 每4个一组 -->
+				<li><span class="index">5.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#5">项目情况</a></span></li>
+				<li><span class="index">6.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#6">经营分析</a></span></li>
+			</ol>
+		</div>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				业务范围<a name="1"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<div class="info-table font-md">
+			<table>
+				<tbody align="center">
+					<tr>
+						<td style="width: 25%">主营业务</td>
+						<td style="width: 75%">${business.priBus}</td>
+					</tr>
+					<tr>
+						<td>兼营业务</td>
+						<td>${business.monMainBus}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				主营构成<a name="2"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<#if !mainBusStructs?? || mainBusStructs?size == 0 > 
+		<div id="normal" class="left-gap font-md break">暂无数据</div>
+		<#else>
+		<#list mainBusStructs as main>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<div class="info-table font-md">
+			<table>
+				<thead align="center">
+					<tr>
+						<th colspan="2" rowspan="2">主营构成</br>(${main.enddate?string("yyyy-MM-dd")})
+						</th>
+						<th colspan="3">主营业务收入</th>
+						<th>主营成本</th>
+						<th colspan="2">毛利率(%)</th>
+					</tr>
+					<tr>
+						<th>收入(亿)</th>
+						<th>占比%</th>
+						<th>比上年%</th>
+						<th>(亿)</th>
+						<th>毛利率</th>
+						<th>比上年</th>
+					</tr>
+				</thead>
+				<tbody align="center">
+					<#list main.info as info>
+					<tr>
+						<td style="width: 20%">【${info.dimension!0.00}】</td>
+						<td style="width: 15%">${info.itemName!0.00}</td>
+						<td style="width: 15%">${info.income!0.00}</td>
+						<td style="width: 10%">${info.priRvnuPct!0.00}</td>
+						<td style="width: 10%">${info.incomeChange!0.00}</td>
+						<td style="width: 10%">${info.cost!0.00}</td>
+						<td style="width: 10%">${info.gpratio!0.00}</td>
+						<td style="width: 10%">${info.gpchange!0.00}</td>
+					</tr>
+					</#list>
+				</tbody>
+			</table>
+		</div>
+		</#list>
+		</#if>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				证券投资情况<a name="3"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<#if !secInfo?? || secInfo?size == 0 > 
+		<div id="normal" class="left-gap font-md break">暂无数据</div>
+		<#else>
+		<#list secInfo as sec>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<div id="normal" class="font-md break">
+			<div>【${sec.enddate?string("yyyy-MM-dd")}】</div>
+		</div>
+		<div class="info-table font-md">
+			<table>
+				<thead align="center">
+					<tr>
+						<th style="width: 40%">证券投资</th>
+						<th style="width: 60%">投资情况</th>
+					</tr>
+				</thead>
+				<tbody align="center">
+					<#list sec.info as info>
+					<tr>
+						<td>${info.csname!}&nbsp;(${info.selcls!}:${info.seccode})</td>
+						<td>持有数量${info.secnum!0.00}万股,持有比例${info.secpct!0.00}%,初始投资${info.value1!0.00}万元,期末账面${info.value2!0.00}万元,
+							损益${info.income!0.00}所有者权益变动${info.ch!0.00}万元,会计核算科目:${info.acctitle!'-'}</td>
+					</tr>
+					</#list>
+				</tbody>
+			</table>
+		</div>
+		</#list>
+		</#if>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				募集及使用<a name="4"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<#if !raiseInfo?? || raiseInfo?size == 0 > 
+		<div id="normal" class="left-gap font-md break">暂无数据</div>
+		<#else>
+		<div class="info-table font-md">
+			<table>
+				<thead align="center">
+					<tr>
+						<th style="width: 30%">资金来源</th>
+						<th style="width: 20%">截止日期</th>
+						<th style="width: 20%">剩余资金亿</th>
+						<th style="width: 30%">尚未使用资金去向</th>
+					</tr>
+				</thead>
+				<tbody align="center">
+					<#list raiseInfo as info>
+					<tr>
+						<#if info.declaredate?? >
+						<td>【${info.declaredate?string("yyyy-MM-dd")!}${info.capsrc!}】</br>
+							<#else>
+						<td>【-${info.capsrc!}】</br> </#if> 计划慕资:${info.clctplan!}亿</br>实际慕资:${info.clctact!}
+						</td> <#if info.enddate ?? >
+						<td>${info.enddate?string("yyyy-MM-dd")!}</td> <#else>
+						<td>-</td> </#if>
+						<td>${info.unusedCap!0.00}</td>
+						<td>${info.unusedInfo!}</td>
+					</tr>
+					</#list>
+				</tbody>
+			</table>
+		</div>
+		</#if>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				项目情况<a name="5"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<#if !projectsrcs?? || projectsrcs?size == 0 > 
+		<div id="normal" class="left-gap font-md break">暂无数据</div>
+		<#else>
+		<div class="info-table font-md">
+			<table>
+				<thead align="center">
+					<tr>
+						<th style="width: 25%">项目名称</th>
+						<th style="width: 20%">截止日期</th>
+						<th style="width: 15%">进度&nbps;%</th>
+						<th style="width: 40%">项目说明</th>
+					</tr>
+				</thead>
+				<tbody align="center">
+					<#list projectsrcs as projectsrc>
+					<tr>
+						<td>${projectsrc.declaredate?string("yyyy-MM-dd")}${projectsrc.capsrc}</td>
+						<td></td>
+						<td></td>
+						<td>计划慕资:${projectsrc.clctplan!0.00}</br>实际慕资:${projectsrc.clctact!0.00}
+						</td>
+					</tr>
+					<#list projectsrc.projectList as project> <#assign size =
+					(project.projectDetailList?size + 1)>
+					<tr>
+						<td rowspan="${size}">${project.prjname!}</td>
+						<td></td>
+						<td></td>
+						<td>本项目总投资${project.ivstplan!0.00}亿.
+							预计使用募集资金${project.clctcap!0.00}亿 投资利润率${project.ivstprft!0.00}%;
+							年销售收入${project.saleIncome!0.00}亿. 净利润${project.grsprft!0.00}亿
+							财务内部收益率${project.irr!0.00}%</td>
+					</tr>
+					<#list project.projectDetailList as detail>
+					<tr>
+						<td>${detail.enddate?string("yyyy-MM-dd")}</td>
+						<td>${(detail.ivstprg!0)?string("#")}%</td>
+						<td>计划投入:${detail.ivstplan!0.00}亿本期投入:${detail.usedcap!0.00}亿累计投入:${detail.totalUsedcap!0.00}亿。${detail.prginfo!}</td>
+					</tr>
+					</#list> </#list> </#list>
+				</tbody>
+			</table>
+		</div>
+		</#if>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				经营分析<a name="6"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="notice-list" class="notice-list break">
+
+			<div class="notice">
+				<div class="subject font-lg">【${(operation.perioddate?string("yyyy-MM-dd"))!}】</div>
+				<div class="publish-date"></div>
+				<div class="break">
+					<br>
+				</div>
+				<div class="content font-md">
+					<span>${(operation.content?replace('[\r\n]+',
+						'<br>', 'r')?replace('\f', ''))!}
+					</span>
+				</div>
+				<div>
+					<br>
+				</div>
+				<div class="issuer"></div>
+				<div class="line"></div>
+			</div>
+		</div>
+	</div>
+
+
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html class="ui-mobile">
+<head>
+	<meta charset="utf-8" />
+	<title>新股信息</title>
+</head>
+	<body>
+		<div class="third-party font-md break">
+			<div>
+				<span>${.now?string("yyyy-MM-dd")}</span><span>&nbsp;&nbsp;更新</span>
+			</div>
+			<div>
+				<img src="${webRootPath}/res/css/mobile/star-white.svg"
+					style="height: 8px; height: 0.8rem" />巨灵信息<img
+					src="${webRootPath}/res/css/mobile/star-white.svg"
+					style="height: 8px; height: 0.8rem" />
+			</div>
+			<div>WWW.GENIUS.COM.CN</div>
+		</div>
+
+		<div class="catalog break">
+			<div id="sub-menu" class="sub-menu font-sm follow">
+				<div class="ui-grid-b">
+					<div class="ui-block-a">
+						<div id="block-1" class="each">
+							<a href="#1"> <span class="index">1.</span> <span
+								class="text">今日新股提示</span>
+							</a>
+						</div>
+					</div>
+					<div class="ui-block-b">
+						<div id="block-2" class="each">
+							<a href="#2"> <span class="index">2.</span> <span
+								class="text">等待发行新股提示</span>
+							</a>
+						</div>
+					</div>
+					<div class="ui-block-c">
+						<div id="block-3" class="each">
+							<a href="#3"> <span class="index">3.</span> <span
+								class="text">等待上市新股一览表</span>
+							</a>
+						</div>
+					</div>
+					<div class="ui-block-a">
+						<div id="block-4" class="each">
+							<a href="#4"> <span class="index">4.</span> <span
+								class="text">最近上市新股一览表</span>
+							</a>
+						</div>
+					</div>
+					<div class="ui-block-b">
+						<div id="block-5" class="each">
+							<a href="#5"> <span class="index">5.</span> <span
+								class="text"><#if newStockLocation.titleMain != null>${newStockLocation.titleMain}<#else>新股定位</#if></span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="dest-1" class="topic break min-h">
+			<div class="type">
+				<div class="exclam follow"></div>
+				<div class="text follow font-lg">
+					今日新股提示<a name="1"></a>
+				</div>
+				<div class="follow-R font-lg top">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<div id="notice-list" class="notice-list break">
+				<div class="notice">
+					<div class="content font-sm break">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span><#if todayNewStockInfo.txtContent != null>${todayNewStockInfo.txtContent?replace('\n', '<br/>')}<#else>暂无今日新股提示</#if></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="line"></div>
+		
+		<div id="dest-2" class="topic break min-h">
+			<div class="type">
+				<div class="exclam follow"></div>
+				<div class="text follow font-lg">
+					等待发行新股提示<a name="2"></a>
+				</div>
+				<div class="follow-R font-lg top">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<div id="notice-list" class="notice-list break">
+				<div class="notice">
+					<div class="content font-sm break">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span><#if waitIssueStockInfo.txtContent != null>${waitIssueStockInfo.txtContent?replace('\n', '<br/>')}<#else>暂无等待发行新股提示</#if></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="line"></div>
+		
+		<div id="dest-3" class="topic break min-h">
+			<div class="type">
+				<div class="exclam follow"></div>
+				<div class="text follow font-lg">
+					等待上市新股一览表<a name="3"></a>
+				</div>
+				<div class="follow-R font-lg top">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<div id="notice-list" class="notice-list break">
+				<div class="notice">
+					<div class="content font-sm break">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span><#if waitListing.txtContent != null>${waitListing.txtContent?replace('\n', '<br/>')}<#else>暂无等待上市新股一览表</#if></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="line"></div>
+		
+		<div id="dest-4" class="topic break min-h">
+			<div class="type">
+				<div class="exclam follow"></div>
+				<div class="text follow font-lg">
+					最近上市新股一览表<a name="4"></a>
+				</div>
+				<div class="follow-R font-lg top">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<div id="notice-list" class="notice-list break">
+				<div class="notice">
+					<div class="content font-sm break">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span><#if latestStock.txtContent != null>${latestStock.txtContent?replace('\n', '<br/>')}<#else>暂无最近上市新股一览表</#if></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="line"></div>
+		
+		<div id="dest-5" class="topic break min-h">
+			<div class="type">
+				<div class="exclam follow"></div>
+				<div class="text follow font-lg">
+					<#if newStockLocation.titleMain != null>${newStockLocation.titleMain}<#else>新股定位</#if><a name="5"></a>
+				</div>
+				<div class="follow-R font-lg top">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<div id="notice-list" class="notice-list break">
+				<div class="notice">
+					<div class="content font-sm break">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span><#if newStockLocation.txtContent != null>${newStockLocation.txtContent?replace('\n', '<br/>')}<#else>暂无新股定位</#if></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="line"></div>
+	</body>
+</html>

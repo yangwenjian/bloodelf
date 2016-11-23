@@ -1,0 +1,136 @@
+.ui-mobile {
+	background-color: #1C1C1C;
+}
+
+.base {
+	background-color: #1C1C1C;
+}
+
+.quick_nav {
+	position: fixed;
+	top: 0px;
+}
+
+.right {
+	margin-right: 2px;
+	float: right;
+}
+
+.title {
+	color: #F2F2F2;
+}
+
+.headline {
+	color: #EEE685;
+}
+
+.headtd {
+	color: #EEE685;
+}
+
+.line {
+	color: #ECF6CE;
+}
+
+.cutline {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.center {
+	color: #EEE685;
+	align: center;
+}
+
+.content {
+	margin-left: 5px;
+	margin-right: 5px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.olStyle {
+	padding-left: 5px;
+}
+
+.olStyle li {
+	white-space: 0nowrap;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	overflow: auto;
+	list-style-position: inside;
+	letter-spacing: 1px;
+	color: #EEE685;
+}
+
+.olStyle li a {
+	color: #fef3cb;
+}
+
+.hrefJumpCss {
+	list-style: none;
+	padding-left: 20px;
+}
+
+.hrefJumpCss li {
+	float: left;
+	color: #EEE685;
+}
+
+.hrefJumpCss li a {
+	float: left;
+	color: #EEE685;
+	text-decoration: none;
+}
+
+.topCss {
+	background: -ms-linear-gradient(top, #EEB422, #F7D358); /*!* IE 10 *!*/
+	background: -moz-linear-gradient(top, #EEB422, #F7D358); /*!*火狐*!*/
+	/*background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#EEB422),
+	to(#F7D358));*/ /*!*谷歌*!*/
+}
+
+.topCss div {
+	/*background-color: #EEB422;*/
+	/*border-right: 3px solid #F7D358;*/
+	height: 35px;
+}
+
+.topCss div li a {
+	text-decoration: none;
+}
+
+.topCss div li a p {
+	color: #F5FBEF;
+	font-size: 14px;
+	font-weight: 800;
+	display: inline-block;
+	vertical-align: middle;
+	line-height: 35px;
+}
+
+.divSpacing {
+	padding-left: 2px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	font-size: 16px;
+	background-color:#353535;
+}
+
+.headcol130 {
+	position: absolute;
+	top: auto;
+	left: 0em;
+	width: 130px;
+	word-wrap: break-word;
+	word-break: break-all;
+	position:absolute;
+	border-right: 0px none black;		
+	border-top-width:3px; /*only relevant for first row*/							
+	margin-top:-1px; /*compensate for top border*/
+	border-bottom-width:2px;
+	margin-bottom:-1px;
+	
+}
+

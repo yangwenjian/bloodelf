@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.resource.geniusdao.FinancialDAO">
+	<!-- 根据证券市场查询所有证券的流通股本 -->
+	<select id="selectEnddate" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT DISTINCT B.ENDDATE as enddate
+		FROM PGENIUS.STK_CODE A
+		INNER JOIN PGENIUS.ANA_STK_FIN_IDX B
+		ON A.COMCODE = B.COMCODE
+		WHERE A.STOCKCODE = #{stockcode}
+		ORDER BY B.ENDDATE DESC
+		LIMIT 5;
+	</select>
+	<select id="selectDebtPaying" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT B.ENDDATE  AS enddate -- 截止日期
+		      ,B.LAB_FLO  AS labflo -- 流动比率
+		      ,B.LAB_SLO  AS labslo -- 速动比率
+		      ,B.OPE_ARC  AS opearc -- 应收账款周转率
+		      ,B.LAB_LO  AS lablo  -- 长期债务与营运资金比率（%）
+		      ,B.LAB_IEBIT  AS labiebit-- 利息保障倍数
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.ANA_STK_FIN_IDX B
+		    ON A.COMCODE = B.COMCODE
+		 WHERE A.STOCKCODE = #{stockcode}
+		 ORDER BY B.ENDDATE DESC  
+		 LIMIT 5;
+	</select>
+	<select id="selectDeveloping" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT B.ENDDATE AS enddate -- 截止日期
+		      ,B.RIS_OR  AS risor -- 主营收入增长率（%）
+		      ,B.RIS_OP  AS risop -- 主营利润增长率（%）
+		      ,100*(C.B100000-D.B100000)/D.B100000 AS totalInc  -- 总资产增长率（%）
+		      ,100*(C.B130001-D.B130001)/D.B130001 AS stableInc  -- 固定资产增长率（%）
+		      ,E.CAP_ADE_RATE AS capAde -- 资本充足率(%)
+		      ,E.COR_CAP_ADE_RATE AS corCapAde-- 核心资本充足率(%)
+		      ,E.PRV_R AS prvr -- 拨备覆盖率(%)
+		      ,100*(E.LOAN-F.LOAN)/F.LOAN AS loanGr-- 贷款增长率(%)
+		      ,B.PS_CR AS pscr-- 每股资本公积（元）
+		      ,B.PS_UP AS psup-- 每股未分配利润（元）
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.ANA_STK_FIN_IDX B
+		    ON A.COMCODE = B.COMCODE
+		 INNER JOIN PGENIUS.STK_BALA_GEN C
+		    ON B.COMCODE = C.COMCODE
+		   AND B.ENDDATE = C.ENDDATE
+		   AND C.RPT_TYPE = '合并'
+		   AND C.RPT_DATE = (SELECT MAX(RPT_DATE) FROM PGENIUS.STK_BALA_GEN
+		                      WHERE COMCODE = C.COMCODE AND ENDDATE = C.ENDDATE AND RPT_TYPE = C.RPT_TYPE)
+		 INNER JOIN PGENIUS.STK_BALA_GEN D
+		    ON D.COMCODE = C.COMCODE
+		   AND D.ENDDATE = DATE_ADD(C.ENDDATE,INTERVAL -1 YEAR)
+		   AND D.RPT_TYPE = '合并'
+		   AND D.RPT_DATE = (SELECT MAX(RPT_DATE) FROM PGENIUS.STK_BALA_GEN
+		                      WHERE COMCODE = D.COMCODE AND ENDDATE = D.ENDDATE AND RPT_TYPE = D.RPT_TYPE)
+		  LEFT JOIN PGENIUS.STK_BANK_IDX E
+		    ON B.COMCODE = E.COMCODE
+		   AND E.RPT_TYPE = 1
+		   AND E.ENDDATE = B.ENDDATE
+		   AND E.RPT_DATE = (SELECT MAX(RPT_DATE) FROM PGENIUS.STK_BANK_IDX
+		                      WHERE COMCODE = E.COMCODE AND ENDDATE = E.ENDDATE AND RPT_TYPE = E.RPT_TYPE)
+		  LEFT JOIN PGENIUS.STK_BANK_IDX F
+		    ON F.COMCODE = E.COMCODE
+		   AND F.RPT_TYPE = 1
+		   AND F.ENDDATE = DATE_ADD(E.ENDDATE,INTERVAL -1 YEAR)
+		   AND F.RPT_DATE = (SELECT MAX(RPT_DATE) FROM PGENIUS.STK_BANK_IDX
+		                      WHERE COMCODE = F.COMCODE AND ENDDATE = F.ENDDATE AND RPT_TYPE = F.RPT_TYPE)   
+		 WHERE A.STOCKCODE = #{stockcode}  ORDER BY B.ENDDATE DESC
+		 LIMIT 5;
+	</select>
+	<select id="selectCapStruct" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT B.ENDDATE enddate -- 截止日期
+		      ,(100-B.CAP_LAB) AS capeq -- 股东权益比率（%）
+		      ,100*C.B220001/C.B100000  AS longDebt-- 长期负债比率（%）
+		      ,100*C.B200000/C.B300000  AS equity-- 产权比率（%）
+		      ,B.CAP_LAB AS caplab-- 资产负债率（%）
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.ANA_STK_FIN_IDX B
+		    ON A.COMCODE = B.COMCODE
+		 INNER JOIN PGENIUS.STK_BALA_GEN C
+		    ON B.COMCODE = C.COMCODE
+		   AND B.ENDDATE = C.ENDDATE
+		   AND C.RPT_TYPE = '合并'
+		   AND C.RPT_DATE = (SELECT MAX(RPT_DATE) FROM PGENIUS.STK_BALA_GEN
+		                      WHERE COMCODE = C.COMCODE AND ENDDATE = C.ENDDATE AND RPT_TYPE = C.RPT_TYPE)
+		 INNER JOIN PGENIUS.STK_BALA_GEN D
+		    ON D.COMCODE = C.COMCODE
+		   AND D.ENDDATE = DATE_ADD(C.ENDDATE,INTERVAL -1 YEAR)
+		   AND D.RPT_TYPE = '合并'
+		   AND D.RPT_DATE = (SELECT MAX(RPT_DATE) FROM PGENIUS.STK_BALA_GEN
+		                      WHERE COMCODE = D.COMCODE AND ENDDATE = D.ENDDATE AND RPT_TYPE = D.RPT_TYPE)
+		 WHERE A.STOCKCODE = #{stockcode}
+		 ORDER BY B.ENDDATE DESC
+		 LIMIT 5;
+	</select>
+	<select id="selectOpeEfficiency" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT B.ENDDATE AS enddate-- 截止日期
+		      ,B.OPE_STCI AS opeStci-- 存货周转率
+		      ,B.OPE_FCI AS opeFci-- 固定资产周转率
+		      ,B.OPE_TAI AS opeTai-- 总资产周转率
+		      ,B.OPE_TAI*(1-B.CAP_LAB) AS opeEqu -- 股东权益周转率
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.ANA_STK_FIN_IDX B
+		    ON A.COMCODE = B.COMCODE
+		 WHERE A.STOCKCODE = #{stockcode}
+		 ORDER BY B.ENDDATE DESC
+		 LIMIT 5;
+	</select>
+	<select id="selectProfite" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT B.ENDDATE AS enddate -- 截止日期
+		      ,B.TR_EBIT*B.INC_H/B.INC_J AS mainPro-- 主营业务利润率（%）
+		      ,100*B.INC_F/(B.BAL_O-B.BAL_P) AS netEssets -- 净资产报酬率（%）
+		      ,100*B.INC_F/B.BAL_O AS totalEssets-- 总资产报酬率（%）
+		      ,B.SEL_RINT AS selRint -- 销售毛利率（%）
+		      ,B.SEL_NINT AS selNint -- 销售净利率（%）
+		      ,B.TR_TP    AS trtp -- 营业利润率（%）
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.ANA_STK_FIN_IDX B
+		    ON A.COMCODE = B.COMCODE
+		 WHERE A.STOCKCODE = #{stockcode}
+		 ORDER BY B.ENDDATE DESC
+		 LIMIT 5;
+	</select>
+	<select id="selectCashFlow" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT B.ENDDATE AS enddate -- 截止日期
+		      ,C.C110101/D.P110202 AS selCash-- 销售收现比率
+		      ,C.C120101/D.P110202 AS purchCash-- 购货收现比率
+		      ,100*B.OR_ONF/B.BAL_N AS cashFlow-- 现金流量比率（%）
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.ANA_STK_FIN_IDX B
+		    ON A.COMCODE = B.COMCODE
+		 INNER JOIN PGENIUS.STK_CASH_GEN C
+		    ON B.COMCODE = C.COMCODE
+		   AND SUBSTR(C.STARTDATE,6,5)='01-01'
+		   AND B.ENDDATE = C.ENDDATE
+		   AND C.RPT_TYPE = '合并'
+		   AND C.RPT_DATE = (SELECT MAX(RPT_DATE) FROM PGENIUS.STK_CASH_GEN
+		                      WHERE COMCODE = C.COMCODE AND STARTDATE = C.STARTDATE AND ENDDATE = C.ENDDATE AND RPT_TYPE = C.RPT_TYPE)
+		 INNER JOIN PGENIUS.STK_INCOME_GEN D
+		    ON D.COMCODE = C.COMCODE
+		   AND SUBSTR(D.STARTDATE,6,5)='01-01'
+		   AND D.ENDDATE = C.ENDDATE
+		   AND D.RPT_TYPE = '合并'
+		   AND D.RPT_DATE = (SELECT MAX(RPT_DATE) FROM PGENIUS.STK_INCOME_GEN
+		                      WHERE COMCODE = D.COMCODE AND STARTDATE = D.STARTDATE AND ENDDATE = D.ENDDATE AND RPT_TYPE = D.RPT_TYPE)
+		 WHERE A.STOCKCODE = #{stockcode} 
+		 ORDER BY B.ENDDATE DESC
+		 LIMIT 5;
+	</select>
+	<select id="selectRisk" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT a.enddate AS enddate -- 截止日期
+		      ,a.NPLR    AS nplr -- 不良贷款率%
+		  FROM pgenius.STK_BANK_FIN_IDX a
+		 INNER JOIN pgenius.stk_code b 
+		    ON a.comcode = b.comcode
+		 WHERE a.isvalid = 1 AND b.isvalid = 1
+		   AND b.stockcode = #{stockcode}
+		 ORDER BY a.enddate DESC LIMIT 5;
+	</select>
+	<select id="selectAudit" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT B.PERIODDATE AS enddate -- 截止日期
+		      ,(SELECT REF_NAME FROM PGENIUS.GEN_REF WHERE CLS_CODE = 2028 
+		           AND REF_CODE = IFNULL(B.DOM_AUDIT_CODE,B.FOR_AUDIT_CODE))AS audit -- 审计意见
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.STK_AUDIT_OPINON B
+		    ON A.COMCODE = B.COMCODE
+		 WHERE A.STOCKCODE = #{stockcode}
+		 ORDER BY B.PERIODDATE DESC
+ 		LIMIT 5;
+	</select>
+	<select id="selectCapDebtTable" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT B.ENDDATE AS enddate-- 截止日期
+		      ,B.B110101/10000 AS B110101 -- 货币资金
+		      ,B.B110701/10000 AS B110701-- 应收账款净额
+		      ,B.B111501/10000 AS B111501-- 存货
+		      ,B.B110001/10000 AS B110001-- 流动资产合计
+		      ,B.B120001/10000 AS B120001-- 长期投资合计
+		      ,B.B130101/10000 AS B130101-- 固定资产合计
+		      ,B.B140001/10000 AS B140001-- 无形及其它资产合计
+		      ,B.B100000/10000 AS B100000-- 资产合计
+		      ,B.B210301/10000 AS B210301-- 应付账款
+		      ,B.B210001/10000 AS B210001-- 流动负债合计
+		      ,B.B220001/10000 AS B220001-- 长期负债合计
+		      ,B.B200000/10000 AS B200000-- 负债合计
+		      ,B.B310101/10000 AS B310101-- 实收股本
+		      ,B.B310201/10000 AS B310201-- 资本公积
+		      ,B.B310301/10000 AS B310301-- 盈余公积
+		      ,B.B310701/10000 AS B310701-- 未分配利润
+		      ,B.B311101/10000 AS B311101-- 股东权益合计
+		      ,B.B110001/B.B210001 -- 流动比率
+		      ,(B.B110001-B.B111501)/B.B210001 -- 速动比率
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.STK_BALA_GEN B
+		    ON A.COMCODE = B.COMCODE
+		   AND B.RPT_TYPE = '合并'
+		   AND B.RPT_DATE = (SELECT MAX(RPT_DATE) FROM PGENIUS.STK_BALA_GEN
+		                      WHERE COMCODE = B.COMCODE AND ENDDATE = B.ENDDATE AND RPT_TYPE = B.RPT_TYPE)
+		 WHERE A.STOCKCODE = #{stockcode}
+		 ORDER BY B.ENDDATE DESC
+		LIMIT 5	
+	</select>
+	<select id="selectProfitTable" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT B.STARTDATE AS startdate, B.ENDDATE AS enddate-- 截止日期
+		      ,B.P110101/10000 AS P110101-- 主营业务收入
+		      ,B.P110202/10000 AS P110202-- 主营业务成本
+		      ,B.P120101/10000 AS P120101-- 主营业务利润
+		      ,B.P120412/10000 AS P120412-- 营业费用
+		      ,B.P120422/10000 AS P120422-- 管理费用
+		      ,B.P120432/10000 AS P120432-- 财务费用
+		      ,B.P130101/10000 AS P130101-- 营业利润
+		      ,B.P130201/10000 AS P130201-- 投资收益
+		      ,B.P140101/10000 AS P140101-- 利润总额
+		      ,B.P140202/10000 AS P140202-- 所得税
+		      ,B.P150101/10000 AS P150101-- 净利润
+		      ,B.P210101/10000 AS P210101-- 年初未分配利润
+		      ,B.P240101/10000 AS P240101-- 未分配利润
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.STK_INCOME_GEN B
+		    ON A.COMCODE = B.COMCODE
+		   AND B.RPT_TYPE = '合并'
+		   AND SUBSTR(B.STARTDATE,6,5)='01-01'
+		   AND B.RPT_DATE = (SELECT MAX(RPT_DATE) FROM PGENIUS.STK_BALA_GEN
+		                      WHERE COMCODE = B.COMCODE AND STARTDATE = B.STARTDATE AND ENDDATE = B.ENDDATE AND RPT_TYPE = B.RPT_TYPE)
+		 WHERE A.STOCKCODE = #{stockcode}
+		 ORDER BY B.ENDDATE DESC
+		 LIMIT 5
+	</select>
+	<select id="selectCashFlowTable" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT B.ENDDATE AS enddate-- 截止日期
+		      ,B.C110000/10000 AS C110000-- 经营活动现金流入小计
+		      ,B.C120000/10000 AS C120000-- 经营活动现金流出小计
+		      ,B.C100000/10000 AS C100000-- 经营活动现金流量净额
+		      ,B.C210000/10000 AS C210000-- 投资活动现金流入小计
+		      ,B.C220000/10000 AS C220000-- 投资活动现金流出小计
+		      ,B.C200000/10000 AS C200000-- 投资活动现金流量净额
+		      ,B.C310000/10000 AS C310000-- 筹资活动现金流入小计
+		      ,B.C320000/10000 AS C320000-- 筹资活动现金流出小计
+		      ,B.C300000/10000 AS C300000-- 筹资活动现金流量净额
+		      ,B.C410101/10000 AS C410101-- 汇率变动对现金的影响
+		      ,B.C410201/10000 AS C410201-- 现金及等价物净增加额
+		  FROM PGENIUS.STK_CODE A
+		 INNER JOIN PGENIUS.STK_CASH_GEN B
+		    ON A.COMCODE = B.COMCODE
+		   AND B.RPT_TYPE = '合并'
+		   AND SUBSTR(B.STARTDATE,6,5)='01-01'
+		   AND B.RPT_DATE = (SELECT MAX(RPT_DATE) FROM PGENIUS.STK_BALA_GEN
+		                      WHERE COMCODE = B.COMCODE AND STARTDATE = B.STARTDATE AND ENDDATE = B.ENDDATE AND RPT_TYPE = B.RPT_TYPE)
+		 WHERE A.STOCKCODE = #{stockcode}
+		 ORDER BY B.ENDDATE DESC
+		 LIMIT 5;
+	</select>
+</mapper>

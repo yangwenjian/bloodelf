@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.market.geniusdao.MarketDAO">
+	<!-- 根据证券市场查询所有证券的流通股本 -->
+	<select id="selectFloatShare" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT
+		B.STOCKCODE,
+		ROUND(A.FL_SHR, 0) AS FL_SHR
+		FROM
+		STK_SHR_STRU A,
+		STK_CODE B
+		WHERE A.ISVALID = 1
+		AND
+		B.STOCKCODE IS NOT
+		NULL
+		AND
+		A.FL_ASHR IS NOT NULL
+		AND
+		B.TRADE_MKT = #{tradeMarket}
+		AND
+		A.COMCODE = B.COMCODE
+		AND A.CHANGEDATE =
+		(SELECT
+		MAX(CHANGEDATE)
+		FROM
+		STK_SHR_STRU
+		WHERE ISVALID = 1
+		AND COMCODE =
+		A.COMCODE) ;
+	</select>
+	<!-- 查询所有证券的所在地和所属行业名称 -->
+	<select id="selectProvince" resultType="String">
+		SELECT
+		CONCAT(
+		"1*",
+		A.DIST_CODE,
+		"&amp;",
+		A.PROV_NAME
+		) AS PROVINCE
+		FROM
+		pub_dist_ref A
+		WHERE
+		A.DIST_CODE LIKE '__0000'
+	</select>
+	<select id="selectProvinceStockCode" resultType="java.util.HashMap">
+		SELECT
+		a.prov_name as provname,
+		CASE
+		c.TRADE_MKT
+		WHEN '上海证券交易所'
+		THEN CONCAT('SH',
+		c.STOCKCODE)
+		ELSE CONCAT('SZ', c.stockcode)
+		END AS stockcode,
+		c.stocksname
+		FROM
+		PUB_DIST_REF a,
+		STK_COM_PROFILE b,
+		STK_CODE c
+		WHERE a.PROV_NAME =
+		b.PROVINCE
+		AND a.DIST_CODE LIKE '__0000'
+		AND
+		b.ISVALID = 1
+		AND
+		c.COMCODE =
+		b.COMCODE
+		ORDER BY
+		DIST_CODE ASC
+	</select>
+	<!-- 选择行业 -->
+	<select id="selectIndustry" resultType="java.util.HashMap"
+		parameterType="Integer">
+		SELECT
+		A.INDU_CODE,
+		A.INDU_NAME,
+		A.INNER_CODE,
+		A.PARENT_CODE
+		FROM
+		PUB_INDU_REF A
+		WHERE
+		A.INDU_SYS_NAME =
+		'国家统计局行业分类标准'
+		AND
+		A.INDU_LEVEL = #{level}
+		ORDER BY
+		A.parent_code ASC,
+		A.INNER_CODE ASC
+	</select>
+
+	<select id="selectIndustryStockCode" resultType="java.util.HashMap">
+		SELECT
+		CASE
+		B.TRADE_MKT
+		WHEN '上海证券交易所'
+		THEN CONCAT('SH', B.STOCKCODE)
+		ELSE CONCAT('SZ', B.STOCKCODE)
+		END AS stockcode,
+		B.stocksname,
+		A.CSRC_INDU_CODE_2012_1 AS inducodel1,
+		A.CSRC_INDU_CODE_2012_2 AS inducodel2,
+		C.INDU_NAME as induname
+		FROM
+		STK_COM_PROFILE A,
+		STK_CODE B,
+		PUB_INDU_REF C
+		WHERE A.COMCODE = B.COMCODE
+		AND A.CSRC_INDU_CODE_2012_2 = C.INDU_CODE
+		AND C.INDU_SYS_NAME = '国家统计局行业分类标准'
+		AND A.ISVALID = 1
+		AND A.CSRC_INDU_CODE_2012_1 IS NOT NULL
+		AND A.CSRC_INDU_CODE_2012_2 IS NOT NULL
+		ORDER BY A.CSRC_INDU_CODE_2012_1 ASC,
+		A.CSRC_INDU_CODE_2012_2 ASC
+	</select>
+
+</mapper>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>高管介绍</title>
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+	name="viewport" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+</head>
+<body>
+
+	<div class="catalog gap">
+		<div class="catalog-name follow font-lg">目录</div>
+		<div id="catalog-list" class="catalog-bg follow font-md">
+			<ol type="" class="catalog-list">
+				<!-- 每4个一组 -->
+				<li><span class="index">1.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#1">高管买卖股票</a></span></li>
+				<li><span class="index">2.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#2">高管持股明细</a></span></li>
+				<li><span class="index">3.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#3">高管兼职</a></span></li>
+				<li><span class="index">4.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#4">股权激励</a></span></li>
+			</ol>
+			<ol class="catalog-list">
+				<!-- 每4个一组 -->
+				<li><span class="index">5.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#5">高管简介</a></span></li>
+			</ol>
+		</div>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				高管买卖股票<a name="1"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<#if !execChanges?? || execChanges?size == 0> 
+		<div>暂无数据</div>
+		<#else>
+		<div class="info-table font-md">
+			<table>
+				<thead align="center">
+					<tr>
+						<th style="width: 13%">高管姓名及职位</th>
+						<th style="width: 13%">持股人与高管关系</th>
+						<th style="width: 12%">股票代码</th>
+						<th style="width: 12%">变动数(股)</th>
+						<th style="width: 12%">变动后持股</th>
+						<th style="width: 12%">变动均价</th>
+						<th style="width: 14%">变动原因</th>
+						<th style="width: 12%">变动日期</th>
+					</tr>
+				</thead>
+				<tbody align="center">
+					<#list execChanges as change>
+					<tr>
+						<td>${change.name!}<br>${change.pos!}
+						</td>
+						<td>${change.holder!}<br>${change.relation!}
+						</td>
+						<td>${change.stockcode!}</td>
+						<td>${change.changeVol!}</td>
+						<td>${change.endVol!}</td>
+						<td>${change.chegEp!}</td>
+						<td>${change.chngReason!}</td>
+						<td>${change.chngdate?string("yyyy-MM-dd")!}</td>
+					</tr>
+					</#list>
+				</tbody>
+			</table>
+		</div>
+		</#if>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				高管持股明细<a name="2"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<#if !execDetials?? || execDetials?size == 0> 
+		<div>暂无数据</div>
+		<#else>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<div class="info-table font-md">
+			<table>
+				<thead align="center">
+					<tr>
+						<th style="width: 20%">股东名称(性别,年龄,学历)</th>
+						<th style="width: 20%">公司职务</th>
+						<th style="width: 20%">年薪(万元)</th>
+						<th style="width: 20%">期初持股(股)</th>
+						<th style="width: 20%">期末持股(股)</th>
+					</tr>
+				</thead>
+				<tbody align="center">
+					<#list execDetials as detail>
+					<tr>
+						<td>${detail.name!}<br>(${detail.gender!},${(detail.age!0)?string("#")},${detail.edu!})
+						</td>
+						<td>${detail.pos!}</td>
+						<td>${detail.reward!0.00}</td>
+						<td>${(detail.startshr!0)?string("#")}</td>
+						<td>${(detail.endshr!0)?string("#")}</td>
+					</tr>
+					</#list>
+				</tbody>
+			</table>
+		</div>
+		</#if>
+		<div id="normal" class="normal font-md break">
+			<div>持股变动原因</div>
+		</div>
+		<#if !execChReasons?? || execChReasons?size == 0> 
+		<div>暂无数据</div>
+		<#else>
+		<div class="info-table font-md">
+			<table>
+				<tbody align="center">
+					<#list execChReasons as reason>
+					<tr>
+						<td style="width: 20%">${reason.name!}</td>
+						<td style="width: 80%">${reason.chngReason!}</td>
+					</tr>
+					</#list>
+				</tbody>
+			</table>
+		</div>
+		</#if>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				董、监事高管兼职&nbsp;截至日期: <#if
+				ptdate??>${ptdate?string("yyyy-MM-dd")}<#else>-</#if><a name="3"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<#if !execPTs?? || execPTs?size == 0> 
+		<div>暂无数据</div>
+		<#else>
+		<div class="info-table font-md">
+			<table>
+				<thead align="center">
+					<tr>
+						<th style="width: 25%">姓名</th>
+						<th style="width: 25%">任职单位名称</th>
+						<th style="width: 25%">职位</th>
+						<th style="width: 25%">任期</th>
+					</tr>
+				</thead>
+				<tbody align="center">
+					<#list execPTs as execPT>
+					<tr>
+						<td>${execPT.name!}</td>
+						<td>${execPT.orgName!}</td>
+						<td>${execPT.orgPos!}</td>
+						<td><#if
+							execPT.enddate??>${execPT.enddate?string("yyyy-MM-dd")}</#if></td>
+					</tr>
+					</#list>
+				</tbody>
+			</table>
+		</div>
+		</#if>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				股权激励<a name="4"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<#if !incetives?? || incetives?size == 0> 
+		<div>暂无数据</div>
+		<#else>
+		<#list incetives as incetive>
+		<div><#if
+			incetive.actdate??>${incetive.actdate?string("yyyy-MM-dd")}</#if>&nbsp;【${incetive.prg!}】</div>
+		<div class="info-table font-md">
+			<table>
+				<tbody align="center">
+					<tr>
+						<td style="width: 13%">激励类型</td>
+						<td style="width: 13%">${incetive.incType!}</td>
+						<td style="width: 12%">激励数量万</td>
+						<td style="width: 12%">${incetive.optNumFlor!}</td>
+						<td style="width: 12%">占股本</td>
+						<td style="width: 12%">${incetive.stkPct!0.00}%</td>
+						<td style="width: 14%">有效期</td>
+						<td style="width: 12%"><#if
+							incetive.validYear??>${incetive.validYear?string("#")!}年</#if></td>
+					</tr>
+					<tr>
+						<td>股票来源</td>
+						<td colspan="7">${incetive.stkSource!}</td>
+					</tr>
+					<tr>
+						<td>激励对象</td>
+						<td colspan="7">${incetive.incTarget!}</td>
+					</tr>
+					<tr>
+						<td>授予价格</td>
+						<td colspan="7">${incetive.giveInfo!}</td>
+					</tr>
+					<tr>
+						<td>授予条件</td>
+						<td colspan="7">${incetive.giveCondi!}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		</#list>
+		</#if>
+	</div>
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				管理层简介<a name="5"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<#if !execIntros?? || execIntros?size == 0> 
+		<div>暂无数据</div>
+		<#else>
+		<#list execIntros as execIntro>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<div class="info-table font-md">
+			<table>
+				<tbody align="center">
+					<tr>
+						<td style="width: 10%">姓名</td>
+						<td style="width: 10%">${execIntro.name!}</td>
+						<td style="width: 10%">性别</td>
+						<td style="width: 10%">${execIntro.gender!}</td>
+						<td style="width: 10%">年龄</td>
+						<td style="width: 10%">${execIntro.age!}</td>
+						<td style="width: 20%">学历</td>
+						<td style="width: 20%">${execIntro.edu!}</td>
+					</tr>
+					<tr>
+						<td>职位</td>
+						<td colspan="5">${execIntro.pos!}</td>
+						<td>本届任期</td>
+						<td><#if execIntro.startdate?? &&
+							execIntro.enddate??>${execIntro.startdate?string("yyyy-MM-dd")!}到${execIntro.enddate?string("yyyy-MM-dd")!}</#if></td>
+
+					</tr>
+					<tr>
+						<td>简历</td>
+						<td colspan="7">${execIntro.resume!}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		</#list>
+		</#if>
+	</div>
+</body>
+</html>

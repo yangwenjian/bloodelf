@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html class="ui-mobile">
+<head>
+	<meta charset="utf-8" />
+	<title>行业研究</title>
+</head>
+	<body>
+		<div class="third-party font-md break">
+			<div>
+				<span>${.now?string("yyyy-MM-dd")}</span><span>&nbsp;&nbsp;更新</span>
+			</div>
+			<div>
+				<img src="${webRootPath}/res/css/mobile/star-white.svg"
+					style="height: 8px; height: 0.8rem" />巨灵信息<img
+					src="${webRootPath}/res/css/mobile/star-white.svg"
+					style="height: 8px; height: 0.8rem" />
+			</div>
+			<div>WWW.GENIUS.COM.CN</div>
+		</div>
+
+		<div class="catalog break">
+			<div id="sub-menu" class="sub-menu font-sm follow">
+				<div class="ui-grid-b">
+					<div class="ui-block-a">
+						<div id="block-100" class="each">
+							<a href="#100"> <span class="index">1.</span> <span
+								class="text">标题列表</span>
+							</a>
+						</div>
+					</div>
+					<div class="ui-block-b">
+						<div id="block-200" class="each">
+							<a href="#200"> <span class="index">2.</span> <span
+								class="text">新闻全文</span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="dest-100" class="topic break min-h">
+			<div class="type">
+				<div class="exclam follow"></div>
+				<div class="text follow font-lg">
+					标题列表<a name="100"></a>
+				</div>
+				<div class="follow-R font-lg top">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<div id="notice-list" class="notice-list break">
+				<#if news??>
+					<#list news!! as entity>
+					<div class="notice">
+						<div class="subject font-md" id='block-${entity_index?string("number")}'>
+							${entity.titleMain}
+						</div>
+						<div class="publish-date font-sm">${entity.declaredate?string("yyyy-MM-dd")}</div>
+						<div class="issuer font-sm break"></div>
+					</div>
+					</#list>
+				<#else>
+					<div class="notice">
+						<div class="content font-sm break">
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span>暂无标题列表</span>
+						</div>
+					</div>
+				</#if>
+			</div>
+		</div>
+		<div class="line"></div>
+		
+		<div id="dest-200" class="topic break min-h">
+			<div class="type">
+				<div class="exclam follow"></div>
+				<div class="text follow font-lg">
+					新闻全文<a name="200"></a>
+				</div>
+				<div class="follow-R font-lg top">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<div id="notice-list" class="notice-list break">
+				<#if news??>
+					<#list news!! as entity>
+					<div class="notice" id='dest-${entity_index?string("number")}'>
+						<div class="subject font-md">${entity.titleMain}</div>
+						<div class="publish-date font-sm">${entity.declaredate?string("yyyy-MM-dd")}&nbsp;&nbsp;&nbsp;&nbsp;<a class="top">Top</a></div>
+						<div class="content font-sm break">
+							<span>${entity.txtContent?replace('[\r\n]+', '<br>', 'r')}</span>
+						</div>
+						<div class="issuer font-sm break"></div>
+						<div class="line"></div>
+					</div>
+					</#list>
+				<#else>
+					<div class="notice">
+						<div class="content font-sm break">
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span>暂无新闻全文</span>
+						</div>
+					</div>
+				</#if>
+			</div>
+		</div>
+		<div class="line"></div>
+	</body>
+</html>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.stockindex.geniusdao.TapeRemarkDAO">
+    <select id="getNewsList" resultType="String">
+        select sql_no_cache
+               A.GUID as guid
+        from (select guid
+              from news_cls 
+              where cls_code IN ('004002', '004010')
+              and declaredate > adddate(curdate(),-30)
+              order by declaredate desc ) d
+        inner join pgenius.news_main a on a.guid=d.guid and a.isvalid=1
+        LIMIT 0, 10;
+    </select>
+    
+    <select id="getNews" resultType="java.util.Map">
+        SELECT A.DECLAREDATE as declaredate, -- 公告日期
+               D.SRC_NAME as resource,       -- 新闻来源 
+               A.TITLE_MAIN as titleMain,    -- 新闻标题
+               C.TXT_CONTENT as txtContent   -- 新闻正文 新闻内容 
+        FROM NEWS_MAIN A 
+        INNER JOIN NEWS_CONTENT C ON A.GUID=C.GUID
+	    INNER JOIN PUB_INFOR_SRC D ON A.SRC_CODE=D.SRC_CODE 
+        WHERE A.ISVALID=1  AND C.ISVALID=1 
+        -- 实际开发中通过变量传递需要指定的GUID
+        AND A.GUID IN 
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">  
+ 			#{item}  
+		</foreach>;
+    </select>
+</mapper>

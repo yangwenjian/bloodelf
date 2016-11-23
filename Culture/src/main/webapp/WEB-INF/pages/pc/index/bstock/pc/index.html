@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>B股动态</title>
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+	name="viewport" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+</head>
+<body>
+
+	<div class="catalog gap">
+		<div class="catalog-name follow font-lg">目录</div>
+		<div id="catalog-list" class="catalog-bg follow font-md">
+			<ol type="" class="catalog-list">
+				<!-- 每4个一组 -->
+				<li><span class="index">1.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#1">大盘评述</a></span></li>
+				<li><span class="index">2.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#2">个股精评</a></span></li>
+				<li><span class="index">&nbsp;&nbsp;</span> <span
+					class="text"><a href="#3"></a></span></li>
+				<li><span class="index">&nbsp;&nbsp;</span> <span class="text"><a
+						href="#4"></a></span></li>
+			</ol>
+		</div>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				大盘评述<a name="1"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap font-md break">
+			<#if tapeReviewInfos?size == 0>
+				<div>暂无数据</div>
+			</#if>
+			<#list tapeReviewInfos as tapeReviewInfo>
+			<div>${(tapeReviewInfo_index+1)?string("#")}、${tapeReviewInfo.title!}</div>
+			</#list>
+		</div>
+		<div id="notice-list" class="notice-list break">
+		<#list tapeReviewInfos as tapeReviewInfo>
+			<div class="notice">
+				<div class="subject font-md">${(tapeReviewInfo_index+1)?string("#")}、${tapeReviewInfo.title!}</div>
+				<div class="subject font-md">【${tapeReviewInfo.declaredate?string("yyyy-MM-dd")!}, ${tapeReviewInfo.sourceName!}】</div>
+				<div class="break">
+					<br>
+				</div>
+				<div class="content font-md">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span>${tapeReviewInfo.content?replace('(\r\n)+','</br>',
+						'r')!}
+					</span>
+				</div>
+				<div>
+					<br>
+				</div>
+			</div>
+			<div class="line"></div>
+			</#list>
+		</div>
+	</div>
+	
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				个股精评<a name="2"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap font-md break">
+			<#if individualReviews?size == 0>
+				<div>暂无数据</div>
+			</#if>
+			<#list individualReviews as individualReview>
+			<div>${(individualReview_index+1)?string("#")}、${individualReview.title!}</div>
+			</#list>
+		</div>
+		<div id="notice-list" class="notice-list break">
+		<#list individualReviews as individualReview>
+			<div class="notice">
+				<div class="subject font-md">${(individualReview_index+1)?string("#")}、${individualReview.title!}</div>
+				<div class="subject font-md">【${individualReview.declaredate?string("yyyy-MM-dd")!}, ${individualReview.sourceName!}】</div>
+				<div class="break">
+					<br>
+				</div>
+				<div class="content font-md">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span>${individualReview.content?replace('(\r\n)+','</br>',
+						'r')!}
+					</span>
+				</div>
+				<div>
+					<br>
+				</div>
+			</div>
+			<div class="line"></div>
+			</#list>
+		</div>
+	</div>
+
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.view.f10dao.ViewMetaDAO">
+	<select id="selectMetadata" resultType="java.util.HashMap">
+	SELECT METAKEY AS METAKEY,
+	METAVALUE AS METAVALUE FROM master_view_metadata
+	</select>
+	<select id="selectComments" resultType="java.util.HashMap">
+	SELECT VIEWTYPE AS VIEWTYPE, 
+	MATCH_POINT AS MATCHPOINT, 
+	SCORE AS SCORE, 
+	COMMENT AS COMMENT
+	FROM master_view_comment
+	</select>	
+</mapper>

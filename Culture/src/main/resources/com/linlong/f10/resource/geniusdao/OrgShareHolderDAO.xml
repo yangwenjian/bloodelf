@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.resource.geniusdao.OrgShareHolderDAO">
+	<!-- 根据证券市场查询所有证券的流通股本 -->
+	<select id="selectNodeDate" resultType="java.util.Date"
+		parameterType="String">
+		SELECT DISTINCT A.ENDDATE as enddate
+		FROM
+		PGENIUS.ANA_STK_ORG_HOLD A ,PGENIUS.STK_CODE B
+		WHERE A.ISVALID=1 AND
+		B.ISVALID=1 AND A.INNER_CODE=B.INNER_CODE
+		AND B.STOCKCODE=#{stockcode}
+		ORDER BY a.ENDDATE DESC LIMIT 6
+	</select>
+	<select id="selectOrgPosition" resultType="java.util.HashMap">
+		SELECT A.ENDDATE AS enddate,
+		CASE WHEN A.ORG_TYPE = 100
+		THEN '持仓合计'
+		ELSE IFNULL(
+		(SELECT
+		REF_NAME
+		FROM
+		PGENIUS.GEN_REF
+		WHERE ISVALID = 1
+		AND ORG_TYPE = REF_CODE
+		AND CLS_CODE = 101),
+		(SELECT
+		REF_NAME
+		FROM
+		PGENIUS.GEN_REF
+		WHERE ISVALID = 1
+		AND ORG_TYPE = REF_CODE
+		AND CLS_CODE = 104)
+		)
+		END AS holdType,
+		ROUND(A.HLD_FL_NUM_END / 10000, 2) AS holdNum,
+		ROUND(A.HLD_FL_PCT_END, 2) AS holdPct
+		FROM
+		PGENIUS.ANA_STK_ORG_HOLD A,
+		PGENIUS.STK_CODE B
+		WHERE A.ISVALID = 1
+		AND B.ISVALID = 1
+		AND A.INNER_CODE = B.INNER_CODE
+		AND A.ENDDATE = #{enddate}
+		AND B.STOCKCODE = #{stockcode}
+	</select>
+	<select id="selectFundPosition" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT DATE(A.ENDDATE) AS enddate,
+		A.FND_NUM AS fundNum,
+		A.SEC_AMT / 10000 AS secamt,
+		A.STK_PCT AS stkpct,
+		A.FL_PCT AS flpct
+		FROM PGENIUS.DERI_FND_KEYSTK_GEN A,
+		PGENIUS.STK_CODE B WHERE A.ISVALID = 1
+		AND B.ISVALID = 1
+		AND A.INNER_CODE = B.INNER_CODE
+		AND RIGHT(DATE(A.ENDDATE), 5) IN ('09-30', '12-31', '06-30', '03-31')
+		AND B.STOCKCODE = #{stockcode}
+		ORDER BY A.ENDDATE DESC LIMIT 20 ;
+	</select>
+	<select id="selectFundPositionBrief" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT DATE(A.ENDDATE) AS enddate,
+		A.FND_NUM AS fundNum,
+		A.SEC_AMT / 10000 AS secamt,
+		A.STK_PCT AS stkpct,
+		A.FL_PCT AS flpct
+		FROM PGENIUS.DERI_FND_KEYSTK_GEN A,
+		PGENIUS.STK_CODE B WHERE A.ISVALID = 1
+		AND B.ISVALID = 1
+		AND A.INNER_CODE = B.INNER_CODE
+		AND RIGHT(DATE(A.ENDDATE), 5) IN ('09-30', '12-31', '06-30', '03-31')
+		AND B.STOCKCODE = #{stockcode}
+		ORDER BY A.ENDDATE DESC LIMIT 5 ;
+	</select>
+	<select id="selectOrgHolderDate" resultType="java.util.Date"
+		parameterType="String">
+		SELECT DISTINCT DATE(ENDDATE) AS enddate
+		FROM
+		PGENIUS.ANA_STK_HOLD_DTL A,PGENIUS.STK_CODE B
+		WHERE A.ISVALID=1 AND
+		B.ISVALID=1 AND A.INNER_CODE=B.INNER_CODE
+		AND B.STOCKCODE=#{stockcode}
+		ORDER BY enddate DESC LIMIT 3
+	</select>
+	<select id="selectOrgHoler" resultType="java.util.HashMap">
+		SELECT DATE(A.ENDDATE) AS
+		enddate, -- 截止日期
+		D.CNAME as cname,
+		(SELECT REF_NAME FROM PGENIUS.GEN_REF
+		WHERE ISVALID=1 AND CLS_CODE=104 AND D.ORG_TYPE=REF_CODE) AS
+		org_typename,
+		ROUND(A.HLD_FL_NUM/10000,2) AS holdNum, -- 持股数(万股)
+		A.HLD_FL_PCT as holdPct, -- 占流通股比 %
+		CASE WHEN
+		ROUND((A.HLD_FL_NUM-IFNULL(C.HLD_FL_NUM,0))/10000,2)=0 THEN '不变'
+		ELSE
+		ROUND((A.HLD_FL_NUM-IFNULL(C.HLD_FL_NUM,0))/10000,2) END AS holdchange
+		-- 持股变动 (万股)
+		FROM PGENIUS.ANA_STK_HOLD_DTL A
+		INNER JOIN PGENIUS.STK_CODE B
+		ON B.ISVALID=1 AND B.INNER_CODE=A.INNER_CODE
+		LEFT JOIN PGENIUS.ANA_STK_HOLD_DTL C
+		ON C.ISVALID=1 AND C.INNER_CODE=A.INNER_CODE AND A.ORGCODE=C.ORGCODE
+		AND
+		C.ENDDATE=(SELECT MAX(ENDDATE) FROM PGENIUS.ANA_STK_HOLD_DTL WHERE
+		ISVALID=1 AND INNER_CODE=A.INNER_CODE AND ENDDATE&lt;A.ENDDATE)
+		INNER
+		JOIN PGENIUS.ORG_PROFILE D
+		ON D.ISVALID=1 AND A.ORGCODE=D.ORGCODE
+		WHERE A.ISVALID=1 AND
+		A.ENDDATE=#{enddate}
+		AND B.STOCKCODE=#{stockcode}
+		ORDER BY ORG_TYPE ASC
+		,holdNum DESC
+	</select>
+	<select id="selectOrgHolerBrief" resultType="java.util.HashMap">
+		SELECT DATE(A.ENDDATE) AS
+		enddate, -- 截止日期
+		D.CNAME as cname,
+		(SELECT REF_NAME FROM PGENIUS.GEN_REF
+		WHERE ISVALID=1 AND CLS_CODE=104 AND D.ORG_TYPE=REF_CODE) AS
+		org_typename,
+		ROUND(A.HLD_FL_NUM/10000,2) AS holdNum, -- 持股数(万股)
+		A.HLD_FL_PCT as holdPct, -- 占流通股比 %
+		CASE WHEN
+		ROUND((A.HLD_FL_NUM-IFNULL(C.HLD_FL_NUM,0))/10000,2)=0 THEN '不变'
+		ELSE
+		ROUND((A.HLD_FL_NUM-IFNULL(C.HLD_FL_NUM,0))/10000,2) END AS holdchange
+		-- 持股变动 (万股)
+		FROM PGENIUS.ANA_STK_HOLD_DTL A
+		INNER JOIN PGENIUS.STK_CODE B
+		ON B.ISVALID=1 AND B.INNER_CODE=A.INNER_CODE
+		LEFT JOIN PGENIUS.ANA_STK_HOLD_DTL C
+		ON C.ISVALID=1 AND C.INNER_CODE=A.INNER_CODE AND A.ORGCODE=C.ORGCODE
+		AND
+		C.ENDDATE=(SELECT MAX(ENDDATE) FROM PGENIUS.ANA_STK_HOLD_DTL WHERE
+		ISVALID=1 AND INNER_CODE=A.INNER_CODE AND ENDDATE&lt;A.ENDDATE)
+		INNER
+		JOIN PGENIUS.ORG_PROFILE D
+		ON D.ISVALID=1 AND A.ORGCODE=D.ORGCODE
+		WHERE A.ISVALID=1 AND
+		A.ENDDATE=#{enddate}
+		AND B.STOCKCODE=#{stockcode}
+		ORDER BY ORG_TYPE ASC
+		,holdNum DESC LIMIT 5
+	</select>
+</mapper>

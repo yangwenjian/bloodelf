@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	    <meta charset="UTF-8">
+	    <title>业绩动态</title>
+	</head>
+	<body>
+		<div class="third-party gap">
+			<div class="h2"><span>WWW.GENIUS.COM.CN-----巨灵信息-----${.now?string("yyyy-MM-dd")}更新</span></div>
+		</div>
+		
+		<div class="catalog gap">
+			<div class="catalog-name follow font-lg">
+				目录
+			</div>
+			<div id="catalog-list" class="catalog-bg follow font-md">
+				<ol type="" class="catalog-list">
+					<!-- 每4个一组 -->
+					<li>
+						<span class="index">1.&nbsp;&nbsp;</span>
+						<span class="text"><a href="#1">业绩披露时间表</a></span>
+					</li>
+					<li>
+						<span class="index">2.&nbsp;&nbsp;</span>
+						<span class="text"><a href="#2">深市业绩预增</a></span>
+					</li>
+					<li>
+						<span class="index">3.&nbsp;&nbsp;</span>
+						<span class="text"><a href="#3">深市业绩预亏</a></span>
+					</li>
+					<li>
+						<span class="index">4.&nbsp;&nbsp;</span>
+						<span class="text"><a href="#4">沪市业绩预增</a></span>
+					</li>
+				</ol>
+				<ol class="catalog-list">
+					<li><span class="index">5.&nbsp;&nbsp;</span>
+						<span class="text"><a href="#5">沪市业绩预亏</a></span></li>
+				</ol>
+			</div>
+		</div>
+		
+		<div class="topic topic-gap">
+			<div class="font-lg">
+				<div class="topic-square follow"></div>
+				<div class="follow">
+					业绩披露时间表<a name="1"></a>
+				</div>
+				<div class="follow-R">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<div id="normal" class="left-gap break">
+				<div class="table-top"></div>
+			</div>
+			<#if earnings?size gt 0>
+			<div class="info-table font-md">
+				<table>
+					<thead align="center">
+						<tr>
+							<th style="width: 10%">股票简称 </th>
+							<th style="width: 20%">预约披露日期</th>
+							<th style="width: 10%">股票简称 </th>
+							<th style="width: 20%">预约披露日期</th>
+							<th style="width: 10%">股票简称 </th>
+							<th style="width: 20%">预约披露日期</th>
+						</tr>
+					</thead>
+					<tbody align="center">
+						<#list earnings as entity>
+							<#if entity_index%3 = 0><tr></#if>
+							<td>${entity.stockName!}</td>
+							<td>${entity.declaredate?string("yyyy-MM-dd")}</td>
+						    <#if entity_index%3 = 2 || entity_index = earnings?size - 1>
+						    	<#if entity_index = earnings?size - 1>
+						    		<#list 0..(earnings?size - entity_index) as x>
+						    			<td>&nbsp;</td><td>&nbsp;</td>
+									</#list>
+						    	</#if>
+						    	</tr>
+						    </#if>
+						</#list>
+					</tbody>
+				</table>
+			</div>
+			<#else>
+				<div class="notice">
+					<div class="break"><br></div>
+					<div class="content font-md">
+						<span>暂无业绩披露时间表</span>
+					</div>
+					<div><br></div>
+					<div class="line"></div>
+				</div>
+			</#if>
+		</div>
+		
+		<div class="topic topic-gap">
+			<div class="font-lg">
+				<div class="topic-square follow"></div>
+				<div class="follow">
+					深市业绩预增<a name="2"></a>
+				</div>
+				<div class="follow-R">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<div id="normal" class="left-gap break">
+				<div class="table-top"></div>
+			</div>
+			<#if SZEarningsPlus?size gt 0>
+			<div class="info-table font-md">
+				<table>
+					<thead align="center">
+						<tr>
+							<th style="width: 25%">深市股票 </th>
+							<th style="width: 75%">业绩预增</th>
+						</tr>
+					</thead>
+					<tbody align="center">
+						<#list SZEarningsPlus as entity>
+						<tr>
+							<td>${entity.stockName!}${entity.declaredate?string("yyyy-MM-dd")}</td>
+							<td>${entity.content!}</td>
+						</tr>
+						</#list>
+					</tbody>
+				</table>
+			</div>
+			<#else>
+				<div class="notice">
+					<div class="break"><br></div>
+					<div class="content font-md">
+						<span>暂无深市业绩预增</span>
+					</div>
+					<div><br></div>
+					<div class="line"></div>
+				</div>
+			</#if>
+		</div>
+		
+		<div class="topic topic-gap">
+			<div class="font-lg">
+				<div class="topic-square follow"></div>
+				<div class="follow">
+					深市业绩预亏<a name="3"></a>
+				</div>
+				<div class="follow-R">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<div id="normal" class="left-gap break">
+				<div class="table-top"></div>
+			</div>
+			<#if SZEarningsSubtract?size gt 0>
+			<div class="info-table font-md">
+				<table>
+					<thead align="center">
+						<tr>
+							<th style="width: 25%">深市股票 </th>
+							<th style="width: 75%">业绩预亏</th>
+						</tr>
+					</thead>
+					<tbody align="center">
+						<#list SZEarningsSubtract as entity>
+						<tr>
+							<td>${entity.stockName!}${entity.declaredate?string("yyyy-MM-dd")}</td>
+							<td>${entity.content!}</td>
+						</tr>
+						</#list>
+					</tbody>
+				</table>
+			</div>
+			<#else>
+				<div class="notice">
+					<div class="break"><br></div>
+					<div class="content font-md">
+						<span>暂无深市业绩预亏</span>
+					</div>
+					<div><br></div>
+					<div class="line"></div>
+				</div>
+			</#if>
+		</div>
+		
+		<div class="topic topic-gap">
+			<div class="font-lg">
+				<div class="topic-square follow"></div>
+				<div class="follow">
+					沪市业绩预增<a name="4"></a>
+				</div>
+				<div class="follow-R">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<div id="normal" class="left-gap break">
+				<div class="table-top"></div>
+			</div>
+			<#if SHEarningsPlus?size gt 0>
+			<div class="info-table font-md">
+				<table>
+					<thead align="center">
+						<tr>
+							<th style="width: 25%">沪市股票 </th>
+							<th style="width: 75%">业绩预增</th>
+						</tr>
+					</thead>
+					<tbody align="center">
+						<#list SHEarningsPlus as entity>
+						<tr>
+							<td>${entity.stockName!}${entity.declaredate?string("yyyy-MM-dd")}</td>
+							<td>${entity.content!}</td>
+						</tr>
+						</#list>
+					</tbody>
+				</table>
+			</div>
+			<#else>
+				<div class="notice">
+					<div class="break"><br></div>
+					<div class="content font-md">
+						<span>暂无沪市业绩预增</span>
+					</div>
+					<div><br></div>
+					<div class="line"></div>
+				</div>
+			</#if>
+		</div>
+		
+		<div class="topic topic-gap">
+			<div class="font-lg">
+				<div class="topic-square follow"></div>
+				<div class="follow">
+					沪市业绩预亏<a name="5"></a>
+				</div>
+				<div class="follow-R">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<div id="normal" class="left-gap break">
+				<div class="table-top"></div>
+			</div>
+			<#if SHEarningsSubtract?size gt 0>
+			<div class="info-table font-md">
+				<table>
+					<thead align="center">
+						<tr>
+							<th style="width: 25%">沪市股票 </th>
+							<th style="width: 75%">业绩预亏</th>
+						</tr>
+					</thead>
+					<tbody align="center">
+						<#list SHEarningsSubtract as entity>
+						<tr>
+							<td>${entity.stockName!}${entity.declaredate?string("yyyy-MM-dd")}</td>
+							<td>${entity.content!}</td>
+						</tr>
+						</#list>
+					</tbody>
+				</table>
+			</div>
+			<#else>
+				<div class="notice">
+					<div class="break"><br></div>
+					<div class="content font-md">
+						<span>暂无沪市业绩预亏</span>
+					</div>
+					<div><br></div>
+					<div class="line"></div>
+				</div>
+			</#if>
+		</div>
+	</body>
+</html>

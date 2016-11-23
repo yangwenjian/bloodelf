@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.resource.geniusdao.StockRequireDAO">
+	<!-- 根据证券市场查询所有证券的流通股本 -->
+	<select id="selectSpeSug" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT
+		B.STOCKCODE,
+		B.STOCKSNAME,
+		A.DECLAREDATE,
+		A.HINT_TYPE_NAME,
+		A.HINT_DT,
+		ESP_HINT
+		FROM
+		PGENIUS.NEWS_ESP_HINT A,
+		PGENIUS.STK_CODE B
+		WHERE A.ISVALID = 1
+		AND B.ISVALID = 1
+		AND A.INNER_CODE
+		= B.INNER_CODE
+		AND B.STOCKCODE = #{stockcode}
+		AND A.DECLAREDATE &gt;
+		DATE_ADD(CURDATE(), INTERVAL - 90 DAY)
+		ORDER BY A.DECLAREDATE DESC ;
+	</select>
+	<select id="selectPerformance" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT
+		CONCAT(
+		(
+		CASE
+		MONTH(A.PERIODDATE)
+		WHEN 3
+		THEN CONCAT(
+		YEAR(A.PERIODDATE),
+		'一季报预约披露时间'
+		)
+		WHEN 6
+		THEN CONCAT(
+		YEAR(A.PERIODDATE),
+		'二季报预约披露时间'
+		)
+		WHEN 9
+		THEN CONCAT(
+		YEAR(A.PERIODDATE),
+		'三季报预约披露时间'
+		)
+		WHEN 12
+		THEN CONCAT(
+		YEAR(A.PERIODDATE),
+		'四季报预约披露时间'
+		)
+		END
+		),
+		':',
+		DATE(
+		COALESCE(
+		A.ACT_DATE,
+		A.CHNG_DATE3,
+		A.CHNG_DATE2,
+		A.CHNG_DATE1,
+		A.PRE_DATE
+		)
+		)
+		) AS
+		FORECAST,
+		CONCAT(DATE(C.DECLAREDATE), ':', C.SUMMARY) AS
+		SUMMARY,
+		C.REASON
+		FROM
+		PGENIUS.STK_PRE_DISCLOSURE A
+		INNER
+		JOIN PGENIUS.STK_CODE B
+		ON A.COMCODE = B.COMCODE
+		AND B.ISVALID = 1
+		AND
+		B.STOCKCODE = #{stockcode}
+		LEFT JOIN PGENIUS.STK_ACHIEVE_FORECAST C
+		ON
+		C.ISVALID = 1
+		AND C.COMCODE =
+		A.COMCODE
+		AND a.PERIODDATE = C.ENDDATE
+		WHERE A.ISVALID = 1
+		AND
+		A.PERIODDATE =
+		(SELECT
+		MAX(PERIODDATE)
+		FROM
+		PGENIUS.STK_PRE_DISCLOSURE
+		WHERE ISVALID = 1
+		AND COMCODE = A.COMCODE)
+		ORDER BY C.ENDDATE DESC ;
+	</select>
+	<select id="selectIndiTitle" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT
+		declaredate,
+		CONCAT(
+		DATE(declaredate),
+		'变动:',
+		CHNG_RES,
+		'(根据',
+		DATE(ENDDATE),
+		'财务数据计算)'
+		) AS SUMMARY
+		FROM
+		pgenius.ANA_STK_FIN_LAT
+		WHERE COMCODE =
+		(SELECT
+		COMCODE
+		FROM
+		PGENIUS.STK_CODE
+		WHERE ISVALID = 1
+		AND STOCKCODE = #{stockcode}) ;
+	</select>
+	<select id="selectIsSeasonReport" resultType="Integer"
+		parameterType="String">
+		SELECT
+		COUNT(*) AS REPORTTYPE
+		FROM
+		pgenius.ANA_STK_FIN_LAT
+		a,
+		pgenius.ANA_STK_FIN_IDX b
+		WHERE a.ISVALID = 1
+		AND b.ISVALID = 1
+		AND
+		a.comcode = b.comcode
+		AND a.COMCODE =
+		(SELECT
+		COMCODE
+		FROM
+		PGENIUS.STK_CODE
+		WHERE ISVALID = 1
+		AND STOCKCODE = #{stockcode})
+		AND
+		b.ENDDATE =
+		(SELECT
+		MAX(ENDDATE)
+		FROM
+		pgenius.ANA_STK_FIN_IDX
+		WHERE ISVALID
+		= 1
+		AND comcode = a.comcode)
+		AND DECLAREDATE = b.ENDDATE ;
+	</select>
+	<select id="selectNoneSeasonReport" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT
+		DATE(DECLAREDATE) AS ENDDATE,
+		EPS AS EPSNED,
+		BPS AS
+		BPSNED,
+		CAP_PS AS PS_CR,
+		RET_PS AS PS_UP,
+		CAS_PS AS PS_NET_VAL,
+		ROE AS
+		ROED,
+		SAL_RAT AS INC_J
+		FROM
+		pgenius.ANA_STK_FIN_LAT
+		WHERE ISVALID = 1
+		AND
+		COMCODE =
+		(SELECT
+		COMCODE
+		FROM
+		PGENIUS.STK_CODE
+		WHERE ISVALID = 1
+		AND
+		STOCKCODE = #{stockcode})
+		UNION
+		SELECT
+		DATE(`ENDDATE`) AS ENDDATE,
+		EPSP,
+		BPS,
+		PS_CR,
+		PS_UP,
+		PS_NET_VAL,
+		ROED,
+		RIS_OR
+		FROM
+		PGENIUS.ANA_STK_FIN_IDX
+		WHERE
+		ISVALID = 1
+		AND COMCODE =
+		(SELECT
+		COMCODE
+		FROM
+		PGENIUS.STK_CODE
+		WHERE
+		ISVALID = 1
+		AND STOCKCODE = #{stockcode})
+		ORDER BY ENDDATE DESC
+		LIMIT 10;
+	</select>
+	<select id="selectSeasonReport" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT
+		DATE(`ENDDATE`) AS ENDDATE,
+		EPSP AS EPSNED,
+		BPS AS
+		BPSNED,
+		PS_CR AS PS_CR,
+		PS_UP AS PS_UP,
+		PS_NET_VAL AS PS_NET_VAL,
+		ROED AS
+		ROED,
+		RIS_OR AS INC_J
+		FROM
+		PGENIUS.ANA_STK_FIN_IDX
+		WHERE ISVALID = 1
+		AND
+		COMCODE =
+		(SELECT
+		COMCODE
+		FROM
+		PGENIUS.STK_CODE
+		WHERE ISVALID = 1
+		AND
+		STOCKCODE = #{stockcode})
+		ORDER BY ENDDATE DESC
+		LIMIT 10 ;
+	</select>
+	<select id="selectShare" resultType="java.util.HashMap"
+		parameterType="String">SELECT
+		DATE(a.CHANGEDATE) AS CHANGEDATE,
+		ROUND(a.TOTAL /
+		10000, 2) AS TOTAL,
+		ROUND(a.FL_SHR / 10000, 2) AS FL_SHR,
+		ROUND(a.FL_ASHR / 10000, 2) AS FL_ASHR,
+		ROUND(a.B_SHR / 10000, 2) AS
+		B_SHR,
+		ROUND(a.H_SHR / 10000, 2) AS H_SHR,
+		ROUND(a.TOT_LTDFL / 10000, 2)
+		AS TOT_LTDFL
+		FROM
+		pgenius.STK_SHR_STRU A
+		WHERE A.ISVALID = 1
+		AND A.COMCODE
+		=
+		(SELECT
+		COMCODE
+		FROM
+		PGENIUS.STK_CODE
+		WHERE ISVALID = 1
+		AND STOCKCODE =
+		#{stockcode})
+		AND A.CHANGEDATE =
+		(SELECT
+		MAX(CHANGEDATE)
+		FROM
+		PGENIUS.STK_SHR_STRU
+		WHERE ISVALID = 1
+		AND COMCODE = A.COMCODE) ;
+	</select>
+	<select id="selectReview" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT 
+		A.DECLAREDATE,
+		A.REVIEW_CONTENT,
+		A.SOURCE_NAME
+		FROM PGENIUS.NEWS_COM_REVIEW A 
+		WHERE  A.ISVALID=1 AND A.REVIEW_TYPE=3
+		AND A.DECLAREDATE=(SELECT MAX(DECLAREDATE) FROM PGENIUS.NEWS_COM_REVIEW 
+		WHERE ISVALID=1 AND REVIEW_TYPE=3 AND STOCKCODE=#{stockcode})
+		AND A.STOCKCODE=#{stockcode}
+	</select>
+	<select id="selectDividend" resultType="java.util.HashMap"
+		parameterType="String">SELECT
+		(SELECT
+		REF_NAME
+		FROM
+		PGENIUS.GEN_REF
+		WHERE ISVALID =
+		1
+		AND REF_CODE = A.PRG_CODE
+		AND CLS_CODE = 1060) AS PRG,
+		a.DIR_DCL_DATE,
+		a.DIV_INFO,
+		a.CASH_BT,
+		a.CASH_AT,
+		a.BONUS_SHR,
+		a.CAP_SHR,
+		a.REG_DATE
+		FROM
+		PGENIUS.STK_DIV_INFO A,
+		pgenius.stk_code b
+		WHERE A.ISVALID = 1
+		AND
+		b.isvalid = 1
+		AND A.DIR_DCL_DATE =
+		(SELECT
+		MAX(DIR_DCL_DATE)
+		FROM
+		PGENIUS.STK_DIV_INFO
+		WHERE ISVALID = 1
+		AND COMCODE = A.COMCODE
+		AND
+		PRG_CODE = A.PRG_CODE)
+		AND a.DIR_DCL_DATE > DATE_ADD(CURDATE(),
+		INTERVAL - 2 YEAR)
+		AND A.PRG_CODE IN (1, 4, 29)
+		AND a.STK_TYPE_CODE =
+		b.STK_TYPE_REF
+		AND A.COMCODE = b.COMCODE
+		AND b.STOCKCODE = #{stockcode}
+		ORDER BY A.DIR_DCL_DATE DESC
+	</select>
+	<select id="selectAllotment" resultType="java.util.HashMap"
+		parameterType="String">SELECT
+		(SELECT
+		REF_NAME
+		FROM
+		PGENIUS.GEN_REF
+		WHERE ISVALID =
+		1
+		AND REF_CODE = A.PRG_CODE
+		AND CLS_CODE = 1060) AS PRG,
+		a.declaredate,
+		b.ALLOT_INFO,
+		b.ALLOT_PCT,
+		b.ALLOT_PRC,
+		b.FOR_PRC,
+		b.CURNCY,
+		b.A_REG_DATE,
+		b.B_REG_DATE
+		FROM
+		pgenius.STK_ALLOT_PLAN a
+		LEFT JOIN
+		pgenius.STK_ALLOT_RESULT b
+		ON b.isvalid = 1
+		AND b.P_SEQ_PLAN = a.`SEQ`
+		INNER JOIN pgenius.stk_code c
+		ON c.`ISVALID` = 1
+		AND c.`COMCODE` =
+		a.ComCode
+		WHERE a.`ISVALID` = 1
+		AND A.DeclareDate =
+		(SELECT
+		MAX(DeclareDate)
+		FROM
+		PGENIUS.STK_ALLOT_PLAN
+		WHERE ISVALID = 1
+		AND COMCODE
+		= A.COMCODE
+		AND PRG_CODE = A.PRG_CODE)
+		AND a.DECLAREDATE >
+		DATE_ADD(CURDATE(), INTERVAL - 2 YEAR)
+		AND a.PRG_CODE IN (4, 29)
+		AND
+		c.STOCKCODE = #{stockcode}
+	</select>
+	<select id="selectShareChange" resultType="java.util.HashMap"
+		parameterType="String">SELECT
+		CONCAT(a.MNG_NAME, a.POST) AS MNG_NAME,
+		CONCAT(a.HOLDER, a.RELATION) AS RELATION,
+		a.STK_CODE,
+		a.CHNG_VOL,
+		a.END_VOL,
+		a.CHEG_EP,
+		a.CHNG_RSN,
+		DATE(a.CHNG_DATE) AS CHNG_DATE
+		FROM
+		pgenius.STK_MNG_TRADE_INFO a
+		INNER JOIN pgenius.stk_code b
+		ON a.comcode
+		= b.`COMCODE`
+		AND b.`ISVALID` = 1
+		WHERE a.isvalid = 1
+		AND b.stockcode =
+		#{stockcode}
+		AND CHNG_DATE &gt; DATE_ADD(CURDATE(), INTERVAL - 1 YEAR)
+		ORDER BY a.CHNG_DATE DESC
+		LIMIT 10;
+	</select>
+	<select id="selectAnnouncement" resultType="java.util.HashMap"
+		parameterType="String">SELECT
+		A.DECLAREDATE,
+		A.TITLE,
+		B.TXT_CONTENT
+		FROM
+		PGENIUS.DISC_MAIN_COM A,
+		PGENIUS.DISC_CONTENT_COM B,
+		PGENIUS.DISC_COM C
+		WHERE A.ISVALID = 1
+		AND B.ISVALID = 1
+		AND C.ISVALID = 1
+		AND A.DISC_ID =
+		B.DISC_ID
+		AND A.DISC_ID = C.DISC_ID
+		AND A.DECLAREDATE = C.DECLAREDATE
+		AND C.COMCODE =
+		(SELECT
+		COMCODE
+		FROM
+		PGENIUS.STK_CODE
+		WHERE ISVALID = 1
+		AND
+		STOCKCODE = #{stockcode})
+		AND A.DECLAREDATE > DATE_ADD(CURDATE(),
+		INTERVAL - 1 YEAR)
+		ORDER BY A.DECLAREDATE DESC
+		LIMIT 3
+	</select>
+</mapper>

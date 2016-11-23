@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.stockindex.geniusdao.FundObserveDAO">
+    <select id="getFundMarketDynamicTitle" resultType="java.util.Map" useCache="false">
+        SELECT SQL_NO_CACHE
+		A.TITLE_MAIN AS title, -- 新闻标题,	
+		A.GUID AS guid
+		FROM (SELECT guid
+		FROM 	news_cls 
+		WHERE cls_code = '006001001'
+		and declaredate > adddate(curdate(),-30)
+		ORDER BY declaredate DESC ) d
+		INNER JOIN pgenius.news_main a ON a.guid=d.guid AND a.isvalid=1
+		LIMIT 0, 15;
+    </select>
+    
+    <select id="getFundMarketDynamicInfo" resultType="java.util.Map" parameterType="java.util.ArrayList" useCache="false">
+       SELECT A.DECLAREDATE AS declaredate, D.SRC_NAME AS sourceName, A.TITLE_MAIN AS title, C.TXT_CONTENT content
+		FROM NEWS_MAIN A INNER JOIN NEWS_CONTENT C ON A.GUID=C.GUID
+			 INNER JOIN PUB_INFOR_SRC D ON A.SRC_CODE=D.SRC_CODE 
+		WHERE  A.ISVALID=1  AND C.ISVALID=1 
+		AND A.GUID IN (
+			<foreach item="guid" index="index" collection="list" separator=",">#{guid}</foreach>
+		) 
+    </select>
+    
+    <select id="getFundResearchTitle" resultType="java.util.Map" useCache="false">
+        SELECT SQL_NO_CACHE
+		A.TITLE_MAIN AS title, -- 新闻标题,	
+		A.GUID AS guid
+		FROM (SELECT guid
+		FROM 	news_cls 
+		WHERE cls_code ='006003'
+		and declaredate > adddate(curdate(),-30)
+		ORDER BY declaredate DESC ) d
+		INNER JOIN pgenius.news_main a ON a.guid=d.guid AND a.isvalid=1
+		LIMIT 0, 5;
+    </select>
+    
+    <select id="getFundResearchInfo" resultType="java.util.Map" parameterType="java.util.ArrayList" useCache="false">
+      SELECT A.DECLAREDATE AS declaredate, D.SRC_NAME AS sourceName, A.TITLE_MAIN AS title, C.TXT_CONTENT AS content 
+		FROM NEWS_MAIN A INNER JOIN NEWS_CONTENT C ON A.GUID=C.GUID
+			 INNER JOIN PUB_INFOR_SRC D ON A.SRC_CODE=D.SRC_CODE 
+		WHERE  A.ISVALID=1  AND C.ISVALID=1 
+		AND A.GUID IN (
+			<foreach item="guid" index="index" collection="list" separator=",">#{guid}</foreach>
+		) 
+    </select>
+    
+    <select id="getFundDynamicTitle" resultType="java.util.Map" useCache="false">
+        SELECT SQL_NO_CACHE
+		DATE(a.declaredate) AS declaredate,  -- 公告日期
+		a.TITLE_MAIN AS title, -- 新闻标题
+		A.GUID AS guid
+		FROM (SELECT GUID
+		FROM 	NEWS_CLS 
+		WHERE CLS_CODE IN ('006002','006004','006008', '006009','006012')
+		AND DECLAREDATE > ADDDATE(CURDATE(),-30) 
+		ORDER BY DECLAREDATE DESC LIMIT 30) d
+		INNER JOIN pgenius.news_main a ON a.guid=d.guid AND a.isvalid=1
+		WHERE 1=1
+		ORDER BY A.GUID DESC
+		LIMIT 5; -- 参数可以调整
+    </select>
+    
+    <select id="getFundDynamicInfo" resultType="java.util.Map" parameterType="java.util.ArrayList" useCache="false">
+       SELECT A.DECLAREDATE AS declaredate, D.SRC_NAME AS sourceName, A.TITLE_MAIN AS title, C.TXT_CONTENT AS content 
+		FROM NEWS_MAIN A INNER JOIN NEWS_CONTENT C ON A.GUID=C.GUID
+			 INNER JOIN PUB_INFOR_SRC D ON A.SRC_CODE=D.SRC_CODE 
+		WHERE  A.ISVALID=1  AND C.ISVALID=1 
+		AND A.GUID IN (
+			<foreach item="guid" index="index" collection="list" separator=",">#{guid}</foreach>
+		) 
+    </select>
+    
+</mapper>

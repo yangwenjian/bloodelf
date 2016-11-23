@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html class="ui-mobile">
+<head>
+<title>媒体报道</title>
+<meta charset="utf-8" />
+
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+	name="viewport" />
+
+</head>
+<body>
+
+	<div class="catalog break">
+		<!--
+			<div class="name font-sm follow">目录</div>
+			<div class="line follow"></div>
+			-->
+		<div id="sub-menu" class="sub-menu font-sm follow">
+			<div class="ui-grid-b">
+				<div class="ui-block-a">
+					<div id="block-0" class="each">
+						<a href="#0"> <span class="index">1.&nbsp;</span> <span
+							class="text">媒体报道</span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="dest-0" class="topic break min-h">
+		<div class="type">
+			<div class="exclam follow"></div>
+			<div class="text follow font-lg">
+				媒体报道<a name="0"></a>
+			</div>
+			<div class="follow-R font-lg top">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="normal font-md break">
+			<#if !reports?? || reports?size == 0>
+			<div id="normal" class="left-gap font-md break">暂无数据</div>
+			<#else> <#list reports as report>
+			<div id="block-${(report_index+1)?string('#')}" class="each">
+				<a href="#0" style="color: white">${(report_index+1)?string("#")}、&nbsp;${report.title!}</a>
+			</div>
+			</#list> </#if>
+		</div>
+	</div>
+	<div class="line"></div>
+
+	<#list reports as report>
+	<div id="dest-${(report_index+1)?string('#')}"
+		class="topic break min-h">
+		<div class="type">
+			<div class="exclam follow"></div>
+			<div class="text follow font-lg">
+				${(report_index+1)?string("#")}、&nbsp;【${(report.declaredate?string("yyyy-MM-dd"))!}&nbsp;${report.source!}】<a
+					name="5"></a>
+			</div>
+			<div class="follow-R font-lg top">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="notice-list" class="notice-list break">
+			<div class="notice">
+				<div class="subject font-md">${report.title!}</div>
+				<div class="content font-sm break">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span>${report.content!}</span>
+				</div>
+			</div>
+			<div class="line"></div>
+
+		</div>
+	</div>
+	</#list>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title><sitemesh:write property='title'/></title>
+		<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0" name="viewport" />
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+		<!--
+	    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	    <meta name="apple-mobile-web-app-capable" content="yes"/>
+		-->
+	    <link href="${webRootPath}/res/css/pc/styles.css" type="text/css" rel="stylesheet"/>
+	    
+		<script src="${webRootPath}/res/js/pc/jquery-1.7.1.min.js"></script>
+		<script src="${webRootPath}/res/js/pc/main.js"></script>
+		<sitemesh:write property='head'/>
+	</head>
+	<body>
+		<div class="base" name="top">
+			<div class="head font-md gap">
+				<div id="m1" class="menu-grid"><a href="${webRootPath}/f10/index/dailyTip/pc.html?tokenId=${tokenId}">每日提示</a></div>
+				<div id="m2" class="menu-grid"><a href="${webRootPath}/f10/index/tradeMemo/pc.html?tokenId=${tokenId}">交易备忘</a></div>
+				<div id="m3" class="menu-grid"><a href="${webRootPath}/f10/index/newStockInfo/pc.html?tokenId=${tokenId}">新股提示</a></div>
+				<div id="m4" class="menu-grid"><a href="${webRootPath}/f10/index/news/pc.html?tokenId=${tokenId}">新闻资讯</a></div>
+				<div id="m5" class="menu-grid"><a href="${webRootPath}/f10/index/internationalNews/pc.html?tokenId=${tokenId}">国际风云</a></div>
+				<div id="m6" class="menu-grid"><a href="${webRootPath}/f10/index/bruntTrend/pc.html?tokenId=${tokenId}">主力动向</a></div>
+				<div id="m7" class="menu-grid"><a href="${webRootPath}/f10/index/tapeRemark/pc.html?tokenId=${tokenId}">大盘点评</a></div>
+				<div id="m8" class="menu-grid"><a href="${webRootPath}/f10/index/singleStockInfo/pc.html?tokenId=${tokenId}">个股点评</a></div>
+				<div id="m9" class="menu-grid break"><a href="${webRootPath}/f10/index/stockIndexFutures/pc.html?tokenId=${tokenId}">股指期货</a></div>
+				<div id="m10" class="menu-grid"><a href="${webRootPath}/f10/index/industryStudy/pc.html?tokenId=${tokenId}">行业研究</a></div>
+				<div id="m11" class="menu-grid"><a href="${webRootPath}/f10/index/manyDimensionsStatistics/pc.html?tokenId=${tokenId}">多维统计</a></div>
+				<div id="m12" class="menu-grid"><a href="${webRootPath}/f10/index/performanceDynamic/pc.html?tokenId=${tokenId}">业绩动态</a></div>
+				<div id="m13" class="menu-grid"><a href="${webRootPath}/f10/index/bstock/pc.html?tokenId=${tokenId}">B股动态</a></div>
+				<div id="m14" class="menu-grid"><a href="${webRootPath}/f10/index/fundobserve/pc.html?tokenId=${tokenId}">基金观察</a></div>
+				<div id="m15" class="menu-grid"><a href="${webRootPath}/f10/index/bondObserve/pc.html?tokenId=${tokenId}">债市观察</a></div>
+				<div id="m16" class="menu-grid"><a href="${webRootPath}/f10/index/thirdboard/pc.html?tokenId=${tokenId}">三板市场</a></div>
+			</div>
+			<sitemesh:write property='body' />
+			<div class="topic-gap">
+				<div class="declare-label font-md follow">免责声明</div>
+				<div class="declare-text follow">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本信息由聚灵信息公司提供, 仅供参考. 巨灵信息力求但不保证数据完全准确. 如有错漏, 请以中国证监会指定上市公司信息披露媒体为准. 巨灵信息不对信息全部或部份内容导致的盈亏承担任何责任.</div>
+			</div>
+			
+			<div class="foot break">
+				巨灵信息, 中国金融资讯服务第一品牌! Email: Service@genius.com.cn
+			</div>
+		</div>
+	</body>
+</html>

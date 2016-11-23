@@ -1,0 +1,402 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>股本分红</title>
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+	name="viewport" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link href="${webRootPath}/res/css/pc/styles.css" type="text/css"
+	rel="stylesheet" />
+
+<script src="${webRootPath}/res/js/pc/jquery-1.7.1.min.js"></script>
+<script src="${webRootPath}/res/js/pc/main.js"></script>
+
+</head>
+<body>
+	<div class="base" name="top">
+
+		<div class="catalog gap">
+			<div class="catalog-name follow font-lg">目录</div>
+			<div id="catalog-list" class="catalog-bg follow font-md">
+				<ol type="" class="catalog-list">
+					<!-- 每4个一组 -->
+					<li><span class="index">1.&nbsp;&nbsp;</span> <span
+						class="text"><a href="#1">股份构成</a></span></li>
+					<li><span class="index">2.&nbsp;&nbsp;</span> <span
+						class="text"><a href="#2">股本变动</a></span></li>
+					<li><span class="index">3.&nbsp;&nbsp;</span> <span
+						class="text"><a href="#3">分红</a></span></li>
+					<li><span class="index">4.&nbsp;&nbsp;</span> <span
+						class="text"><a href="#4">配股</a></span></li>
+				</ol>
+				<ol class="catalog-list">
+					<!-- 每4个一组 -->
+					<li><span class="index">5.&nbsp;&nbsp;</span> <span
+						class="text"><a href="#5">增发</a></span></li>
+					<li><span class="index">6.&nbsp;&nbsp;</span> <span
+						class="text"><a href="#6">可转债发行</a></span></li>
+				</ol>
+			</div>
+		</div>
+
+		<div class="topic topic-gap">
+			<div class="font-lg">
+				<div class="topic-square follow"></div>
+				<div class="follow">
+					股份构成<a name="1"></a>
+				</div>
+				<div class="follow-R">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<div id="normal" class="left-gap break">
+				<div class="table-top"></div>
+			</div>
+			<div class="info-table font-md">
+				<table>
+					<thead align="center">
+						<tr>
+							<th style="width: 20%">股份构成</th> <#list shareCons as shareCon>
+							<th style="width: 20%">${(shareCon['changedate'])!}</th> </#list>
+						</tr>
+					</thead>
+					<tbody align="center">
+						<tr>
+							<td>总股本</td> <#list shareCons as shareCon>
+							<td>${(shareCon['total'])!'0.00'}
+							</th> </#list>
+						</tr>
+						<tr>
+							<td>流通股</td> <#list shareCons as shareCon>
+							<td>${(shareCon['flshr'])!'0.00'}
+							</th> </#list>
+						</tr>
+						<tr>
+							<td>流通A股</td> <#list shareCons as shareCon>
+							<td>${(shareCon['flashr'])!'0.00'}
+							</th> </#list>
+						</tr>
+						<tr>
+							<td>已上市流通A股</td> <#list shareCons as shareCon>
+							<td>${(shareCon['listFlashr'])!'0.00'}
+							</th> </#list>
+						</tr>
+						<tr>
+							<td>受限流通股份</td> <#list shareCons as shareCon>
+							<td>${(shareCon['totLtdfl'])!'0.00'}
+							</th> </#list>
+						</tr>
+						<tr>
+							<td>境内法人股</td> <#list shareCons as shareCon>
+							<td>${(shareCon['domleg'])!'0.00'}
+							</th> </#list>
+						</tr>
+						<tr>
+							<td>高管股(已流通)</td> <#list shareCons as shareCon>
+							<td>${(shareCon['mngfl'])!'0.00'}
+							</th> </#list>
+						</tr>
+						<tr>
+							<td>战略投资者配售股</td> <#list shareCons as shareCon>
+							<td>${(shareCon['strapla'])!'0.00'}
+							</th> </#list>
+						</tr>
+						<tr>
+							<td>基金配售股</td> <#list shareCons as shareCon>
+							<td>${(shareCon['fundpla'])!'0.00'}
+							</th> </#list>
+						</tr>
+						<tr>
+							<td>法人配售股</td> <#list shareCons as shareCon>
+							<td>${(shareCon['legpla'])!'0.00'}
+							</th> </#list>
+						</tr>
+						<tr>
+							<td>B股</td> <#list shareCons as shareCon>
+							<td>${(shareCon['bshr'])!'0.00'}
+							</th> </#list>
+						</tr>
+						<tr>
+							<td>H股</td> <#list shareCons as shareCon>
+							<td>${(shareCon['hshr'])!'0.00'}
+							</th> </#list>
+						</tr>
+						<tr>
+							<td>S股</td> <#list shareCons as shareCon>
+							<td>${(shareCon['sshr'])!'0.00'}
+							</th> </#list>
+						</tr>
+						<tr>
+							<td>N股</td> <#list shareCons as shareCon>
+							<td>${(shareCon['nshr'])!'0.00'}
+							</th> </#list>
+						</tr>
+						<tr>
+							<td>境外上市其他股份</td> <#list shareCons as shareCon>
+							<td>${(shareCon['othAbroad'])!'0.00'}
+							</th> </#list>
+						</tr>
+						<tr>
+							<td>其他已流通股份</td> <#list shareCons as shareCon>
+							<td>${(shareCon['othfl'])!'0.00'}
+							</th> </#list>
+						</tr>
+						<tr>
+							<td>非流通股合计</td> <#list shareCons as shareCon>
+							<td>${(shareCon['totNonfl'])!'0.00'}
+							</th> </#list>
+						</tr>
+						<tr>
+							<td>国家及国有法人股</td> <#list shareCons as shareCon>
+							<td>${(shareCon['stateLegshr'])!'0.00'}
+							</th> </#list>
+						</tr>
+						<tr>
+							<td>其中:国家拥有股份</td> <#list shareCons as shareCon>
+							<td>${(shareCon['state'])!'0.00'}
+							</th> </#list>
+						</tr>
+						<tr>
+							<td>其中:国有法人股</td> <#list shareCons as shareCon>
+							<td>${(shareCon['stateleg'])!'0.00'}
+							</th> </#list>
+						</tr>
+						<tr>
+							<td>境内自然人持股</td> <#list shareCons as shareCon>
+							<td>${(shareCon['domNatural'])!'0.00'}
+							</th> </#list>
+						</tr>
+						<tr>
+							<td>其他发起人股</td> <#list shareCons as shareCon>
+							<td>${(shareCon['othspon'])!'0.00'}
+							</th> </#list>
+						</tr>
+						<tr>
+							<td>外资持股</td> <#list shareCons as shareCon>
+							<td>${(shareCon[' frgnshr'])!'0.00'}
+							</th> </#list>
+						</tr>
+						<tr>
+							<td>其中:外资法人股</td> <#list shareCons as shareCon>
+							<td>${(shareCon['frgnleg'])!'0.00'}
+							</th> </#list>
+						</tr>
+						<tr>
+							<td>其中：境外自然人持股</td> <#list shareCons as shareCon>
+							<td>${(shareCon['frgnNatural'])!'0.00'}
+							</th> </#list>
+						</tr>
+						<tr>
+							<td>募集法人股</td> <#list shareCons as shareCon>
+							<td>${(shareCon['raisleg'])!'0.00'}
+							</th> </#list>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<div class="topic topic-gap">
+			<div class="font-lg">
+				<div class="topic-square follow"></div>
+				<div class="follow">
+					股本变动情况<a name="2"></a>
+				</div>
+				<div class="follow-R">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<div id="normal" class="left-gap break">
+				<div class="table-top"></div>
+			</div>
+			<#if !shareChanges?? || shareChanges?size == 0>
+			<div>暂无数据</div>
+			<#else>
+			<div class="info-table font-md">
+				<table>
+					<thead align="center">
+						<tr>
+							<th style="width: 20%">变更日期</th>
+							<th style="width: 28%">变更原因</th>
+							<th style="width: 14%">总股本 (万)</th>
+							<th style="width: 14%">实际流通A股(万)</th>
+							<th style="width: 14%">限售流通股(万)</th>
+							<th style="width: 14%">流通A股比例(%)</th>
+						</tr>
+					</thead>
+					<tbody align="center">
+						<#list shareChanges as change>
+						<tr>
+							<td>${(change['changedate'])?string("yyyy-MM-dd")}</td>
+							<td>${(change['refName'])!}</td>
+							<td>${(change['newtotal'])!'0.00'}</td>
+							<td>${(change['newashr'])!'0.00'}</td>
+							<td>${(change['newltdfl'])!'0.00'}</td>
+							<td>${(change['apercent'])!'0.00'}</td>
+						</tr>
+						</#list>
+					</tbody>
+				</table>
+			</div>
+			</#if>
+		</div>
+	</div>
+	<div class="line"></div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				分红<a name="3"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<#if !dividends?? || dividends?size == 0>
+		<div>暂无数据</div>
+		<#else>
+		<div class="info-table font-md">
+			<table>
+				<thead align="center">
+					<tr>
+						<th style="width: 20%">分红年度</th>
+						<th style="width: 42%">分红方案说明</th>
+						<th style="width: 14%">每股收益(元)</th>
+						<th style="width: 28%">重点提示</th>
+					</tr>
+				</thead>
+				<tbody align="center">
+					<#list dividends as dividend>
+					<tr>
+						<td>${(dividend['enddate']?string("yyyy-MM-dd"))!}</td>
+						<td>${(dividend['divinfo'])!}</td>
+						<td>${(dividend['eps'])!0.00}</td>
+						<td>${(dividend['actdecDate'])!}</td>
+					</tr>
+					</#list>
+				</tbody>
+			</table>
+		</div>
+		</#if>
+	</div>
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				配股<a name="4"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<#if !allotments?? || allotments?size == 0>
+		<div>暂无数据</div>
+		<#else>
+		<div class="info-table font-md">
+			<table>
+				<thead align="center">
+					<tr>
+						<th style="width: 20%">配股年度</th>
+						<th style="width: 32%">配股方案说明</th>
+						<th style="width: 48%">重点提示</th>
+					</tr>
+				</thead>
+				<tbody align="center">
+					<#list allotments as allotment>
+					<tr>
+						<td>${(allotment.basedate)?string("yyyy")}</td>
+						<td>${(allotment.refName)!}</td>
+						<td>${(allotment.endbuyDate)!}</td>
+					</tr>
+					</#list>
+				</tbody>
+			</table>
+		</div>
+		</#if>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				增发<a name="5"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<#if !additions?? || additions?size == 0>
+		<div>暂无数据</div>
+		<#else>
+		<div class="info-table font-md">
+			<table>
+				<thead align="center">
+					<tr>
+						<th style="width: 60%">增发方案简介</th>
+						<th style="width: 42%">重点提示</th>
+					</tr>
+				</thead>
+				<tbody align="center">
+					<#list additions as addition>
+					<tr>
+						<td>${(addition['addinfo'])!}</td>
+						<td>${(addition['spesug'])!}</td>
+					</tr>
+					</#list>
+				</tbody>
+			</table>
+		</div>
+		</#if>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				可转债发行<a name="6"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<#if !convBonds?? || convBonds?size == 0>
+		<div>暂无数据</div>
+		<#else>
+		<div class="info-table font-md">
+			<table>
+				<thead align="center">
+					<tr>
+						<th style="width: 60%">发行方案简介</th>
+						<th style="width: 42%">重点提示</th>
+					</tr>
+				</thead>
+				<tbody align="center">
+					<#list convBonds as convBond>
+					<tr>
+						<td>${(convBond['convinfo'])!}</td>
+						<td>${(convBond['spesug'])!}</td>
+					</tr>
+					</#list>
+				</tbody>
+			</table>
+		</div>
+		</#if>
+	</div>
+
+
+</body>
+</html>

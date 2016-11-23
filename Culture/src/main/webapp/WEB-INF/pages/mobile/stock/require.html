@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html class="ui-mobile">
+<head>
+<title>必读</title>
+<meta charset="utf-8" />
+
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>必读</title>
+
+<script src="${webRootPath}/res/js/mobile/jquery.js"></script>
+<!-- <script src="${webRootPath}/res/js/mobile/jquery.mobile-1.4.5.js"></script> -->
+<script src="${webRootPath}/res/js/bootstrap.min.js"></script>
+<script src="${webRootPath}/res/js/mobile/main.js"></script>
+<script src="${webRootPath}/res/js/mobile/require.js"></script>
+<script src="${webRootPath}/res/js/mobile/dragonDetail.js"></script>
+<script type="text/javascript">
+	var basePath = "${webRootPath}";
+</script>
+<!-- <link href="${webRootPath}/res/css/mobile/jquery.mobile-1.4.5.css"
+	type="text/css" rel="stylesheet" /> -->
+<link href="${webRootPath}/res/css/mobile/styles_mobile.css"
+	type="text/css" rel="stylesheet" />
+<link href="${webRootPath}/res/css/bootstrap.min.css" type="text/css"
+	rel="stylesheet" />
+</head>
+<body>
+	<div class="base">
+		<div id="quickNavigation" class="quick_nav"
+			style="background-color: #0f0f0f; width: 100%; z-index: 11;">
+			<div class="content topCss">
+				<table id="navtable"
+					class="table table-bordered table-condensed line"
+					style="border-style: solid; align: center; margin-bottom: 10px;">
+					<tbody>
+						<td id="unic1" width="25%" align="center" style="border: 1px solid #353535;"
+							onclick="reload('${webRootPath}/f10/stock/cpbd/mobile/${stockcode}.html?tokenId=${tokenId}')">必读</td>
+						<td width="25%" align="center" style="border: 1px solid #353535;"
+							onclick="reload('${webRootPath}/f10/stock/gsgk/mobile/${stockcode}.html?tokenId=${tokenId}')">简况</td>
+						<td width="25%" align="center" style="border: 1px solid #353535;"
+							onclick="reload('${webRootPath}/f10/stock/cwfx/mobile/${stockcode}.html?tokenId=${tokenId}')">财务</td>
+						<td width="25%" align="center" style="border: 1px solid #353535;"
+							onclick="reload('${webRootPath}/f10/stock/gdyj/mobile/${stockcode}.html?tokenId=${tokenId}')">股本股东</td>
+					</tbody>
+				</table>
+			</div>
+			<div id="jump">
+				<ul class="hrefJumpCss">
+					<div class="row">
+						<li><a href="javascript:void(false);"
+							onclick="scrollHref('c1', this)">公司公告</a>&nbsp;|&nbsp;</li>
+						<li><a href="javascript:void(false);"
+							onclick="scrollHref('c2')">股本分红</a>&nbsp;|&nbsp;</li>
+						<li><a href="javascript:void(false);"
+							onclick="scrollHref('c3')">媒体报道</a>&nbsp;|&nbsp;</li>
+						<li><a href="javascript:void(false);"
+							onclick="scrollHref('c4')">市场评论</a>&nbsp;|&nbsp;</li>
+						<li><a href="javascript:void(false);"
+							onclick="scrollHref('c5')">龙虎榜</a></li>
+					</div>
+				</ul>
+			</div>
+		</div>
+		<div id="content" style="width: 100%; height: 100%; margin-top: 60px">
+
+			<br>
+			<div id="c1">
+				<div class="divSpacing">
+					<div class="nav nav-pills nav-stacked headline" role="tablist"
+						onclick="show1()">
+						公司公告 <span id="button1"
+							class="glyphicon glyphicon-circle-arrow-down right"></span>
+					</div>
+				</div>
+				<div id="content1">
+					<ol class="olStyle cutline">
+						<#list announceTitles as title>
+						<li class="line"><a class="line" href="#0"
+							onclick="announceDetail('${title.discId!}')">
+								${(title.title!)}</a></li> </#list>
+					</ol>
+				</div>
+			</div>
+			<div id="c2">
+				<div class="divSpacing">
+					<div class="nav nav-pills nav-stacked headline" role="tablist"
+						onclick="show2()">
+						股本分红<span id="button2"
+							class="glyphicon glyphicon-circle-arrow-down right"></span>
+					</div>
+				</div>
+				<div id="content2" style="margin-left: 128px;">
+					<div class="table-responsive">
+						<table class="table table-bordered table-condensed line"
+							style="float: left;">
+							<thead class="headtd">
+								<tr>
+									<th class="headcol130" style="border-top: 1px solid #ddd;border-left:2px solid #ddd;">分红年度</th>
+									<th>分红方案说明</th>
+									<th>每股收益(元)</th>
+									<th>重点提示</th>
+								</tr>
+							</thead>
+							<tbody>
+								<#list dividends as dividend>
+								<tr>
+									<td class="headtd headcol130" style="border-bottom: 2px solid #ddd;border-left:2px solid #ddd;">${((dividend['enddate'])!)?string("yyyy-MM-dd")}</td>
+									<td>${(dividend['divinfo'])!}</td>
+									<td>${(dividend['eps'])!0.00}</td>
+									<td>${(dividend['actdecDate'])!}</td>
+								</tr>
+								</#list>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div id="c3">
+				<div class="divSpacing">
+					<div class="nav nav-pills nav-stacked headline" role="tablist"
+						onclick="show3()">
+						媒体报道 <span id="button3"
+							class="glyphicon glyphicon-circle-arrow-down right"></span>
+					</div>
+				</div>
+				<div id="content3">
+					<ol class="olStyle cutline">
+						<#list reportTitles as title>
+						<li class="line"><a class="line" href="#0"
+							onclick="reportDetail('${title.guId!}')"> ${(title.title!)}</a></li>
+						</#list>
+					</ol>
+				</div>
+			</div>
+			<div id="c4">
+				<div class="divSpacing">
+					<div class="nav nav-pills nav-stacked headline" role="tablist"
+						onclick="show4()">
+						市场评论 <span id="button4"
+							class="glyphicon glyphicon-circle-arrow-down right"></span>
+					</div>
+				</div>
+				<div id="content4">
+					<ol class="olStyle cutline">
+						<#list reviewTitles as title>
+						<div class="cutline">
+							<li class="line"><a class="line" href="#0"
+								onclick="reviewDetail('${title.guid!}')"> ${(title.title!)}</a>
+							</li>
+						</div>
+						</#list>
+					</ol>
+				</div>
+			</div>
+			<div id="c5">
+				<div class="divSpacing">
+					<div class="nav nav-pills nav-stacked headline" role="tablist"
+						onclick="show5()">
+						龙虎榜 <span id="button5"
+							class="glyphicon glyphicon-circle-arrow-down right"></span>
+					</div>
+				</div>
+				<div id="content5">
+					<div class="line" style="color: #fef3cb;">
+						1.&nbsp;${fluct.refName} <br />&nbsp;&nbsp;[${fluct.enddate}]&nbsp;跌幅：${fluct.fflChangePct!}&nbsp;成交量：${fluct.volume!}(万)&nbsp;
+						<br />&nbsp;&nbsp;成交额：${fluct.value!}(万) <span class="headline"
+							style="float: right; margin-right: 2px;"
+							onclick="loadDragonData('${stockcode}')"> >>更多 </span>
+					</div>
+					<div 
+						style="margin-bottom: 0px; margin-left: 1px;">
+						<table
+							class="table table-bordered table-condensed line table_body"
+							style="border: 1px solid #fff;">
+							<thead class="headtd">
+								<tr>
+									<td width="40%">买入金额居前的营业部名称</td>
+									<td>买入金额(元)</td>
+									<td>卖出金额(元)</td>
+								</tr>
+							</thead>
+							<tbody>
+								<#list fluct.details as detail>
+								<tr>
+									<#if detail.rankCls == "买入金额最大的前5名">
+									<td class="headtd" width="40%">${(detail.branchName)!}</td>
+									<td>${(detail.bvalue)!0.00}</td>
+									<td>${(detail.svalue)!0.00}</td> </#if>
+								</tr>
+								</#list>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 内容div -->
+		<br>
+		<div id="goback_li" role="presentation"
+			style="float: right; margin-top: 30px; display: none;">
+			<a href="javascript:void(0);" onclick="backtoMain()"
+				class="ui-btn grid-corner headline">返回</a>
+		</div>
+		<textarea id="detail" class='form-control' rows='30'
+			style='background-color: #0f0f0f; width: 100%; color: #b9def0; display: none'
+			disabled="disabled">
+			</textarea>
+		<!-- 龙虎榜 -->
+		<div id="dragonDetail"
+			style="display: none; width: 100%; margin-top: 40px;">
+			<div style="font-size: 12px; line-height: 22px; color: #fef3cb;">
+				<div class="follow">
+					涨跌异动（交易所交易公开信息）<a name="1"></a>
+				</div>
+
+				<div id="dragonAddLoad">
+					<div
+						style="font-size: 12px; line-height: 22px; width: 400px; height: 23px;">
+						<span style="float: left; color: #DBA901; margin-right: 3px;"
+							onclick="loadDragonData('${stockcode}')"> >>更多 </span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

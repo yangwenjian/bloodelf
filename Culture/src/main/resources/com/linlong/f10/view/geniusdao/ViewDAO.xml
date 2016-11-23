@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.view.geniusdao.ViewDAO">
+	<select id="selectEquity" resultType="java.util.HashMap">
+	SELECT B.ENDDATE -- 截止日期
+	      ,(100-B.CAP_LAB)AS CAP_EQ -- 股东权益比率（%）          
+	  FROM PGENIUS.STK_CODE A
+	 INNER JOIN PGENIUS.ANA_STK_FIN_IDX B
+	    ON A.COMCODE = B.COMCODE
+	 INNER JOIN PGENIUS.STK_BALA_GEN C
+	    ON B.COMCODE = C.COMCODE
+	   AND B.ENDDATE = C.ENDDATE
+	   AND C.RPT_TYPE = '合并'
+	   AND C.RPT_DATE = (SELECT MAX(RPT_DATE) FROM PGENIUS.STK_BALA_GEN
+	                      WHERE COMCODE = C.COMCODE AND ENDDATE = C.ENDDATE AND RPT_TYPE = C.RPT_TYPE)
+	 INNER JOIN PGENIUS.STK_BALA_GEN D
+	    ON D.COMCODE = C.COMCODE
+	   AND D.ENDDATE = DATE_ADD(C.ENDDATE,INTERVAL -1 YEAR)
+	   AND D.RPT_TYPE = '合并'
+	   AND D.RPT_DATE = (SELECT MAX(RPT_DATE) FROM PGENIUS.STK_BALA_GEN
+	                      WHERE COMCODE = D.COMCODE AND ENDDATE = D.ENDDATE AND RPT_TYPE = D.RPT_TYPE)
+	 WHERE A.STOCKCODE = #{stockcode} 
+	 ORDER BY B.ENDDATE DESC
+	LIMIT 12
+	</select>
+	<select id="selectProfit" resultType="java.util.HashMap">
+	SELECT 
+	  B.ENDDATE,   
+	  B.SEL_RINT AS PROFIT-- 销售毛利率（%）          
+	FROM
+	  PGENIUS.STK_CODE A 
+	  INNER JOIN PGENIUS.ANA_STK_FIN_IDX B 
+	    ON A.COMCODE = B.COMCODE 
+	WHERE A.STOCKCODE = #{stockcode} 
+	ORDER BY B.ENDDATE DESC 
+	LIMIT 12 ;
+	</select>
+	<select id="selectCashFlow" resultType="java.util.HashMap">
+	SELECT B.ENDDATE -- 截止日期
+	      ,100*B.OR_ONF/B.BAL_N AS CASH_FLOW-- 现金流量比率（%）
+	  FROM PGENIUS.STK_CODE A
+	 INNER JOIN PGENIUS.ANA_STK_FIN_IDX B
+	    ON A.COMCODE = B.COMCODE
+	 INNER JOIN PGENIUS.STK_CASH_GEN C
+	    ON B.COMCODE = C.COMCODE
+	   AND SUBSTR(C.STARTDATE,6,5)='01-01'
+	   AND B.ENDDATE = C.ENDDATE
+	   AND C.RPT_TYPE = '合并'
+	   AND C.RPT_DATE = (SELECT MAX(RPT_DATE) FROM PGENIUS.STK_CASH_GEN
+	                      WHERE COMCODE = C.COMCODE AND STARTDATE = C.STARTDATE AND ENDDATE = C.ENDDATE AND RPT_TYPE = C.RPT_TYPE)
+	 INNER JOIN PGENIUS.STK_INCOME_GEN D
+	    ON D.COMCODE = C.COMCODE
+	   AND SUBSTR(D.STARTDATE,6,5)='01-01'
+	   AND D.ENDDATE = C.ENDDATE
+	   AND D.RPT_TYPE = '合并'
+	   AND D.RPT_DATE = (SELECT MAX(RPT_DATE) FROM PGENIUS.STK_INCOME_GEN
+	                      WHERE COMCODE = D.COMCODE AND STARTDATE = D.STARTDATE AND ENDDATE = D.ENDDATE AND RPT_TYPE = D.RPT_TYPE)
+	 WHERE A.STOCKCODE = #{stockcode}
+	 ORDER BY B.ENDDATE DESC
+	 LIMIT 12;
+	</select>
+	<select id="selectIsSeason" resultType="Integer">
+	SELECT COUNT(*) AS REPORTTYPE
+		FROM pgenius.ANA_STK_FIN_LAT a ,pgenius.ANA_STK_FIN_IDX b
+		WHERE a.ISVALID=1 AND b.ISVALID=1
+		AND a.comcode=b.comcode
+		AND a.COMCODE=(SELECT COMCODE FROM PGENIUS.STK_CODE WHERE ISVALID=1 AND STOCKCODE=#{stockcode})
+		AND b.ENDDATE=(SELECT MAX(ENDDATE) FROM pgenius.ANA_STK_FIN_IDX WHERE ISVALID=1 AND comcode=a.comcode)
+		AND DECLAREDATE=b.ENDDATE;
+	</select>
+	<select id="selectEpsSeason" resultType="java.util.HashMap">
+	SELECT 
+	  DATE(`ENDDATE`) AS ENDDATE,
+	  EPSP AS EPSNED
+	FROM
+	  PGENIUS.ANA_STK_FIN_IDX 
+	WHERE ISVALID = 1 
+	  AND COMCODE = 
+	  (SELECT 
+	    COMCODE 
+	  FROM
+	    PGENIUS.STK_CODE 
+	  WHERE ISVALID = 1 
+	    AND STOCKCODE = #{stockcode}) 
+	ORDER BY ENDDATE DESC 
+	LIMIT 20
+	</select>
+	<select id="selectEpsNoneSeason" resultType="java.util.HashMap">
+	SELECT 
+	  DATE(DECLAREDATE) AS ENDDATE,
+	  EPS AS EPSNED
+	FROM
+	  pgenius.ANA_STK_FIN_LAT 
+	WHERE ISVALID = 1 
+	  AND COMCODE = 
+	  (SELECT 
+	    COMCODE 
+	  FROM
+	    PGENIUS.STK_CODE 
+	  WHERE ISVALID = 1 
+	    AND STOCKCODE = #{stockcode}) 
+	  UNION
+	  SELECT 
+	    DATE(`ENDDATE`) AS ENDDATE,
+	    EPSP
+	  FROM
+	    PGENIUS.ANA_STK_FIN_IDX 
+	  WHERE ISVALID = 1 
+	    AND COMCODE = 
+	    (SELECT 
+	      COMCODE 
+	    FROM
+	      PGENIUS.STK_CODE 
+	    WHERE ISVALID = 1 
+	      AND STOCKCODE = #{stockcode}) 
+	  ORDER BY ENDDATE DESC 
+	  LIMIT 20
+	</select>
+	<select id="selectPB" resultType="java.util.HashMap">
+	SELECT enddate
+       ,PB       -- 市净率
+	FROM f10.u_stk_val_idx WHERE stockcode= #{stockcode} ORDER BY enddate DESC LIMIT 1;
+	</select>
+	<select id="selectInduInfo" resultType="java.util.HashMap">
+	SELECT 
+	  T.ROED AS ROE,
+	  100*T.INC_F/T.BAL_O AS ROA,
+	  T.RIS_OR AS RISOR,
+	  T.OPE_STCI AS OPESTCI,
+	  T.CAP_LAB AS CAPLAB,
+	  T.RIS_OP AS RISOP
+	FROM
+	  PGENIUS.STK_CODE R 
+	  INNER JOIN PGENIUS.STK_COM_INDU_REL S 
+	    ON R.COMCODE = S.COMCODE 
+	  INNER JOIN PGENIUS.ANA_STK_FIN_IDX_LAT T 
+	    ON R.COMCODE = T.COMCODE 
+	WHERE R.STK_TYPE_REF IN (1) 
+	  AND R.STATUS_TYPE_REF IN (1) 
+	  AND S.CF_INDU_CODE = 
+	  (SELECT 
+	    X.CF_INDU_CODE 
+	  FROM
+	    PGENIUS.STK_COM_INDU_REL X
+	    INNER JOIN PGENIUS.STK_CODE Y
+	      ON X.COMCODE = Y.COMCODE 
+	  WHERE Y.STOCKCODE = #{stockcode}) 
+	</select>
+	<select id="selectInfo" resultType="java.util.HashMap">
+	SELECT 
+	  T.ROED AS ROE,
+	  100*T.INC_F/T.BAL_O AS ROA,
+	  T.RIS_OR AS RISOR,
+	  T.OPE_STCI AS OPESTCI,
+	  T.LAB_SLO AS LABSLO,
+	  T.CAP_LAB AS CAPLAB,
+	  T.RIS_OP AS RISOP
+	  FROM
+	    PGENIUS.STK_CODE R 
+	    INNER JOIN PGENIUS.ANA_STK_FIN_IDX_LAT T 
+	      ON R.COMCODE = T.COMCODE 
+	  WHERE R.STOCKCODE=#{stockcode}
+    </select>
+    <select id="selectNetProfit" resultType="java.math.BigDecimal">
+    SELECT B.P150101/10000 AS P150101-- 净利润
+	  FROM PGENIUS.STK_CODE A
+	 INNER JOIN PGENIUS.STK_INCOME_GEN B
+	    ON A.COMCODE = B.COMCODE
+	   AND B.RPT_TYPE = '合并'
+	   AND B.RPT_DATE = (SELECT MAX(RPT_DATE) FROM PGENIUS.STK_BALA_GEN
+	                      WHERE COMCODE = B.COMCODE AND ENDDATE = B.ENDDATE AND RPT_TYPE = B.RPT_TYPE)
+	 WHERE A.STOCKCODE = #{stockcode} AND SUBSTR(ENDDATE,6,5)='12-31'
+	 ORDER BY B.ENDDATE DESC
+	 LIMIT 3
+	</select>
+ 	<select id="selectDividend" resultType="java.util.HashMap">
+ 	SELECT 
+	  A.CASH_BT AS CASHBT,
+	  A.DIV_INFO AS DIVINFO
+	FROM
+	  PGENIUS.STK_DIV_INFO A,
+	  PGENIUS.STK_CODE B 
+	WHERE A.ISVALID = 1 
+	  AND B.ISVALID = 1 
+	  AND A.COMCODE = B.COMCODE 
+	  AND A.INNER_CODE = B.INNER_CODE 
+	  AND B.STOCKCODE = #{stockcode}
+	  AND SUBSTR(A.END_DATE,6,5)='12-31'
+	ORDER BY DIR_DCL_DATE DESC LIMIT 3;
+ 	</select>
+	<!-- <select id="selectQuickRatio"  resultType="java.math.BigDecimal">
+	SELECT B.LAB_SLO   
+	  FROM PGENIUS.STK_CODE A
+	 INNER JOIN PGENIUS.ANA_STK_FIN_IDX B
+	    ON A.COMCODE = B.COMCODE
+	 WHERE A.STOCKCODE = #{stockcode}
+	 ORDER BY B.ENDDATE DESC  
+	 LIMIT 1;
+ 	</select> -->
+</mapper>

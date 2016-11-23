@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.stockindex.geniusdao.NewsDAO">
+    <select id="getTodayNews" resultType="java.util.Map" useCache="false">
+        select sql_no_cache
+			   date(a.declaredate) as declaredate,  -- 公告日期
+               a.title_main as titleMain,           -- 新闻标题
+               c.TXT_CONTENT as txtContent          -- 新闻正文
+        from (select guid from pgenius.news_cls 
+        where declaredate > adddate(curdate(),-3) 
+        and isvalid=1 and cls_code ='001002' 
+        order by declaredate desc limit 1 ) d
+        inner join pgenius.news_main a on a.guid=d.guid and a.isvalid=1
+        left join news_content c on a.guid=c.guid and c.isvalid=1;
+    </select>
+    
+    <select id="getYestdayNews" resultType="java.util.Map" useCache="false">
+        select sql_no_cache
+			   '昨日要闻综述' as titleMain,             -- 新闻标题
+				date(a.declaredate) as declaredate,  -- 公告日期
+               c.txt_content as txtContent           -- 新闻正文
+        from (select guid 
+              from pgenius.news_cls 
+              where declaredate>adddate(curdate(),-10) 
+              and isvalid=1 and cls_code ='001002') d
+        inner join pgenius.news_main a on a.guid=d.guid and a.isvalid=1
+        left join news_content c on a.guid=c.guid and c.isvalid=1
+        where a.DECLAREDATE!=CURDATE()
+        ORDER BY a.declaredate DESC
+        LIMIT 1;
+    </select>
+    
+    <select id="getTodayFocus" resultType="java.util.Map" useCache="false">
+        select sql_no_cache
+               date(a.declaredate) as declaredate,  -- 公告日期
+               a.title_main as titleMain,           -- 新闻标题
+               c.txt_content as txtContent          -- 新闻正文
+        from (select guid 
+              from pgenius.news_cls 
+              where declaredate>=date_add(curdate(),interval -3 day) 
+              and isvalid=1 and cls_code ='001003' ) d
+        inner join pgenius.news_main a on a.guid=d.guid and a.isvalid=1
+        left join news_content c on a.guid=c.guid and c.isvalid=1
+        ORDER BY A.GUID DESC
+        LIMIT 0, 10;
+    </select>	
+</mapper>

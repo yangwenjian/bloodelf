@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.stockindex.geniusdao.PerformanceDynamicDAO">
+    <select id="getEarnings" resultType="java.util.Map">
+        SELECT A.STOCKSNAME as stockName,                   -- 股票简称 
+               IFNULL(CHNG_DATE3,IFNULL(CHNG_DATE2,IFNULL(CHNG_DATE1,PRE_DATE))) 
+                                     as declaredate         -- 预约披露日期
+        FROM STK_CODE A 
+        INNER JOIN STK_PRE_DISCLOSURE B ON A.COMCODE=B.COMCODE
+        WHERE A.ISVALID=1 AND B.ISVALID=1
+        AND B.PERIODDATE= (SELECT MAX(PERIODDATE) 
+                           FROM STK_PRE_DISCLOSURE WHERE ISVALID=1)
+                           ORDER BY IFNULL(CHNG_DATE3,IFNULL(CHNG_DATE2,IFNULL(CHNG_DATE1,PRE_DATE)));
+    </select>
+    
+    <select id="getEarningsPlus" resultType="java.util.Map" parameterType="int">
+		SELECT A.STOCKSNAME as stockName,                   -- 深市股票
+		       B.DECLAREDATE as declaredate,                -- 披露日期
+			   CONTENT as content                           -- 业绩预增
+        FROM STK_CODE A INNER JOIN STK_ACHIEVE_FORECAST B ON A.COMCODE=B.COMCODE
+        WHERE A.ISVALID=1 AND B.ISVALID=1 
+		AND B.FORE_CLS_CODE IN (1,12,3,5,7)  -- 限定预增的相关类型
+        AND   A.TRADE_MKT_REF=#{type} -- 限定深交所
+		AND B.ENDDATE=(SELECT MAX(ENDDATE) FROM STK_ACHIEVE_FORECAST WHERE ISVALID=1)
+        ORDER BY B.DECLAREDATE DESC;
+    </select>
+    <select id="getEarningsSubtract" resultType="java.util.Map" parameterType="int">
+		SELECT A.STOCKSNAME as stockName,                   -- 深市股票
+		       B.DECLAREDATE as declaredate,                -- 披露日期
+			   CONTENT as content                           -- 业绩预增
+        FROM STK_CODE A INNER JOIN STK_ACHIEVE_FORECAST B ON A.COMCODE=B.COMCODE
+        WHERE A.ISVALID=1 AND B.ISVALID=1 
+		AND B.FORE_CLS_CODE IN (8,6,2,13,10,4)  -- 限定预亏/减的相关类型
+        AND A.TRADE_MKT_REF=#{type} -- 限定交易所
+		AND B.ENDDATE=(SELECT MAX(ENDDATE) FROM STK_ACHIEVE_FORECAST WHERE ISVALID=1)
+        ORDER BY B.DECLAREDATE DESC;
+    </select>
+</mapper>

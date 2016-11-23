@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.stockindex.geniusdao.BruntTrendDAO">
+    <select id="getBruntTrend" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT A.DECLAREDATE as declaredate, -- 公告日期
+               A.TITLE_MAIN  as titleMain,   -- 新闻标题 
+               C.TXT_CONTENT as txtContent   -- 新闻正文 新闻内容 
+	    FROM NEWS_MAIN A 
+		INNER JOIN NEWS_CLS B ON A.GUID=B.GUID 
+        INNER JOIN NEWS_CONTENT C ON A.GUID=C.GUID
+        WHERE A.ISVALID=1 AND B.ISVALID=1 AND C.ISVALID=1 AND B.CLS_CODE = #{stockCode, jdbcType=VARCHAR}
+        AND A.DECLAREDATE>ADDDATE(CURDATE(),-5) 
+        -- 可以控制需要展示的数据时间范围
+        ORDER BY A.DECLAREDATE DESC
+        LIMIT 0, 5;
+    </select>
+</mapper>

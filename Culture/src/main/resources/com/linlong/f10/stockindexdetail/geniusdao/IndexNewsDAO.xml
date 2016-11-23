@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linlong.f10.stockindexdetail.geniusdao.IndexNewsDAO">
+	<!-- 根据证券市场查询所有证券的流通股本 -->
+	<select id="selectIndexNews" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT SQL_NO_CACHE
+		DATE(a.declaredate) AS declaredate,  -- 公告日期
+		b.SRC_NAME AS srcname,  -- 新闻来源
+		a.TITLE_MAIN AS title, -- 新闻标题
+		c.TXT_CONTENT AS content -- 新闻正文
+		FROM (SELECT guid FROM pgenius.NEWS_CLS WHERE 
+		 isvalid=1 
+		AND CLS_CODE=#{indexcode}
+		ORDER BY declaredate DESC
+		LIMIT 30) d
+		INNER JOIN pgenius.news_main a ON a.guid=d.guid AND a.isvalid=1
+		INNER JOIN PUB_INFOR_SRC b ON a.SRC_CODE=b.SRC_CODE AND b.isvalid=1
+		LEFT JOIN NEWS_CONTENT c ON a.guid=c.guid AND c.isvalid=1
+		LIMIT 10 ; -- 参数可以调整
+	</select>
+</mapper>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	    <meta charset="UTF-8">
+	    <title>新股信息</title>
+	</head>
+	<body>
+		<div class="third-party gap">
+			<div class="h2"><span>WWW.GENIUS.COM.CN-----巨灵信息-----${.now?string("yyyy-MM-dd")}更新</span></div>
+		</div>
+		
+		<div class="catalog gap">
+			<div class="catalog-name follow font-lg">
+				目录
+			</div>
+			<div id="catalog-list" class="catalog-bg follow font-md">
+				<ol type="" class="catalog-list">
+					<li>
+						<span class="index">1.&nbsp;&nbsp;</span>
+						<span class="text"><a href="#1">今日新股提示</a></span>
+					</li>
+					<li>
+						<span class="index">2.&nbsp;&nbsp;</span>
+						<span class="text"><a href="#2">等待发行新股提示</a></span>
+					</li>
+					<li>
+						<span class="index">3.&nbsp;&nbsp;</span>
+						<span class="text"><a href="#3">等待上市新股一览表</a></span>
+					</li>
+					<li>
+						<span class="index">4.&nbsp;&nbsp;</span>
+						<span class="text"><a href="#4">最近上市新股一览表</a></span>
+					</li>
+				</ol>
+				<ol class="catalog-list">
+					<li><span class="index">5.&nbsp;&nbsp;</span>
+						<span class="text"><a href="#5"><#if newStockLocation.titleMain != null>${newStockLocation.titleMain}<#else>新股定位</#if></a></span></li>
+				</ol>
+			</div>
+		</div>
+		
+		<div class="topic topic-gap">	
+			<div class="font-lg">
+				<div class="topic-square follow"></div>
+				<div class="follow">今日新股提示<a name="1"></a></div>
+				<div class="follow-R"><a href="#top">Top</a></div>
+			</div>
+			<div id="notice-list" class="notice-list break">
+				<div class="notice">
+					<div class="break"><br></div>
+					<div class="content font-md">
+						<span><#if todayNewStockInfo.txtContent != null>${todayNewStockInfo.txtContent?replace('\n', '<br/>')}<#else>暂无今日新股提示</#if></span>
+					</div>
+					<div><br></div>
+					<div class="line"></div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="topic topic-gap">	
+			<div class="font-lg">
+				<div class="topic-square follow"></div>
+				<div class="follow">等待发行新股提示<a name="2"></a></div>
+				<div class="follow-R"><a href="#top">Top</a></div>
+			</div>
+			<div id="notice-list" class="notice-list break">
+				<div class="notice">
+					<div class="break"><br></div>
+					<div class="content font-md">
+						<span><#if waitIssueStockInfo.txtContent != null>${waitIssueStockInfo.txtContent?replace('\n', '<br/>')}<#else>暂无等待发行新股提示</#if></span>
+					</div>
+					<div><br></div>
+					<div class="line"></div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="topic topic-gap">	
+			<div class="font-lg">
+				<div class="topic-square follow"></div>
+				<div class="follow">等待上市新股一览表<a name="3"></a></div>
+				<div class="follow-R"><a href="#top">Top</a></div>
+			</div>
+			<div id="notice-list" class="notice-list break">
+				<div class="notice">
+					<div class="break"><br></div>
+					<div class="content font-md">
+						<span><#if waitListing.txtContent != null>${waitListing.txtContent?replace('\n', '<br/>')}<#else>暂无等待上市新股一览表</#if></span>
+					</div>
+					<div><br></div>
+					<div class="line"></div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="topic topic-gap">	
+			<div class="font-lg">
+				<div class="topic-square follow"></div>
+				<div class="follow">最近上市新股一览表<a name="4"></a></div>
+				<div class="follow-R"><a href="#top">Top</a></div>
+			</div>
+			<div id="notice-list" class="notice-list break">
+				<div class="notice">
+					<div class="break"><br></div>
+					<div class="content font-md">
+						<span><#if latestStock.txtContent != null>${latestStock.txtContent?replace('\n', '<br/>')}<#else>暂无最近上市新股一览表</#if></span>
+					</div>
+					<div><br></div>
+					<div class="line"></div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="topic topic-gap">	
+			<div class="font-lg">
+				<div class="topic-square follow"></div>
+				<div class="follow"><#if newStockLocation.titleMain != null>${newStockLocation.titleMain}<#else>新股定位</#if><a name="5"></a></div>
+				<div class="follow-R"><a href="#top">Top</a></div>
+			</div>
+			<div id="notice-list" class="notice-list break">
+				<div class="notice">
+					<div class="break"><br></div>
+					<div class="content font-md">
+						<span><#if newStockLocation.txtContent != null>${newStockLocation.txtContent?replace('\n', '<br/>')}<#else>暂无新股定位</#if></span>
+					</div>
+					<div><br></div>
+					<div class="line"></div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

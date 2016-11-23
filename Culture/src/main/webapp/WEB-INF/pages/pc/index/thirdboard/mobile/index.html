@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html class="ui-mobile">
+<head>
+<title>三板市场</title>
+<meta charset="utf-8" />
+
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+	name="viewport" />
+
+</head>
+<body>
+
+	<div class="catalog break">
+		<div id="sub-menu" class="sub-menu font-sm follow">
+			<div class="ui-grid-b">
+				<div class="ui-block-a">
+					<div id="block-1" class="each">
+						<a href="#1"> <span class="index">1.&nbsp;</span> <span
+							class="text">行情统计</span>
+						</a>
+					</div>
+				</div>
+				<div class="ui-block-a">
+					<div id="block-2" class="each">
+						<a href="#2"> <span class="index">2.&nbsp;</span> <span
+							class="text">三板市场评论标题</span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+
+
+	<div id="dest-1" class="topic break min-h">
+		<div class="type">
+			<div class="exclam follow"></div>
+			<div class="text follow font-lg">
+				行情统计<a name="1"></a>
+			</div>
+			<div class="follow-R font-lg top">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="font-md break">【<#if
+			market.declaredate??>${market.declaredate?string("yyyy-MM-dd")}</#if>
+			&nbsp; ${market.sourceName!}】</div>
+		<div id="normal" class="font-md break" style="text-align: center">${market.title!}</div>
+		<#assign content=market.content?split("\r\n")>
+		<div>${content?first!}</div>
+		<div class="info-table font-sm break">
+			<table style="width: 1000px; width: 100rem; text-align: center;">
+				<thead>
+					<tr>
+						<th style="width: 125px; width: 12.5rem;">代码</th>
+						<th style="width: 125px; width: 12.5rem;">名称</th>
+						<th style="width: 125px; width: 12.5rem;">收盘价(元)</th>
+						<th style="width: 125px; width: 12.5rem;">涨跌</th>
+						<th style="width: 125px; width: 12.5rem;">涨跌幅(%)</th>
+						<th style="width: 125px; width: 12.5rem;">成交(股)</th>
+						<th style="width: 125px; width: 12.5rem;">成交(元)</th>
+						<th style="width: 125px; width: 12.5rem;">成交(笔)</th>
+					</tr>
+				</thead>
+				<tbody>
+					<#list content as line> <#if line_index &gt; 1>
+					<tr>
+						<#list line?trim?split('\\s+', 'r') as word>
+						<td>${word!}</td> </#list>
+					</tr>
+					</#if> </#list>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="line"></div>
+
+	<div id="dest-2" class="topic break min-h">
+		<div class="type">
+			<div class="exclam follow"></div>
+			<div class="text follow font-lg">
+				三板市场评论标题<a name="2"></a>
+			</div>
+			<div class="follow-R font-lg top">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="normal font-md break">
+			<#if reviewTitles?size == 0>
+			<div>暂无数据</div>
+			</#if> <#list reviewTitles as reviewTitle>
+			<div>${(reviewTitle_index+1)?string("#")}、${reviewTitle.title!}</div>
+			</#list>
+		</div>
+	</div>
+	<div class="line"></div>
+
+		<div id="notice-list" class="notice-list break">
+			<#list reviewContents as reviewContent>
+			<div class="notice">
+				<div class="subject font-md">${reviewContent.title!}</div>
+				<div class="publish-date font-sm"></div>
+				<div class="content font-sm break">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span>${reviewContent.content?replace('(\r\n)+','</br>',
+						'r')!}
+					</span>
+				</div>
+				<div class="issuer font-sm break">发布单位 2016年6月01日</div>
+			</div>
+			<div class="line"></div>
+			</#list>
+		</div>
+
+</body>
+</html>

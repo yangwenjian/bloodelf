@@ -1,0 +1,273 @@
+﻿﻿<!DOCTYPE html>
+<html>
+<head>
+<title>操盘必读</title>
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+	name="viewport" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+<link href="${webRootPath}/res/css/pc/styles.css" type="text/css"
+	rel="stylesheet" />
+
+<script src="${webRootPath}/res/js/pc/jquery-1.7.1.min.js"></script>
+<script src="${webRootPath}/res/js/pc/main.js"></script>
+
+</head>
+<body>
+	<div class="base" name="top">
+
+		<div class="catalog gap">
+			<div class="catalog-name follow font-lg">目录</div>
+			<div id="catalog-list" class="catalog-bg follow font-md">
+				<ol type="" class="catalog-list">
+					<!-- 每4个一组 -->
+					<li><span class="index">1.&nbsp;&nbsp;</span> <span
+						class="text"><a href="#1">特别提示</a></span></li>
+					<li><span class="index">2.&nbsp;&nbsp;</span> <span
+						class="text"><a href="#2">业绩预批</a></span></li>
+					<li><span class="index">3.&nbsp;&nbsp;</span> <span
+						class="text"><a href="#3">重要指标</a></span></li>
+					<li><span class="index">4.&nbsp;&nbsp;</span> <span
+						class="text"><a href="#4">千股千评</a></span></li>
+				</ol>
+				<ol class="catalog-list">
+					<!-- 每4个一组 -->
+					<li><span class="index">5.&nbsp;&nbsp;</span> <span
+						class="text"><a href="#5">最新分配</a></span></li>
+					<li><span class="index">6.&nbsp;&nbsp;</span> <span
+						class="text"><a href="#6">高管持股变动</a></span></li>
+					<li><span class="index">7.&nbsp;&nbsp;</span> <span
+						class="text"><a href="#7">最新公告</a></span></li>
+				</ol>
+			</div>
+		</div>
+
+		<div class="topic topic-gap">
+			<div class="font-lg">
+				<div class="topic-square follow"></div>
+				<div class="follow">
+					特别提示<a name="1"></a>
+				</div>
+				<div class="follow-R">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<div class="event-table left-gap break">
+				<table class="event-table font-md">
+					<#if !sepSuglist?? || sepSuglist?size == 0>
+					<tr style="height: 60px;">
+						<td class="colum2"
+							style="width: 80%; text-align: left; vertical-align: top;">暂无特别提示</td>
+					</tr>
+					</#if>
+					<#list sepSuglist as sepSug>
+					<tr style="height: 60px;">
+						<td class="colum1"
+							style="width: 8%; text-align: left; vertical-align: top;">${sepSug?substring(0,10)}&nbsp;&nbsp;</td>
+						<td class="colum2"
+							style="width: 80%; text-align: left; vertical-align: top;">${sepSug?substring(10)}</td>
+					</tr>
+					</#list>
+				</table>
+			</div>
+		</div>
+
+		<div class="topic topic-gap">
+			<div class="font-lg">
+				<div class="topic-square follow"></div>
+				<div class="follow">
+					业绩预批<a name="2"></a>
+				</div>
+				<div class="follow-R">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<#if !performances?? || performances?size == 0>
+				<div id="normal" class="left-gap font-md break">
+				<div>暂无业绩预批</div>
+			</div>
+			</#if>
+			<#list performances as performance>
+			<div id="normal" class="left-gap font-md break">
+				<div>${performance}</div>
+			</div>
+			</#list>
+		</div>
+
+		<div class="topic topic-gap">
+			<div class="font-lg">
+				<div class="topic-square follow"></div>
+				<div class="follow">
+					重要指标<a name="3"></a>
+				</div>
+				<div class="follow-R">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<div id="normal" class="left-gap break">
+				<div class="table-top"></div>
+			</div>
+			<div class="info-table font-md">
+				<table>
+					<thead align="center">
+						<tr>
+							<th style="width: 16%">主要指标(摊薄计算)</th>
+							<th style="width: 12%">基本每股收益(元)</th>
+							<th style="width: 12%">每股净资产(元)</th>
+							<th style="width: 12%">每股资本公积金(元)</th>
+							<th style="width: 12%">每股未分配利润(元)</th>
+							<th style="width: 12%">每股经营现金流(元)</th>
+							<th style="width: 12%">净资产收益率(%)</th>
+							<th style="width: 12%">营业收入增长率(%)</th>
+						</tr>
+					</thead>
+					<tbody align="center">
+						<#list indicatorList as indicator>
+						<tr>
+							<td>${indicator.endDate!}</td>
+							<td>${indicator.epsned!}</td>
+							<td>${indicator.bpsned!}</td>
+							<td>${indicator.pscr!}</td>
+							<td>${indicator.psup!}</td>
+							<td>${indicator.psNetVal!}</td>
+							<td>${indicator.roed!}</td>
+							<td>${indicator.incj!}</td>
+						</tr>
+						</#list>
+					</tbody>
+				</table>
+			</div>
+			<div class="table-bottom font-md">
+				<div>最新股本&nbsp;(${shareInfo.changeDate!})</div>
+				<div>
+					<span>总股本&nbsp;${shareInfo.flShare!0}亿</span><span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+					<span>流通A股&nbsp;${shareInfo.flAShare!0}亿</span><span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+					<span>限售股份&nbsp;${shareInfo.totLtdfl!0}亿</span><span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+					<span>流通B股&nbsp;${shareInfo.bShare!0}亿</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="topic topic-gap">
+			<div class="font-lg">
+				<div class="topic-square follow"></div>
+				<div class="follow">
+					千股千评<a name="4"></a>
+				</div>
+				<div class="follow-R">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<#list reviews as review>
+			<div id="normal" class="left-gap font-md break">
+				<div>${review}</div>
+			</div>
+			</#list>
+		</div>
+
+		<div class="topic topic-gap">
+			<div class="font-lg">
+				<div class="topic-square follow"></div>
+				<div class="follow">
+					最新分配<a name="5"></a>
+				</div>
+				<div class="follow-R">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<#list allotments as allotment>
+			<div id="normal" class="left-gap font-md break">
+				<div>${allotment}</div>
+			</div>
+			</#list>
+		</div>
+
+		<div class="topic topic-gap">
+			<div class="font-lg">
+				<div class="topic-square follow"></div>
+				<div class="follow">
+					高管持股变动<a name="6"></a>
+				</div>
+				<div class="follow-R">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<div id="normal" class="left-gap break">
+				<div class="table-top"></div>
+			</div>
+			<#if !shareChanges?? || shareChanges?size == 0>
+			<div>暂无数据</div>
+			<#else>
+			<div class="info-table font-md">
+				<table>
+					<thead align="center">
+						<tr>
+							<th style="width: 16%">高管姓名(及职位)</th>
+							<th style="width: 12%">持股人与高管关系</th>
+							<th style="width: 12%">股票代码</th>
+							<th style="width: 12%">变动数(股)</th>
+							<th style="width: 12%">变动后持股</th>
+							<th style="width: 12%">变动均价</th>
+							<th style="width: 12%">变动原因</th>
+							<th style="width: 12%">变动时间</th>
+						</tr>
+					</thead>
+					<tbody align="center">
+						<#list shareChanges as shareChange>
+						<tr>
+							<td>${shareChange.name!}</td>
+							<td>${shareChange.relation!}</td>
+							<td>${shareChange.stockcode!}</td>
+							<td>${shareChange.changeVol!}</td>
+							<td>${shareChange.endVol!}</td>
+							<td>${shareChange.chegEp!}</td>
+							<td>${shareChange.changeReason!}</td>
+							<td>${shareChange.changeDate!}</td>
+						</tr>
+						</#list>
+					</tbody>
+				</table>
+			</div>
+			</#if>
+		</div>
+
+		<div class="topic topic-gap">
+			<div class="font-lg">
+				<div class="topic-square follow"></div>
+				<div class="follow">
+					最新公告<a name="7"></a>
+				</div>
+				<div class="follow-R">
+					<a href="#top">Top</a>
+				</div>
+			</div>
+			<div id="notice-list" class="notice-list break">
+				<#if !announcements?? || announcements?size == 0>
+					<div>暂无最新公告</div>
+				</#if>
+				<#list announcements as announce>
+				<div class="notice">
+					<div class="subject font-lg">${(announce["title"])!}</div>
+					<div class="publish-date">2016-07-01</div>
+					<div class="break">
+						<br>
+					</div>
+					<div class="content font-md">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span>${(announce["content"]?replace('(\r\n)+',
+							'</br>', 'r')?replace('\t', '&emsp;')?replace('       ', '&thinsp;'))!}
+						</span>
+					</div>
+					<div>
+						<br>
+					</div>
+					<div class="issuer"></div>
+					<div class="line"></div>
+				</div>
+				</#list>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

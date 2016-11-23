@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html class="ui-mobile">
+<head>
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+	name="viewport" />
+
+<title><sitemesh:write property='title'/></title>
+
+<script src="${webRootPath}/res/js/mobile/jquery.js"></script>
+<script src="${webRootPath}/res/js/mobile/jquery.mobile-1.4.5.js"></script>
+<script src="${webRootPath}/res/js/mobile/main.js"></script>
+
+<link href="${webRootPath}/res/css/mobile/jquery.mobile-1.4.5.css"
+	type="text/css" rel="stylesheet" />
+<link href="${webRootPath}/res/css/mobile/styles.css" type="text/css"
+	rel="stylesheet" />
+<sitemesh:write property='head'/>
+</head>
+<body>
+	<div class="base" name="top">
+		<div class="ui-grid-c font-md">
+			<div class="ui-block-a">
+				<a href="${webRootPath}/f10/index/dailyTip/mobile.html?tokenId=${tokenId}" class="ui-btn grid-corner">每日提示</a>
+			</div>
+			<div class="ui-block-b">
+				<a href="${webRootPath}/f10/index/tradeMemo/mobile.html?tokenId=${tokenId}" class="ui-btn grid-corner">交易备忘</a>
+			</div>
+			<div class="ui-block-c">
+				<a href="${webRootPath}/f10/index/newStockInfo/mobile.html?tokenId=${tokenId}" class="ui-btn grid-corner">新股提示</a>
+			</div>
+			<div class="ui-block-d">
+				<a href="${webRootPath}/f10/index/news/mobile.html?tokenId=${tokenId}" class="ui-btn grid-corner">新闻资讯</a>
+			</div>
+
+			<div class="ui-block-a">
+				<a href="${webRootPath}/f10/index/internationalNews/mobile.html?tokenId=${tokenId}" class="ui-btn grid-corner">国际风云</a>
+			</div>
+			<div class="ui-block-b">
+				<a href="${webRootPath}/f10/index/bruntTrend/mobile.html?tokenId=${tokenId}" class="ui-btn grid-corner">主力动向</a>
+			</div>
+			<div class="ui-block-c">
+				<a href="${webRootPath}/f10/index/tapeRemark/mobile.html?tokenId=${tokenId}" class="ui-btn grid-corner">大盘点评</a>
+			</div>
+			<div class="ui-block-d">
+				<a href="${webRootPath}/f10/index/singleStockInfo/mobile.html?tokenId=${tokenId}" class="ui-btn grid-corner">个股点评</a>
+			</div>
+
+			<div class="ui-block-a">
+				<a href="${webRootPath}/f10/index/stockIndexFutures/mobile.html?tokenId=${tokenId}" class="ui-btn grid-corner">股指期货</a>
+			</div>
+			<div class="ui-block-b">
+				<a href="${webRootPath}/f10/index/industryStudy/mobile.html?tokenId=${tokenId}" class="ui-btn grid-corner">行业研究</a>
+			</div>
+			<div class="ui-block-c">
+				<a href="${webRootPath}/f10/index/manyDimensionsStatistics/mobile.html?tokenId=${tokenId}" class="ui-btn grid-corner">多维统计</a>
+			</div>
+			<div class="ui-block-d">
+				<a href="${webRootPath}/f10/index/performanceDynamic/mobile.html?tokenId=${tokenId}" class="ui-btn grid-corner">业绩动态</a>
+			</div>
+
+			<div class="ui-block-a">
+				<a href="#" class="ui-btn grid-corner">B股动态</a>
+			</div>
+			<div class="ui-block-b">
+				<a href="#" class="ui-btn grid-corner">基金观察</a>
+			</div>
+			<div class="ui-block-c">
+				<a href="${webRootPath}/f10/index/bondObserve/mobile.html?tokenId=${tokenId}" class="ui-btn grid-corner">债市观察</a>
+			</div>
+			<div class="ui-block-d">
+				<a href="#" class="ui-btn grid-corner">三板市场</a>
+			</div>
+		</div>
+		<sitemesh:write property='body' />
+		<div class="topic break">
+			<div class="foot">
+				<div class="declare-label font-md follow">免责声明</div>
+				<div class="declare-text font-sm follow">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本信息由聚灵信息公司提供, 仅供参考. 巨灵信息力求但不保证数据完全准确. 如有错漏, 请以中国证监会指定上市公司信息披露媒体为准. 巨灵信息不对信息全部或部份内容导致的盈亏承担任何责任.</div>
+			<br>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

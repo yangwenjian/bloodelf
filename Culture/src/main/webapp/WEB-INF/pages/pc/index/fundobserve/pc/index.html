@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>三板市场</title>
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+	name="viewport" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+</head>
+<body>
+
+	<div class="catalog gap">
+		<div class="catalog-name follow font-lg">目录</div>
+		<div id="catalog-list" class="catalog-bg follow font-md">
+			<ol type="" class="catalog-list">
+				<!-- 每4个一组 -->
+				<li><span class="index">1.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#1">市场动态</a></span></li>
+				<li><span class="index">2.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#2">基金研究</a></span></li>
+				<li><span class="index">3.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#3">基金动态</a></span></li>
+				<li><span class="index">&nbsp;&nbsp;</span> <span class="text"><a
+						href="#4"></a></span></li>
+			</ol>
+		</div>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				市场动态<a name="1"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap font-md break">
+			<#if marketInfos?size == 0>
+				<div>暂无数据</div>
+			</#if>
+			<#list marketInfos as marketInfo>
+			<div>${(marketInfo_index+1)?string("#")}、${marketInfo.title!}</div>
+			</#list>
+		</div>
+		<div id="notice-list" class="notice-list break">
+		<#list marketInfos as marketInfo>
+			<div class="notice">
+				<div class="subject font-md">${(marketInfo_index+1)?string("#")}、${marketInfo.title!}</div>
+				<div class="subject font-md">【${marketInfo.declaredate?string("yyyy-MM-dd")!}, ${marketInfo.sourceName!}】</div>
+				<div class="break">
+					<br>
+				</div>
+				<div class="content font-md">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span>${marketInfo.content?replace('(\r\n)+','</br>',
+						'r')!}
+					</span>
+				</div>
+				<div>
+					<br>
+				</div>
+			</div>
+			<div class="line"></div>
+			</#list>
+		</div>
+	</div>
+	
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				基金研究<a name="2"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap font-md break">
+			<#if researchInfos?size == 0>
+				<div>暂无数据</div>
+			</#if>
+			<#list researchInfos as researchInfo>
+			<div>${(researchInfo_index+1)?string("#")}、${researchInfo.title!}</div>
+			</#list>
+		</div>
+		<div id="notice-list" class="notice-list break">
+		<#list researchInfos as researchInfo>
+			<div class="notice">
+				<div class="subject font-md">${(researchInfo_index+1)?string("#")}、${researchInfo.title!}</div>
+				<div class="subject font-md">【${researchInfo.declaredate?string("yyyy-MM-dd")!}, ${researchInfo.sourceName!}】</div>
+				<div class="break">
+					<br>
+				</div>
+				<div class="content font-md">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span>${researchInfo.content?replace('(\r\n)+','</br>',
+						'r')!}
+					</span>
+				</div>
+				<div>
+					<br>
+				</div>
+			</div>
+			<div class="line"></div>
+			</#list>
+		</div>
+	</div>
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				基金动态<a name="3"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap font-md break">
+			<#if fundInfos?size == 0>
+				<div>暂无数据</div>
+			</#if>
+			<#list fundInfos as fundInfo>
+			<div>${(fundInfo_index+1)?string("#")}、${fundInfo.title!}</div>
+			</#list>
+		</div>
+		<div id="notice-list" class="notice-list break">
+		<#list fundInfos as fundInfo>
+			<div class="notice">
+				<div class="subject font-md">${(fundInfo_index+1)?string("#")}、${fundInfo.title!}</div>
+				<div class="subject font-md">【${fundInfo.declaredate?string("yyyy-MM-dd")!}, ${fundInfo.sourceName!}】</div>
+				<div class="break">
+					<br>
+				</div>
+				<div class="content font-md">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span>${fundInfo.content?replace('(\r\n)+','</br>',
+						'r')!}
+					</span>
+				</div>
+				<div>
+					<br>
+				</div>
+			</div>
+			<div class="line"></div>
+			</#list>
+		</div>
+	</div>
+
+
+</body>
+</html>

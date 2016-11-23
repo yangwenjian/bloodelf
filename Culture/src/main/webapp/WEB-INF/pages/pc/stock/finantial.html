@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>财务分析</title>
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+	name="viewport" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+</head>
+<body>
+
+	<div class="catalog gap">
+		<div class="catalog-name follow font-lg">目录</div>
+		<div id="catalog-list" class="catalog-bg follow font-md">
+			<ol type="" class="catalog-list">
+				<!-- 每4个一组 -->
+				<li><span class="index">1.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#1">财务分析</a></span></li>
+				<li><span class="index">2.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#2">资产负债简表</a></span></li>
+				<li><span class="index">3.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#3">利润分配简表</a></span></li>
+				<li><span class="index">4.&nbsp;&nbsp;</span> <span
+					class="text"><a href="#4">现金流量简表</a></span></li>
+			</ol>
+		</div>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				财务分析<a name="1"></a>
+			</div>
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<div class="info-table font-md">
+			<table>
+				<thead align="center">
+					<tr>
+						<th style="width: 25%">指标\报告期</th> <#list enddates as enddate>
+						<th style="width: 15%">${enddate.enddate?string("yyyy-MM-dd")}</th>
+						</#list>
+					</tr>
+				</thead>
+				<tbody align="center">
+					<tr>
+						<td>*投资收益分析*</br>基本每股收益(元)</br>摊薄每股收益(元)</br>每股净资产(元)</br>股息发放率</br>普通股获利率</br>本利比</br>市盈率</br>市净率
+						</td> <#list investments as invest>
+						<td></br>${invest.epsp!0.00}</br>${invest.epseed!0.00}</br>${invest.bps!0.00}</br>${invest.shrrt!0.00}</br>${invest.divrate!0.00}</br>${invest.peg!0.00}</br>${invest.pe!0.00}</br>${invest.pb!0.00}</td>
+						</#list>
+					</tr>
+					<tr>
+						<td>*偿债能力分析*</br>流动比率</br>速动比率</br>应收账款周转率</br>长期债务与营运资金比率(%)</br>利息保障倍数(%)
+						</td> <#list debts as debt>
+						<td></br>${debt.labflo!0.00}</br>${debt.labslo!0.00}</br>${debt.opearc!0.00}</br>${debt.lablo!0.00}</br>${debt.labiebit!0.00}</td>
+						</#list>
+					</tr>
+					<tr>
+						<td>*发展能力分析*</br>主营收入增长率(%)</br>主营利润增长率(%)</br>总资产增长率(%)</br>固定资产增长率(%)</br>资本充足率(%)</br>核心资本充足率(%)</br>拨备覆盖率(%)</br>贷款增长率(%)</br>每股资本公积(元)</br>每股未分配利润(元)
+						</td> <#list developings as dev>
+						<td></br>${dev.risor!0.00}</br>${dev.risop!0.00}</br>${dev.totalInc!0.00}</br>${dev.stableInc!0.00}</br>${dev.capAde!0.00}</br>${dev.corCapAde!0.00}</br>${dev.prvr!0.00}</br>${dev.loanGr!0.00}</br>${dev.pscr!0.00}</br>${dev.psup!0.00}</td>
+						</#list>
+					</tr>
+					<tr>
+						<td>*资本结构分析*</br>股东权益比率(%)</br>长期负债比率(%)</br>产权比率(%)</br>资产负债率(%)
+						</td> <#list capStructs as struct>
+						<td></br>${struct.capeq!0.00}</br>${struct.longDebt!0.00}</br>${struct.equity!0.00}</br>${struct.caplab!0.00}</td>
+						</#list>
+					</tr>
+					<tr>
+						<td>*经营效率分析*</br>存货周转率</br>固定资产周转率</br>总资产周转率</br>股东权益周转率
+						</td> <#list opeeffs as ope>
+						<td></br>${ope.opeStci!0.00}</br>${ope.opeFci!0.00}</br>${ope.opeTai!0.00}</br>${ope.opeEqu!0.00}</td>
+						</#list>
+					</tr>
+					<tr>
+						<td>*获利能力分析*</br>主营业务利润率(%)</br>净资产报酬率(%)</br>总资产报酬率(%)</br>销售毛利率(%)</br>销售净利率(%)</br>营业利润率(%
+						</td> <#list profits as profit>
+						<td></br>${profit.mainPro!0.00}</br>${profit.netEssets!0.00}</br>${profit.totalEssets!0.00}</br>${profit.selRint!0.00}</br>${profit.selNint!0.00}</br>${profit.trtp!0.00}</td>
+						</#list>
+					</tr>
+					<tr>
+						<td>*现金流量分析*</br>销售收现比率</br>购货付现比率</br>现金流量比率(%)
+						</td> <#list cashFlows as cash>
+						<td></br>${cash.selCash!0.00}</br>${cash.purchCash!0.00}</br>${cash.cashFlow!0.00}</td>
+						</#list>
+					</tr>
+					<tr>
+						<td>*风险分析*</br>不良贷款率(%)
+						</td> <#if risks?? && (risks?size > 1)> <#list risks as risk>
+						<td></br>${risk.nplr!0.00}</td> </#list> <#else>
+						<td>0.00</td>
+						<td>0.00</td>
+						<td>0.00</td>
+						<td>0.00</td>
+						<td>0.00</td> </#if>
+					</tr>
+					<tr>
+						<td>*审计意见*</td> <#list audits as audit>
+						<td></br>${audit.audit!'-'}</td> </#list>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				资产负债简表<a name="2"></a>
+			</div>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单位：万元
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<div class="info-table font-md">
+			<table>
+				<thead align="center">
+					<tr>
+						<th style="width: 25%">科目\年度</th> <#list capDebtTables as capDebt>
+						<th style="width: 15%">${capDebt.enddate?string("yyyy-MM-dd")}</th>
+						</#list>
+					</tr>
+				</thead>
+				<tbody align="center">
+					<tr>
+						<td>货币资金</td><#list capDebtTables as capDebt>
+						<td>${capDebt.B110101!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>应收帐款净额</td><#list capDebtTables as capDebt>
+						<td>${capDebt.B110701!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>存货</td><#list capDebtTables as capDebt>
+						<td>${capDebt.B111501!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>流动资产合计</td><#list capDebtTables as capDebt>
+						<td>${capDebt.B110001!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>长期投资合计</td><#list capDebtTables as capDebt>
+						<td>${capDebt.B120001!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>固定资产合计</td><#list capDebtTables as capDebt>
+						<td>${capDebt.B130101!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>无形及其它资产合计</td><#list capDebtTables as capDebt>
+						<td>${capDebt.B140001!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>资产总计</td><#list capDebtTables as capDebt>
+						<td>${capDebt.B100000!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>应付帐款</td><#list capDebtTables as capDebt>
+						<td>${capDebt.B210301!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>流动负债合计</td><#list capDebtTables as capDebt>
+						<td>${capDebt.B210001!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>长期负债合计</td><#list capDebtTables as capDebt>
+						<td>${capDebt.B220001!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>负债合计</td><#list capDebtTables as capDebt>
+						<td>${capDebt.B200000!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>实收股本</td><#list capDebtTables as capDebt>
+						<td>${capDebt.B310101!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>资本公积</td><#list capDebtTables as capDebt>
+						<td>${capDebt.B310201!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>盈余公积</td><#list capDebtTables as capDebt>
+						<td>${capDebt.B310301!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>未分配利润</td><#list capDebtTables as capDebt>
+						<td>${capDebt.B310701!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>股东权益合计</td><#list capDebtTables as capDebt>
+						<td>${capDebt.B311101!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>流动比率</td><#list capDebtTables as capDebt>
+						<td>${capDebt.B210001!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>速动比率</td> <#list capDebtTables as capDebt>
+						<td>${capDebt.B210001!0.00}</td> </#list>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				利润分配简表<a name="3"></a>
+			</div>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单位：万元
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<div class="info-table font-md">
+			<table>
+				<thead align="center">
+					<tr>
+						<th style="width: 25%">科目\年度</th> <#list profitTables as profit>
+						<th style="width: 15%">${profit.enddate?string("yyyy-MM-dd")}</th>
+						</#list>
+					</tr>
+				</thead>
+				<tbody align="center">
+					<tr>
+						<td>主营业务收入</td><#list profitTables as profit>
+						<td>${profit.P110101!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>主营业务成本</td><#list profitTables as profit>
+						<td>${profit.P110202!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>主营业务利润</td><#list profitTables as profit>
+						<td>${profit.P120101!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>营业费用</td><#list profitTables as profit>
+						<td>${profit.P120412!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>管理费用</td><#list profitTables as profit>
+						<td>${profit.P120422!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>财务费用</td><#list profitTables as profit>
+						<td>${profit.P120432!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>营业利润</td><#list profitTables as profit>
+						<td>${profit.P130101!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>投资收益</td><#list profitTables as profit>
+						<td>${profit.P130201!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>利润总额</td><#list profitTables as profit>
+						<td>${profit.P140101!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>所得税</td><#list profitTables as profit>
+						<td>${profit.P140202!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>净利润</td><#list profitTables as profit>
+						<td>${profit.P150101!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>年初未分配利润</td><#list profitTables as profit>
+						<td>${profit.P210101!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>未分配利润</td><#list profitTables as profit>
+						<td>${profit.P240101!0.00}</td> </#list>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	
+	<div class="topic topic-gap">
+		<div class="font-lg">
+			<div class="topic-square follow"></div>
+			<div class="follow">
+				现金流量简表<a name="4"></a>
+			</div>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单位：万元
+			<div class="follow-R">
+				<a href="#top">Top</a>
+			</div>
+		</div>
+		<div id="normal" class="left-gap break">
+			<div class="table-top"></div>
+		</div>
+		<div class="info-table font-md">
+			<table>
+				<thead align="center">
+					<tr>
+						<th style="width: 25%">科目\年度</th> <#list cashFlowTables as cash>
+						<th style="width: 15%">${cash.enddate?string("yyyy-MM-dd")}</th>
+						</#list>
+					</tr>
+				</thead>
+				<tbody align="center">
+					<tr>
+						<td>经营活动现金流入小计</td><#list cashFlowTables as cash>
+						<td>${cash.C110000!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>经营活动现金流出小计</td><#list cashFlowTables as cash>
+						<td>${cash.C120000!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>经营活动现金流量净额</td><#list cashFlowTables as cash>
+						<td>${cash.C100000!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>投资活动现金流入小计</td><#list cashFlowTables as cash>
+						<td>${cash.C210000!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>投资活动现金流出小计</td><#list cashFlowTables as cash>
+						<td>${cash.C220000!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>投资活动现金流量净额</td><#list cashFlowTables as cash>
+						<td>${cash.C200000!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>筹资活动现金流入小计</td><#list cashFlowTables as cash>
+						<td>${cash.C310000!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>筹资活动现金流出小计</td><#list cashFlowTables as cash>
+						<td>${cash.C320000!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>筹资活动现金流量净额</td><#list cashFlowTables as cash>
+						<td>${cash.C300000!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>汇率变动对现金的影响</td><#list cashFlowTables as cash>
+						<td>${cash.C410101!0.00}</td> </#list>
+					</tr>
+					<tr>
+						<td>现金及等价物净增加额</td><#list cashFlowTables as cash>
+						<td>${cash.C410201!0.00}</td> </#list>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+</body>
+</html>

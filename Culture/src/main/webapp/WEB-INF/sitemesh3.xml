@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemesh>
+	<mapping path="*/index/*/pc.html" decorator="/template/index/pc.html" />
+	<mapping path="*/index/*/mobile.html" decorator="/template/index/mobile.html" />
+	<!-- <mapping path="*stock/*/mobile/*.html" decorator="/template/stock/mobile.html" /> -->
+	<mapping path="*stock/*/pc/*.html" decorator="/template/stock/pc.html" />
+	<mapping path="*indexdetail/*/mobile/*.html" decorator="/template/indexdetail/mobile.html" />
+	<mapping path="*indexdetail/*/pc/*.html" decorator="/template/indexdetail/pc.html" />
+	<!-- 排除，不进行装饰的路径 -->
+	<mapping path="/download/*" exclue="true" />
+	<mapping path="/market/*" exclue="true" />
+</sitemesh>
